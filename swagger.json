@@ -1,0 +1,1286 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "除了用户登录和注册以及头像获取三个接口\n其他的都需要用户携带TOKEN进行用户验证，否则无法访问接口\n\nTOKEN 格式 ： KEY：Authorization VALUE： \"JWT \" + 登录时返回的对应TOKEN   （放在请求的header中）",
+    "title": "JieTong API.",
+    "version": "0.0.1"
+  },
+  "host": "47.107.108.127",
+  "basePath": "/",
+  "paths": {
+    "/user/cancellation": {
+      "delete": {
+        "description": "用户注销",
+        "tags": [
+          "user"
+        ],
+        "summary": "用户注销",
+        "operationId": "cancellation"
+      }
+    },
+    "/user/editor/message": {
+      "post": {
+        "description": "修改用户信息",
+        "tags": [
+          "user"
+        ],
+        "summary": "修改用户信息",
+        "operationId": "editor_message",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户昵称",
+            "name": "name"
+          },
+          {
+            "type": "string",
+            "description": "用户 密码",
+            "name": "password"
+          },
+          {
+            "type": "string",
+            "description": "真实姓名",
+            "name": "realname"
+          },
+          {
+            "type": "int",
+            "description": "用户年龄",
+            "name": "age"
+          },
+          {
+            "type": "datetime",
+            "description": "用户生日",
+            "name": "birthday"
+          },
+          {
+            "type": "string",
+            "description": "用户性别",
+            "name": "sex",
+            "in": "男/女"
+          },
+          {
+            "type": "string",
+            "description": "微信",
+            "name": "Wechat"
+          },
+          {
+            "type": "string",
+            "description": "QQ",
+            "name": "Qqnumber"
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Info"
+          },
+          {
+            "type": "string",
+            "description": "邮箱",
+            "name": "mail"
+          },
+          {
+            "type": "string",
+            "description": "公司",
+            "name": "company"
+          },
+          {
+            "type": "string",
+            "description": "职业",
+            "name": "vocation"
+          },
+          {
+            "type": "string",
+            "description": "联系电话",
+            "name": "phone"
+          },
+          {
+            "type": "string",
+            "description": "部门",
+            "name": "department"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/responses/forbidden"
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "description": "用户登录",
+        "tags": [
+          "user"
+        ],
+        "summary": "用户登录",
+        "operationId": "login",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户邮箱",
+            "name": "mail",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "用户密码",
+            "name": "password",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/user/message": {
+      "get": {
+        "description": "获取用户信息",
+        "tags": [
+          "user"
+        ],
+        "summary": "获取用户信息",
+        "operationId": "message"
+      }
+    },
+    "/user/photo/{id:int}": {
+      "get": {
+        "description": "获取用户头像",
+        "tags": [
+          "user"
+        ],
+        "summary": "获取用户头像",
+        "operationId": "get_photo"
+      }
+    },
+    "/user/registe": {
+      "post": {
+        "description": "用户注册",
+        "tags": [
+          "user"
+        ],
+        "summary": "用户注册",
+        "operationId": "registe",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户昵称",
+            "name": "name",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "用户 密码",
+            "name": "password",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "真实姓名",
+            "name": "realname"
+          },
+          {
+            "type": "int",
+            "description": "用户年龄",
+            "name": "age"
+          },
+          {
+            "type": "datetime",
+            "description": "用户生日",
+            "name": "birthday"
+          },
+          {
+            "type": "string",
+            "description": "用户性别",
+            "name": "sex",
+            "in": "男/女",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "微信",
+            "name": "Wechat"
+          },
+          {
+            "type": "string",
+            "description": "QQ",
+            "name": "Qqnumber"
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Info"
+          },
+          {
+            "type": "string",
+            "description": "邮箱",
+            "name": "mail",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "公司",
+            "name": "company"
+          },
+          {
+            "type": "string",
+            "description": "职业",
+            "name": "vocation"
+          },
+          {
+            "type": "string",
+            "description": "部门",
+            "name": "department"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/responses/forbidden"
+            }
+          }
+        }
+      }
+    },
+    "/user/set_photo": {
+      "post": {
+        "description": "设置用户头像",
+        "tags": [
+          "user"
+        ],
+        "summary": "设置用户头像",
+        "operationId": "set_photo",
+        "parameters": [
+          {
+            "type": "file",
+            "description": "用户头像",
+            "name": "UserPhoto",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/create/table": {
+      "post": {
+        "description": "创建表单（发布）",
+        "tags": [
+          "table"
+        ],
+        "summary": "创建表单（发布）",
+        "operationId": "create_table",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "要发布的工作空间的id",
+            "name": "WorkspaceId",
+            "required": true
+          },
+          {
+            "type": "json(string)",
+            "description": "表单的具体数据",
+            "name": "Data",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "表单的名字",
+            "name": "Name",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/create/table-draft": {
+      "post": {
+        "description": "创建表单（草稿）",
+        "tags": [
+          "table"
+        ],
+        "summary": "创建表单（草稿）",
+        "operationId": "Workflow_create_table_draft-draft",
+        "parameters": [
+          {
+            "type": "json(string)",
+            "description": "表单的具体数据",
+            "name": "Data",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "表单的名字",
+            "name": "Name",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/create/workflow": {
+      "post": {
+        "description": "创建流程（发布）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "创建流程（发布）",
+        "operationId": "create_workflow"
+      }
+    },
+    "/workflow/create/workflow-draft": {
+      "post": {
+        "description": "创建流程（草稿）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "创建流程（草稿）",
+        "operationId": "create_workflow-draft"
+      }
+    },
+    "/workflow/delete/table": {
+      "post": {
+        "description": "删除表单（已发布）",
+        "tags": [
+          "table"
+        ],
+        "summary": "删除表单（已发布）",
+        "operationId": "delete_table",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "表单ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/delete/table-draft": {
+      "post": {
+        "description": "删除表单（草稿）",
+        "tags": [
+          "table"
+        ],
+        "summary": "删除表单（草稿）",
+        "operationId": "delete_table-draft",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "表单草稿ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/delete/workflow": {
+      "post": {
+        "description": "删除流程（已发布）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "删除流程（已发布）",
+        "operationId": "delete_workflow",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/delete/workflow-draft": {
+      "post": {
+        "description": "删除流程（草稿）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "删除流程（草稿）",
+        "operationId": "delete_workflow-draft",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/editor/table": {
+      "post": {
+        "description": "修改表单（已发布）",
+        "tags": [
+          "table"
+        ],
+        "summary": "修改表单（已发布）",
+        "operationId": "editor_table",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "表单ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/editor/table-draft": {
+      "post": {
+        "description": "修改表单（草稿）",
+        "tags": [
+          "table"
+        ],
+        "summary": "修改表单（草稿）",
+        "operationId": "editor_table_draft",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "表单ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/editor/workflow": {
+      "post": {
+        "description": "修改流程（已发布）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "修改流程（已发布）",
+        "operationId": "editor_workflow",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/editor/workflow-draft": {
+      "post": {
+        "description": "修改流程（草稿）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "修改流程（草稿）",
+        "operationId": "editor_workflow_draft",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/editor/workflow-state": {
+      "post": {
+        "description": "修改流程状态（已发布）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "修改流程状态（已发布）",
+        "operationId": "editor_workflow_state",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/order/create-order": {
+      "post": {
+        "description": "创建流程申请",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "创建流程申请",
+        "operationId": "Workflow_order_create_order",
+        "parameters": [
+          {
+            "type": "file",
+            "description": "用户头像",
+            "name": "UserPhoto",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/order/fill-table": {
+      "post": {
+        "description": "填写表单（会修改流程状态）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "填写表单（会修改流程状态）",
+        "operationId": "Workflow_order_fill_table",
+        "parameters": [
+          {
+            "type": "file",
+            "description": "用户头像",
+            "name": "UserPhoto",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/order/notification": {
+      "post": {
+        "description": "获取消息提醒",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "获取消息提醒",
+        "operationId": "Workflow_order_notification",
+        "parameters": [
+          {
+            "type": "file",
+            "description": "用户头像",
+            "name": "UserPhoto",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/order/order-state": {
+      "post": {
+        "description": "获取流程状态",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "获取流程状态",
+        "operationId": "Workflow_order_order_state",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "Id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/select/table": {
+      "post": {
+        "description": "查询表单（已发布）",
+        "tags": [
+          "table"
+        ],
+        "summary": "查询表单（已发布）",
+        "operationId": "select_table",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "表单ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/select/table-draft": {
+      "post": {
+        "description": "查询表单（草稿）",
+        "tags": [
+          "table"
+        ],
+        "summary": "查询表单（草稿）",
+        "operationId": "select_table-draft",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "表单草稿ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/select/table-draft-user": {
+      "post": {
+        "description": "查询用户拥有查询表单（草稿）",
+        "tags": [
+          "table"
+        ],
+        "summary": "查询用户拥有的表单（草稿）",
+        "operationId": "Workflow_select_table_draft_user"
+      }
+    },
+    "/workflow/select/table-workSpace": {
+      "post": {
+        "description": "查询工作空间拥有的表单",
+        "tags": [
+          "table"
+        ],
+        "summary": "查询工作空间拥有的表单",
+        "operationId": "Workflow_select_table_draft_workSpace",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "工作空间ID",
+            "name": "workspace_id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/select/workflow": {
+      "get": {
+        "description": "查询流程（已发布）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "查询流程（已发布）",
+        "operationId": "select_workflow"
+      }
+    },
+    "/workflow/select/workflow-byId": {
+      "get": {
+        "description": "查询流程（已发布）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "查询流程（已发布）",
+        "operationId": "select_workflow_byId",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workflow/select/workflow-draft": {
+      "get": {
+        "description": "查询流程（草稿）",
+        "tags": [
+          "workflow"
+        ],
+        "summary": "查询流程（草稿）",
+        "operationId": "select_workflow-draft"
+      }
+    },
+    "/workspace/application/create": {
+      "post": {
+        "description": "创建应用",
+        "tags": [
+          "application"
+        ],
+        "summary": "创建应用",
+        "operationId": "application_create",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "WorkspaceId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "名字",
+            "name": "name",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Remark",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/application/delete": {
+      "delete": {
+        "description": "删除应用",
+        "tags": [
+          "application"
+        ],
+        "summary": "删除应用",
+        "operationId": "application_delete"
+      }
+    },
+    "/workspace/application/delete-workflow": {
+      "delete": {
+        "description": "删除流程",
+        "tags": [
+          "application"
+        ],
+        "summary": "删除流程",
+        "operationId": "Application_delete_workflow",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "流程ID",
+            "name": "WorkflowId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "应用id",
+            "name": "ApplicationId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/application/editor": {
+      "post": {
+        "description": "修改应用信息",
+        "tags": [
+          "application"
+        ],
+        "summary": "修改应用信息",
+        "operationId": "application_editor",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "WorkspaceId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "名字",
+            "name": "name",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Remark",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/application/insert-workflow": {
+      "post": {
+        "description": "添加流程",
+        "tags": [
+          "application"
+        ],
+        "summary": "添加流程",
+        "operationId": "application_insert",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "流程ID",
+            "name": "WorkflowId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "应用id",
+            "name": "ApplicationId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/application/select": {
+      "post": {
+        "description": "根据ID获取应用信息",
+        "tags": [
+          "application"
+        ],
+        "summary": "获取应用信息",
+        "operationId": "application_select",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "应用id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/application/select/workspace": {
+      "post": {
+        "description": "获取应用信息",
+        "tags": [
+          "application"
+        ],
+        "summary": "获取应用信息",
+        "operationId": "Application_select_workspace",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "WorkspaceId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/create/workspace": {
+      "post": {
+        "description": "创建工作空间",
+        "tags": [
+          "workspace"
+        ],
+        "summary": "创建工作空间",
+        "operationId": "create_workspace",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间名字",
+            "name": "name",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "联系电话",
+            "name": "phone"
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "remark"
+          }
+        ]
+      }
+    },
+    "/workspace/delete/workspace": {
+      "post": {
+        "description": "删除工作空间",
+        "tags": [
+          "workspace"
+        ],
+        "summary": "删除工作空间",
+        "operationId": "Workspace_delete",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "ID",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/department/create": {
+      "post": {
+        "description": "创建部门",
+        "tags": [
+          "department"
+        ],
+        "summary": "创建部门",
+        "operationId": "department_create",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "WorkspaceId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "部门名字",
+            "name": "Name",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "联系电话",
+            "name": "Phone"
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Remark"
+          }
+        ]
+      }
+    },
+    "/workspace/department/delete": {
+      "delete": {
+        "description": "删除部门",
+        "tags": [
+          "department"
+        ],
+        "summary": "删除部门",
+        "operationId": "department_delete",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "部门id",
+            "name": "Id",
+            "required": true
+          },
+          {
+            "name": "WorkspaceId"
+          }
+        ]
+      }
+    },
+    "/workspace/department/editor": {
+      "post": {
+        "description": "修改部门信息",
+        "tags": [
+          "department"
+        ],
+        "summary": "修改部门信息",
+        "operationId": "department_editor",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "部门id",
+            "name": "Id",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "WorkspaceId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "部门名字",
+            "name": "Name",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "联系电话",
+            "name": "Phone"
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Remark"
+          }
+        ]
+      }
+    },
+    "/workspace/department/select": {
+      "post": {
+        "description": "获取部门信息",
+        "tags": [
+          "department"
+        ],
+        "summary": "获取部门信息",
+        "operationId": "department_select",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "部门id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/department/select/user": {
+      "get": {
+        "description": "根据用户ID获取部门信息",
+        "tags": [
+          "department"
+        ],
+        "summary": "获取部门信息",
+        "operationId": "Department_select_user"
+      }
+    },
+    "/workspace/department/select/workspace": {
+      "post": {
+        "description": "获取部门信息",
+        "tags": [
+          "department"
+        ],
+        "summary": "获取部门信息",
+        "operationId": "Department_select_workspace",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/editor/workspace": {
+      "post": {
+        "description": "修改工作空间信息",
+        "tags": [
+          "workspace"
+        ],
+        "summary": "修改工作空间信息",
+        "operationId": "editor_workspace",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "id",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "工作空间名字",
+            "name": "name"
+          },
+          {
+            "type": "string",
+            "description": "联系电话",
+            "name": "phone"
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "remark"
+          }
+        ]
+      }
+    },
+    "/workspace/job/create": {
+      "post": {
+        "description": "创建职位",
+        "tags": [
+          "job"
+        ],
+        "summary": "创建职位",
+        "operationId": "job_create",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "部门id",
+            "name": "DepartmentId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "名字",
+            "name": "name",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/job/delete": {
+      "delete": {
+        "description": "删除职位",
+        "tags": [
+          "job"
+        ],
+        "summary": "删除职位",
+        "operationId": "job_delete",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "职位id",
+            "name": "Id"
+          }
+        ]
+      }
+    },
+    "/workspace/job/delete-user": {
+      "post": {
+        "description": "删除员工",
+        "tags": [
+          "job"
+        ],
+        "summary": "删除员工",
+        "operationId": "Job_delete_user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户ID",
+            "name": "UserId",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "职位id",
+            "name": "JobId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/job/editor": {
+      "post": {
+        "description": "修改职位信息",
+        "tags": [
+          "job"
+        ],
+        "summary": "修改职位信息",
+        "operationId": "job_editor",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "部门id",
+            "name": "DepartmentId"
+          },
+          {
+            "type": "string",
+            "description": "名字",
+            "name": "name"
+          }
+        ]
+      }
+    },
+    "/workspace/job/insert-user": {
+      "post": {
+        "description": "添加员工",
+        "tags": [
+          "job"
+        ],
+        "summary": "添加员工",
+        "operationId": "job_insert",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户邮箱",
+            "name": "Mail",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "职位id",
+            "name": "JobId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/job/select": {
+      "post": {
+        "description": "获取职位信息",
+        "tags": [
+          "job"
+        ],
+        "summary": "获取职位信息",
+        "operationId": "job_select",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "职位id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/job/select-user": {
+      "post": {
+        "description": "获取职位人员信息",
+        "tags": [
+          "job"
+        ],
+        "summary": "获取职位人员信息",
+        "operationId": "Job_selectUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "职位id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/job/select/department": {
+      "post": {
+        "description": "获取职位信息",
+        "tags": [
+          "job"
+        ],
+        "summary": "获取职位信息",
+        "operationId": "Job_select_department",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "部门id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/workspace/job/select/user": {
+      "get": {
+        "description": "获取用户职位信息",
+        "tags": [
+          "job"
+        ],
+        "summary": "获取用户职位信息",
+        "operationId": "Job_select_user"
+      }
+    },
+    "/workspace/select/user": {
+      "get": {
+        "description": "根据用户ID获取工作空间信息",
+        "tags": [
+          "workspace"
+        ],
+        "summary": "获取工作空间信息",
+        "operationId": "select_workspace_userId"
+      }
+    },
+    "/workspace/select/workspace": {
+      "post": {
+        "description": "根据ID获取工作空间信息",
+        "tags": [
+          "workspace"
+        ],
+        "summary": "获取工作空间信息",
+        "operationId": "select_workspace_workspaceId",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "工作空间id",
+            "name": "id",
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  "responses": {
+    "forbidden": {
+      "description": "Error Forbidden",
+      "schema": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "description": "HTTP status code 403 -  Forbidden",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    }
+  }
+}
