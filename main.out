@@ -1,0 +1,11 @@
+2021/12/06 16:27:40 ### Init app conf
+2021/12/06 16:27:40 ### Init db conf
+2021/12/06 16:27:40 123123
+Now listening on: http://localhost:80
+Application started. Press CTRL+C to shut down.
+2021/12/06 17:27:36 13526
+2021/12/06 17:27:36 {8 perry 123456  0   {0 0 <nil>} 男  798692795@qq.com     ./data/photo/2.png {0 63772556673 0x12c0d60} 0}
+2021/12/06 17:27:36 用户[perry], 登录生成token [eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmFtZSI6InBlcnJ5IiwiZXhwIjoxNjM5Mzg3NjU2LCJpc3MiOiJpcmlzLWNhc2JpbnMtand0In0.eeC8yh2DCMjvaSYCYoKo6GBbisjfOfmAR5jBmeutIKs]
+2021/12/06 17:27:36 ok
+2021/12/08 08:54:33 Error parsing token1: Token is expired
+[ERRO] 2021/12/08 08:54 Check jwt error, Error parsing token2: Token is expired

@@ -162,8 +162,8 @@ func Workflow_select_table_draft_workSpace(ctx iris.Context) {
 	}
 	var table []model.SdTable
 	e := conn.MasterEngine()
-	has, err := e.Where("workspace_id = ?", workflow.Id).Find(&table)
-	if !has || err != nil {
+	err := e.Where("workspace_id = ?", workflow.Id).Find(&table)
+	if err != nil {
 		log.Print(err)
 		log.Printf("工作空间流程草稿查询失败")
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -185,8 +185,8 @@ func Workflow_select_table_draft_user(ctx iris.Context) {
 	}
 	var tableDraft []model.SdTableDraft
 	e := conn.MasterEngine()
-	has, err := e.Where("user_id = ?", user.Id).Find(&tableDraft)
-	if !has || err != nil {
+	err := e.Where("user_id = ?", user.Id).Find(&tableDraft)
+	if err != nil {
 		log.Print(err)
 		log.Printf("个人流程草稿查询失败")
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
