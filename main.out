@@ -1,11 +1,20 @@
-2021/12/06 16:27:40 ### Init app conf
-2021/12/06 16:27:40 ### Init db conf
-2021/12/06 16:27:40 123123
+2021/12/23 11:09:06 ### Init app conf
+2021/12/23 11:09:06 ### Init db conf
+2021/12/23 11:09:06 123123
 Now listening on: http://localhost:80
 Application started. Press CTRL+C to shut down.
-2021/12/06 17:27:36 13526
-2021/12/06 17:27:36 {8 perry 123456  0   {0 0 <nil>} 男  798692795@qq.com     ./data/photo/2.png {0 63772556673 0x12c0d60} 0}
-2021/12/06 17:27:36 用户[perry], 登录生成token [eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmFtZSI6InBlcnJ5IiwiZXhwIjoxNjM5Mzg3NjU2LCJpc3MiOiJpcmlzLWNhc2JpbnMtand0In0.eeC8yh2DCMjvaSYCYoKo6GBbisjfOfmAR5jBmeutIKs]
-2021/12/06 17:27:36 ok
-2021/12/08 08:54:33 Error parsing token1: Token is expired
-[ERRO] 2021/12/08 08:54 Check jwt error, Error parsing token2: Token is expired
+2021/12/23 14:25:58 {  }
+2021/12/23 14:26:05 {  }
+2021/12/23 14:26:17 {1 2 3}
+2021/12/23 14:26:17 {1 2 3}
+2021/12/23 14:26:58 {1 2 3}
+2021/12/23 14:26:58 {1 2 3}
+2021/12/23 16:23:24 {1 2 3}
+2021/12/23 16:23:24 {1 2 3}
+2021/12/23 16:46:28 {  }
+2021/12/23 16:47:04 {1 2 3}
+2021/12/23 16:47:04 {1 2 3}
+2021/12/26 15:36:24 13526
+2021/12/26 15:36:24 {8 perry 123456  0   {0 0 <nil>} 男  798692795@qq.com     ./data/photo/2.png {0 63772556673 0x12c0d80} 0}
+2021/12/26 15:36:24 用户[perry], 登录生成token [eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwibmFtZSI6InBlcnJ5IiwiZXhwIjoxNjQxMTA4OTg0LCJpc3MiOiJpcmlzLWNhc2JpbnMtand0In0.qyh8EgyYvax2Xh1WJJmtrC-jRVK8IvFNB6JK21xXvnc]
+2021/12/26 15:36:24 ok

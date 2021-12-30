@@ -1,7 +1,6 @@
 package responser
 import (
 	"github.com/kataras/iris/v12"
-	//"log"
 	"mayday/src/models"
 )
 //成功返回

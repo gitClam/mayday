@@ -2,7 +2,6 @@ package vo
 
 import (
 	"mayday/src/models"
-	//"time"
 	//"log"
 )
 
@@ -46,7 +45,6 @@ func TansformUserVOToken(token string, user *model.SdUser) (uVO UserVO) {
 	uVO.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")	
 	uVO.Token = token
 	
-	//golog.Infof("uptime=%d", user.UpdateTime.UnixNano())
 	return
 }
 

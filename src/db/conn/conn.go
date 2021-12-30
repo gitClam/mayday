@@ -78,7 +78,6 @@ func GetConnURL(info *parse.DBConfigInfo) (url string) {
 
 //var db *sql.DB
 /*func Getconn() *sql.DB{
-	log.Print("123123\n")
 	if(db == nil){	
 		var err error
 		db, err = sql.Open("mysql", "root:123456@tcp(localhost:3306)/jietong?charset=utf8")
@@ -88,6 +87,5 @@ func GetConnURL(info *parse.DBConfigInfo) (url string) {
 		db.SetMaxOpenConns(50)
      	db.SetMaxIdleConns(10)
 	}
-	log.Print("123123\n")
 	return db
 }*/

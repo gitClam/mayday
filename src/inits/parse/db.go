@@ -2,7 +2,6 @@ package parse
 
 import (
 	"log"
-	//"github.com/kataras/iris/v12"
 	"mayday/src/supports/fio"
 	"gopkg.in/yaml.v2"
 )

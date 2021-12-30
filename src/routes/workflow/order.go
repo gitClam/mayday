@@ -24,7 +24,7 @@ import (
 //   type: file
 //   required: true
 func Workflow_order_create_order(ctx iris.Context) {
-	//检查请求的用户（检测TOKEN类的东西）            
+	//检查请求的用户            
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
@@ -43,23 +43,13 @@ func Workflow_order_create_order(ctx iris.Context) {
 // --- 
 // summary: 填写表单（会修改流程状态）
 // description: 填写表单（会修改流程状态）
-// parameters:
-// - name: UserPhoto
-//   description: 用户头像
-//   type: file
-//   required: true
 func Workflow_order_fill_table(ctx iris.Context) {
 	
 }
 // swagger:operation POST /workflow/order/notification workflow Workflow_order_notification
 // --- 
-// summary: 获取消息提醒
-// description: 获取消息提醒
-// parameters:
-// - name: UserPhoto
-//   description: 用户头像
-//   type: file
-//   required: true
+// summary: 获取待办提醒
+// description: 获取待办提醒
 func Workflow_order_notification(ctx iris.Context) {
 	
 }

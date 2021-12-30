@@ -1,13 +1,14 @@
 package inits
 
 import (
-	//"github.com/kataras/iris/v12/v12/middleware/logger"
+	"github.com/kataras/iris/v12"
 	"mayday/src/models"
 	"mayday/src/inits/parse"
-	//"github.com/kataras/iris/v12/v12/middleware/recover"
+	"mayday/src/inits/cors"
 )
 
-func Init(){
+func Init(app *iris.Application){
+	app.Use(cors.Cors)
 	parse.AppOtherParse()
 	parse.DBSettingParse()
 	model.RegisterLocalTimeDecoder()
