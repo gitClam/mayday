@@ -531,33 +531,17 @@
           "workflow"
         ],
         "summary": "填写表单（会修改流程状态）",
-        "operationId": "Workflow_order_fill_table",
-        "parameters": [
-          {
-            "type": "file",
-            "description": "用户头像",
-            "name": "UserPhoto",
-            "required": true
-          }
-        ]
+        "operationId": "Workflow_order_fill_table"
       }
     },
     "/workflow/order/notification": {
       "post": {
-        "description": "获取消息提醒",
+        "description": "获取待办提醒",
         "tags": [
           "workflow"
         ],
-        "summary": "获取消息提醒",
-        "operationId": "Workflow_order_notification",
-        "parameters": [
-          {
-            "type": "file",
-            "description": "用户头像",
-            "name": "UserPhoto",
-            "required": true
-          }
-        ]
+        "summary": "获取待办提醒",
+        "operationId": "Workflow_order_notification"
       }
     },
     "/workflow/order/order-state": {

@@ -1,7 +1,7 @@
 master:
   dialect: mysql
   user: root
-  password: 123456
+  password: Qq791285634
   host: localhost
   port: 3306
   database: jietong
