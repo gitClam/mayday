@@ -8,7 +8,7 @@ Charset: UTF-8
 Other:
   IgnoreURLs: [ /user/login, /user/registe, /login_pwd,/user/photo/*]
   Port: ":80"
-  JWTTimeout: 604800 #second
+  JWTTimeout: 6048000 #second
   LogLevel: debug
   Secret: xxx-Secret
 

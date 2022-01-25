@@ -1,5 +1,5 @@
-nohup go run main.go > main.out 2>&1 &
-nohup ./start_swagger.sh > swagger.out 2>&1 &
+nohup go run main.go >> ./log/main.out 2>&1 &
+nohup ./tools/swagger/start_swagger.sh >> ./log/swagger/swagger.out 2>&1 &
 
 sleep 3s
 
@@ -13,7 +13,7 @@ else
 fi
 
 if [ $Pidofswagger ]; then
-  echo "swagger sever started , pid:$Pidofswagger"
+  echo "swagger started , pid:$Pidofswagger"
 else
-  echo "sever start filed"
+  echo "swagger start filed"
 fi

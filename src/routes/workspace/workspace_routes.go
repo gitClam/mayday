@@ -210,7 +210,6 @@ func Workspace_editor(ctx iris.Context) {
 //   type: int
 //   required: true
 func Workspace_delete(ctx iris.Context) {
-	log.Printf("1111")
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); (err != nil || Workspace.Id == 0) {
 		responser.MakeErrorRes(ctx,iris.StatusInternalServerError, model.OptionFailur , nil)

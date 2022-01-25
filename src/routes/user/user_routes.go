@@ -81,7 +81,7 @@ import (
 func User_registe(ctx iris.Context) {
 	var user model.SdUser
 	if err := ctx.ReadForm(&user); err != nil {
-		responser.MakeErrorRes(ctx,iris.StatusInternalServerError, model.RegisteFailur , nil)
+		responser.MakeErrorRes(ctx,iris.StatusInternalServerError, model.RegisteFailur , "数据接收失败")
 		log.Print("用户注册失败，数据接收失败")
 		return 
 	}
@@ -93,8 +93,8 @@ func User_registe(ctx iris.Context) {
 	e := conn.MasterEngine()	
 	effect, err := e.Insert(user)	
 	if effect <= 0 || err != nil {
-		log.Printf("用户注册失败。")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.RegisteFailur, nil)
+		log.Printf("用户注册失败")
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.RegisteFailur, "用户注册失败")
 		return 
 	} 
 	
@@ -120,13 +120,13 @@ func User_login(ctx iris.Context) {
 	
 	var user model.SdUser
 	if err := ctx.ReadForm(&user); err != nil {
-		responser.MakeErrorRes(ctx,iris.StatusInternalServerError, model.LoginFailur , nil)
+		responser.MakeErrorRes(ctx,iris.StatusInternalServerError, model.LoginFailur , "数据接收失败")
 		log.Print("用户登录失败，数据接收失败")
 		return 
 	}
 	
 	if(user.Mail == "" || user.Password == ""){
-		responser.MakeErrorRes(ctx,3333, model.LoginFailur , nil)
+		responser.MakeErrorRes(ctx,3333, model.LoginFailur , "用户名或密码为空")
 		log.Print("用户登录失败,邮箱或密码为空")
 		return 
 	}	
@@ -137,7 +137,7 @@ func User_login(ctx iris.Context) {
 	e := conn.MasterEngine()
 	has, err := e.Where("is_deleted != 1").Get(&mUser)
 	if ( !has || err != nil || mUser.IsDeleted == 1) {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, "用户名不存在")
 		log.Printf("数据库查询错误或用户名不存在")
 		return 
 	} 
@@ -145,21 +145,20 @@ func User_login(ctx iris.Context) {
 	log.Print(mUser)
 	
 	if mUser.Password != user.Password{
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, nil)
-		log.Printf("用户密码错误" )
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, "密码错误")
+		log.Printf("密码错误")
 		return
 	}
 	
 	token, err := jwts.GenerateToken(&mUser);
 	log.Printf("用户[%s], 登录生成token [%s]", mUser.Name, token)
 	if err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenCreateFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenCreateFailur, "用户名不存在")
 		log.Printf("数据库查询错误或用户名不存在")
 		return
 	}
 	
 	responser.MakeSuccessRes(ctx,model.Success,vo.TansformUserVOToken(token,&mUser))
-	log.Print("ok")
 }
 
 // swagger:operation GET /user/photo/{id:int} user get_photo
@@ -172,8 +171,8 @@ func User_photo(ctx iris.Context) {
 	var user model.SdUser
 	Id , err := strconv.Atoi(ctx.Params().Get("id"))
 	if(err != nil){
-		log.Printf("ID获取失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		log.Printf("数据接收失败")
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "数据接收失败")
 		return 
 	}
 	user.Id = Id
@@ -181,19 +180,19 @@ func User_photo(ctx iris.Context) {
 	has, err := e.Get(&user)
 	if ( !has || err != nil) {
 		log.Printf("数据库查询错误或用户名不存在")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
 		return 
 	} 
 	
 	if user.Photo == ""{
 		log.Printf("用户头像获取出错")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户头像获取出错")
 		return 
 	}
 	err1 := ctx.ServeFile(user.Photo, false)
 	if err1 != nil {
 		log.Printf("用户头像文件读取错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户头像获取出错")
 		return 
 	}
 }
@@ -208,11 +207,10 @@ func User_photo(ctx iris.Context) {
 //   type: file
 //   required: true
 func Set_user_photo(ctx iris.Context){
-	log.Print("修改用户头像")
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
 	log.Print(user)
@@ -224,7 +222,7 @@ func Set_user_photo(ctx iris.Context){
 	if ( !has || err != nil) {
 		
 		log.Printf("数据库查询错误或用户名不存在") 
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
 		return 
 	}  
 	
@@ -232,7 +230,7 @@ func Set_user_photo(ctx iris.Context){
 	file, _, err := ctx.FormFile("UserPhoto")
 	if err != nil {
 		log.Print("图片文件不存在")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "图片文件不存在")
 		return
 	}
 	defer file.Close()
@@ -242,7 +240,7 @@ func Set_user_photo(ctx iris.Context){
 		affected, err := e.Id(mUser.Id).Update(mUser)
 		if ( affected <= 0 || err != nil) {
 		log.Printf("数据库更新失败") 
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "更新失败")
 		return 
 		}  
 	}
@@ -250,7 +248,7 @@ func Set_user_photo(ctx iris.Context){
 	out, err := os.OpenFile(mUser.Photo, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		log.Print("文件打开失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "文件打开失败")
 		return
 	}
 	defer out.Close()
@@ -270,7 +268,7 @@ func User_cancellation(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var mUser model.SdUser
@@ -281,7 +279,7 @@ func User_cancellation(ctx iris.Context) {
 	if ( !has || err != nil) {
 		log.Print(err)
 		log.Printf("数据库查询错误或用户名不存在") 
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
 		return 
 	} 
 	mUser.IsDeleted = 1
@@ -289,7 +287,7 @@ func User_cancellation(ctx iris.Context) {
 	if affected <= 0 || err1 != nil{
 		log.Print(err)
 		log.Printf("数据库修改失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "注销失败")
 		return 
 	}
 	responser.MakeSuccessRes(ctx,model.Success,nil)
@@ -306,7 +304,7 @@ func User_message(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var mUser model.SdUser
@@ -317,7 +315,7 @@ func User_message(ctx iris.Context) {
 	has, err := e.Where(" is_deleted != 1 ").Get(&mUser)
 	if ( !has || err != nil) {
 		log.Printf("数据库查询错误或用户名不存在") 
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
 		return 
 	} 
 	
@@ -397,14 +395,14 @@ func Set_User_message(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
 	
 	var mUser model.SdUser
 	if err := ctx.ReadForm(&mUser); err != nil {
 		log.Print(err)
-		responser.MakeErrorRes(ctx,model.OtherErrorCode, model.OptionFailur , nil)
+		responser.MakeErrorRes(ctx,model.OtherErrorCode, model.OptionFailur , "数据接收失败")
 		log.Print("数据接收失败")
 		return 
 	}
@@ -414,7 +412,7 @@ func Set_User_message(ctx iris.Context) {
 	if ( affected <= 0 || err != nil) {
 		log.Print(err)
 		log.Printf("数据库更新失败") 
-		responser.MakeErrorRes(ctx, model.OtherErrorCode, model.OptionFailur, nil)
+		responser.MakeErrorRes(ctx, model.OtherErrorCode, model.OptionFailur, "数据库更新失败")
 		return 
 	} 
 	

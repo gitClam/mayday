@@ -22,6 +22,22 @@ import (
 //   description: 流程ID
 //   type: int
 //   required: true
+// - name: Name
+//   description: 流程名字
+//   type: json
+//   required: true
+// - name: Structure
+//   description: 流程结构
+//   type: json
+//   required: true
+// - name: Tables
+//   description: 表单样式
+//   type: json
+//   required: true
+// - name: Remarks
+//   description: 备注
+//   type: string
+//   required: false
 func Workflow_editor_workflow(ctx iris.Context) {
 
 	var workflow model.SdWorkflow
@@ -95,6 +111,14 @@ func Workflow_editor_workflow_state(ctx iris.Context) {
 //   description: 表单ID
 //   type: int
 //   required: true
+// - name: Data
+//   description: 表单的具体数据
+//   type: json(string)
+//   required: true
+// - name: Name
+//   description: 表单的名字
+//   type: string
+//   required: true
 func Workflow_editor_table(ctx iris.Context) {
 	log.Print("修改流程表单")
 	var table model.SdTable
@@ -123,6 +147,14 @@ func Workflow_editor_table(ctx iris.Context) {
 //   description: 流程ID
 //   type: int
 //   required: true
+// - name: Name
+//   description: 流程名字
+//   type: json
+//   required: true
+// - name: Structure
+//   description: 流程结构
+//   type: json
+//   required: true
 func Workflow_editor_workflow_draft(ctx iris.Context) {
 
 }
@@ -135,6 +167,14 @@ func Workflow_editor_workflow_draft(ctx iris.Context) {
 // - name: id
 //   description: 表单ID
 //   type: int
+//   required: true
+// - name: Name
+//   description: 表单名字
+//   type: string
+//   required: true
+// - name: Date
+//   description: 表单数据
+//   type: json
 //   required: true
 func Workflow_editor_table_draft(ctx iris.Context) {
 	log.Print("修改流程表单草稿")

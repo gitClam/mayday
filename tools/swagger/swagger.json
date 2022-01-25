@@ -331,7 +331,37 @@
           "workflow"
         ],
         "summary": "创建流程（发布）",
-        "operationId": "create_workflow"
+        "operationId": "create_workflow",
+        "parameters": [
+          {
+            "type": "json",
+            "description": "流程名字",
+            "name": "Name",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "流程结构",
+            "name": "Structure",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "表单样式",
+            "name": "Tables",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Remarks"
+          },
+          {
+            "type": "bool",
+            "description": "是否开启(默认为开启)",
+            "name": "IsStart"
+          }
+        ]
       }
     },
     "/workflow/create/workflow-draft": {
@@ -341,7 +371,15 @@
           "workflow"
         ],
         "summary": "创建流程（草稿）",
-        "operationId": "create_workflow-draft"
+        "operationId": "create_workflow-draft",
+        "parameters": [
+          {
+            "type": "json(string)",
+            "description": "流程结构",
+            "name": "Structure",
+            "required": true
+          }
+        ]
       }
     },
     "/workflow/delete/table": {
@@ -430,6 +468,18 @@
             "description": "表单ID",
             "name": "id",
             "required": true
+          },
+          {
+            "type": "json(string)",
+            "description": "表单的具体数据",
+            "name": "Data",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "表单的名字",
+            "name": "Name",
+            "required": true
           }
         ]
       }
@@ -447,6 +497,18 @@
             "type": "int",
             "description": "表单ID",
             "name": "id",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "表单名字",
+            "name": "Name",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "表单数据",
+            "name": "Date",
             "required": true
           }
         ]
@@ -466,6 +528,29 @@
             "description": "流程ID",
             "name": "id",
             "required": true
+          },
+          {
+            "type": "json",
+            "description": "流程名字",
+            "name": "Name",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "流程结构",
+            "name": "Structure",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "表单样式",
+            "name": "Tables",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "备注",
+            "name": "Remarks"
           }
         ]
       }
@@ -483,6 +568,18 @@
             "type": "int",
             "description": "流程ID",
             "name": "id",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "流程名字",
+            "name": "Name",
+            "required": true
+          },
+          {
+            "type": "json",
+            "description": "流程结构",
+            "name": "Structure",
             "required": true
           }
         ]
@@ -661,7 +758,15 @@
           "workflow"
         ],
         "summary": "查询流程（草稿）",
-        "operationId": "select_workflow-draft"
+        "operationId": "select_workflow-draft",
+        "parameters": [
+          {
+            "type": "int",
+            "description": "流程ID",
+            "name": "id",
+            "required": true
+          }
+        ]
       }
     },
     "/workspace/application/create": {

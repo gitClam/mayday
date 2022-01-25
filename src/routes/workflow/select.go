@@ -93,7 +93,11 @@ func Workflow_select_table(ctx iris.Context) {
 // ---
 // summary: 查询流程（草稿）
 // description: 查询流程（草稿）
-
+// parameters:
+// - name: id
+//   description: 流程ID
+//   type: int
+//   required: true
 func Workflow_select_workflow_draft(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
