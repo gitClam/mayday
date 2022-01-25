@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/inits"
-	"mayday/src/routes"
-	"mayday/src/inits/parse"
 	"log"
+	"mayday/src/inits"
+	"mayday/src/inits/parse"
+	"mayday/src/routes"
 )
 
 //
@@ -14,7 +14,7 @@ import (
 //                      88" . "88
 //                      (| -_- |)
 //                      0\  =  /0
-//                    ___/`---'\___  
+//                    ___/`---'\___
 //                  .' \\|     |// '.
 //                 / \\|||  :  |||// \
 //                / _||||| -:- |||||- \
@@ -33,29 +33,17 @@ import (
 //
 //               佛祖保佑         永无BUG
 //
-type test struct {
-	ProjectId    string
-	SeriesId string    
-	TestOwner  string 
-}
+
 func main() {
-	
+
 	app := iris.New()
-	
+
 	inits.Init(app)
-    	route_Controller.Hub(app)
-    	
-    	app.Post("/hello", func(ctx iris.Context) {
-    	   var abc test
-    	   ctx.ReadJSON(&abc)
-    	   log.Print(abc)
-    	   if(abc.ProjectId == "1" && abc.SeriesId == "2" && abc.TestOwner == "3"){
-    	   	log.Print(abc)
-    	   	ctx.JSON(iris.Map{"message": "ok"})
-    	   	return
-    	   }
-        ctx.JSON(iris.Map{"message": "no ok"})
-    })
-    
-	app.Run(iris.Addr(parse.O.Port))
+	route_Controller.Hub(app)
+
+	err := app.Run(iris.Addr(parse.O.Port))
+	if err != nil {
+		log.Print("服务器启动失败 " + err.Error())
+		return
+	}
 }
