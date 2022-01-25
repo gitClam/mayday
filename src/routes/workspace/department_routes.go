@@ -9,11 +9,11 @@ import (
 	"mayday/src/supports/responser"
 )
 
-// swagger:operation GET /workspace/department/select/user department Department_select_user
+// swagger:operation GET /workspace/department/select/user department select_user_Department
 // ---
 // summary: 获取部门信息
 // description: 根据用户ID获取部门信息
-func Department_select_user(ctx iris.Context) {
+func DepartmentSelectUser(ctx iris.Context) {
 
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
@@ -35,7 +35,7 @@ func Department_select_user(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, department)
 }
 
-// swagger:operation Post /workspace/department/select department department_select
+// swagger:operation Post /workspace/department/select department select_department
 // ---
 // summary: 获取部门信息
 // description: 获取部门信息
@@ -44,7 +44,7 @@ func Department_select_user(ctx iris.Context) {
 //   description: 部门id
 //   type: string
 //   required: true
-func Department_select(ctx iris.Context) {
+func DepartmentSelect(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -61,7 +61,7 @@ func Department_select(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, department)
 }
 
-// swagger:operation Post /workspace/department/select/workspace department Department_select_workspace
+// swagger:operation Post /workspace/department/select/workspace department select_workspace_Department
 // ---
 // summary: 获取部门信息
 // description: 获取部门信息
@@ -70,7 +70,7 @@ func Department_select(ctx iris.Context) {
 //   description: 工作空间id
 //   type: string
 //   required: true
-func Department_select_workspace(ctx iris.Context) {
+func DepartmentSelectWorkspace(ctx iris.Context) {
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); err != nil || Workspace.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -91,7 +91,7 @@ func Department_select_workspace(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, departments)
 }
 
-// swagger:operation POST /workspace/department/create department department_create
+// swagger:operation POST /workspace/department/create department create_department
 // ---
 // summary: 创建部门
 // description: 创建部门
@@ -112,7 +112,7 @@ func Department_select_workspace(ctx iris.Context) {
 //   description: 备注
 //   type: string
 //   required: false
-func Department_create(ctx iris.Context) {
+func DepartmentCreate(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -130,7 +130,7 @@ func Department_create(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation POST /workspace/department/editor department department_editor
+// swagger:operation POST /workspace/department/editor department editor_department
 // ---
 // summary: 修改部门信息
 // description: 修改部门信息
@@ -155,7 +155,7 @@ func Department_create(ctx iris.Context) {
 //   description: 备注
 //   type: string
 //   required: false
-func Department_editor(ctx iris.Context) {
+func DepartmentEditor(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -172,7 +172,7 @@ func Department_editor(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation DELETE /workspace/department/delete department department_delete
+// swagger:operation DELETE /workspace/department/delete department delete_department
 // ---
 // summary: 删除部门
 // description: 删除部门
@@ -182,7 +182,7 @@ func Department_editor(ctx iris.Context) {
 //   type: string
 //   required: true
 // - name: WorkspaceId
-func Department_delete(ctx iris.Context) {
+func DepartmentDelete(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)

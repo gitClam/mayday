@@ -9,7 +9,7 @@ import (
 	//"mayday/middleware/jwts"
 )
 
-// swagger:operation Post /workspace/application/select application application_select
+// swagger:operation Post /workspace/application/select application select_application
 // ---
 // summary: 获取应用信息
 // description: 根据ID获取应用信息
@@ -18,7 +18,7 @@ import (
 //   description: 应用id
 //   type: string
 //   required: true
-func Application_select(ctx iris.Context) {
+func ApplicationSelect(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -35,7 +35,7 @@ func Application_select(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, application)
 }
 
-// swagger:operation Post /workspace/application/select/workspace application Application_select_workspace
+// swagger:operation Post /workspace/application/select/workspace application select_workspace_Application
 // ---
 // summary: 获取应用信息
 // description: 获取应用信息
@@ -44,7 +44,7 @@ func Application_select(ctx iris.Context) {
 //   description: 工作空间id
 //   type: string
 //   required: true
-func Application_select_workspace(ctx iris.Context) {
+func ApplicationSelectWorkspace(ctx iris.Context) {
 
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.WorkspaceId == 0 {
@@ -65,7 +65,7 @@ func Application_select_workspace(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, applications)
 }
 
-// swagger:operation POST /workspace/application/create application application_create
+// swagger:operation POST /workspace/application/create application create_application
 // ---
 // summary: 创建应用
 // description: 创建应用
@@ -82,7 +82,7 @@ func Application_select_workspace(ctx iris.Context) {
 //   description: 备注
 //   type: string
 //   required: true
-func Application_create(ctx iris.Context) {
+func ApplicationCreate(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -101,7 +101,7 @@ func Application_create(ctx iris.Context) {
 
 }
 
-// swagger:operation POST /workspace/application/editor application application_editor
+// swagger:operation POST /workspace/application/editor application editor_application
 // ---
 // summary: 修改应用信息
 // description: 修改应用信息
@@ -118,7 +118,7 @@ func Application_create(ctx iris.Context) {
 //   description: 备注
 //   type: string
 //   required: true
-func Application_editor(ctx iris.Context) {
+func ApplicationEditor(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -135,11 +135,11 @@ func Application_editor(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation DELETE /workspace/application/delete application application_delete
+// swagger:operation DELETE /workspace/application/delete application delete_application
 // ---
 // summary: 删除应用
 // description: 删除应用
-func Application_delete(ctx iris.Context) {
+func ApplicationDelete(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -157,7 +157,7 @@ func Application_delete(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation POST /workspace/application/insert-workflow application application_insert
+// swagger:operation POST /workspace/application/insert-workflow application insert_application
 // ---
 // summary: 添加流程
 // description: 添加流程
@@ -170,7 +170,7 @@ func Application_delete(ctx iris.Context) {
 //   description: 应用id
 //   type: string
 //   required: true
-func Application_insert(ctx iris.Context) {
+func ApplicationInsert(ctx iris.Context) {
 	var workflowApplication model.SdWorkflowApplication
 	if err := ctx.ReadForm(&workflowApplication); err != nil || workflowApplication.WorkflowId == 0 || workflowApplication.ApplicationId == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -187,7 +187,7 @@ func Application_insert(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation DELETE /workspace/application/delete-workflow application Application_delete_workflow
+// swagger:operation DELETE /workspace/application/delete-workflow application delete_workflow_Application
 // ---
 // summary: 删除流程
 // description: 删除流程
@@ -200,7 +200,7 @@ func Application_insert(ctx iris.Context) {
 //   description: 应用id
 //   type: string
 //   required: true
-func Application_delete_workflow(ctx iris.Context) {
+func ApplicationDeleteWorkflow(ctx iris.Context) {
 	var workflowApplication model.SdWorkflowApplication
 	if err := ctx.ReadForm(&workflowApplication); err != nil || workflowApplication.WorkflowId == 0 || workflowApplication.ApplicationId == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)

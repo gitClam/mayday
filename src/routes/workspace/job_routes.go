@@ -195,7 +195,7 @@ func Job_delete(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation Post /workspace/job/select-user job Job_selectUser
+// swagger:operation Post /workspace/job/select-user job selectUser_Job
 // ---
 // summary: 获取职位人员信息
 // description: 获取职位人员信息
@@ -204,7 +204,7 @@ func Job_delete(ctx iris.Context) {
 //   description: 职位id
 //   type: string
 //   required: true
-func Job_selectUser(ctx iris.Context) {
+func JobSelectUser(ctx iris.Context) {
 	var job model.SdJob
 	if err := ctx.ReadForm(&job); err != nil || job.Id == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
@@ -223,7 +223,7 @@ func Job_selectUser(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, vo.TransformUserVOList(users))
 }
 
-// swagger:operation POST /workspace/job/insert-user job job_insert
+// swagger:operation POST /workspace/job/insert-user job insert_job
 // ---
 // summary: 添加员工
 // description: 添加员工
@@ -236,7 +236,7 @@ func Job_selectUser(ctx iris.Context) {
 //   description: 职位id
 //   type: string
 //   required: true
-func Job_insert(ctx iris.Context) {
+func JobInsert(ctx iris.Context) {
 	var userJob model.SdUserJob
 	var user model.SdUser
 
@@ -264,7 +264,7 @@ func Job_insert(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, nil)
 }
 
-// swagger:operation POST /workspace/job/delete-user job Job_delete_user
+// swagger:operation POST /workspace/job/delete-user job delete_user_Job
 // ---
 // summary: 删除员工
 // description: 删除员工
@@ -277,7 +277,7 @@ func Job_insert(ctx iris.Context) {
 //   description: 职位id
 //   type: string
 //   required: true
-func Job_delete_user(ctx iris.Context) {
+func JobDeleteUser(ctx iris.Context) {
 	var userJob model.SdUserJob
 	if err := ctx.ReadForm(&userJob); err != nil || userJob.UserId == 0 || userJob.JobId == 0 {
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
