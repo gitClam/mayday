@@ -5,35 +5,34 @@ import (
 	//"log"
 )
 
-// 前端需要的数据结构
+// UserVO 前端需要的数据结构
 type UserVO struct {
-	Id         int       
-	Name       string    
-	Realname   string    
-	Age        int       
-	Wechat     string    
-	Qqnumber   string    
-	Birthday   string 
-	Sex        string    
-	Info       string    
-	Mail       string    
-	Company    string 
+	Id         int
+	Name       string
+	RealName   string
+	Age        int
+	Wechat     string
+	QqNumber   string
+	Birthday   string
+	Sex        string
+	Info       string
+	Mail       string
+	Company    string
 	Department string
-	Vocation   string    
-	Phone      string       
-	CreateDate string 
-	Token      string 
+	Vocation   string
+	Phone      string
+	CreateDate string
+	Token      string
 }
 
-
-// 携带token
-func TansformUserVOToken(token string, user *model.SdUser) (uVO UserVO) {
+// TransformUserVOToken 携带token
+func TransformUserVOToken(token string, user *model.SdUser) (uVO UserVO) {
 	uVO.Id = user.Id
 	uVO.Name = user.Name
-	uVO.Realname = user.Realname
+	uVO.RealName = user.Realname
 	uVO.Age = user.Age
 	uVO.Wechat = user.Wechat
-	uVO.Qqnumber = user.Qqnumber
+	uVO.QqNumber = user.Qqnumber
 	uVO.Birthday = user.Birthday.String("2006-01-02")
 	uVO.Sex = user.Sex
 	uVO.Info = user.Info
@@ -42,17 +41,17 @@ func TansformUserVOToken(token string, user *model.SdUser) (uVO UserVO) {
 	uVO.Department = user.Department
 	uVO.Vocation = user.Vocation
 	uVO.Phone = user.Phone
-	uVO.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")	
+	uVO.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")
 	uVO.Token = token
-	
+
 	return
 }
 
-// 用户列表，不带啊token
-func TansformUserVOList(userList []model.SdUser) (userVOList []UserVO) {
-	for _, user := range userList {	
+// TransformUserVOList 用户列表，不带啊token
+func TransformUserVOList(userList []model.SdUser) (userVOList []UserVO) {
+	for _, user := range userList {
 		uVO := UserVO{}
-		
+
 		uVO.Id = user.Id
 		uVO.Name = user.Name
 		uVO.Age = user.Age
@@ -63,15 +62,16 @@ func TansformUserVOList(userList []model.SdUser) (userVOList []UserVO) {
 	}
 	return
 }
-// 用户，不带啊token
-func TansformUserVO(user *model.SdUser) (userVO UserVO) {	
+
+// TransformUserVO 用户，不带啊token
+func TransformUserVO(user *model.SdUser) (userVO UserVO) {
 
 	userVO.Id = user.Id
 	userVO.Name = user.Name
-	userVO.Realname = user.Realname
+	userVO.RealName = user.Realname
 	userVO.Age = user.Age
 	userVO.Wechat = user.Wechat
-	userVO.Qqnumber = user.Qqnumber
+	userVO.QqNumber = user.Qqnumber
 	userVO.Birthday = user.Birthday.String("2006-01-02")
 	userVO.Sex = user.Sex
 	userVO.Info = user.Info
@@ -80,6 +80,6 @@ func TansformUserVO(user *model.SdUser) (userVO UserVO) {
 	userVO.Department = user.Department
 	userVO.Vocation = user.Vocation
 	userVO.Phone = user.Phone
-	userVO.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")		
+	userVO.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")
 	return
 }

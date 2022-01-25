@@ -1,4 +1,5 @@
 package order
+
 import (
 	"github.com/kataras/iris/v12"
 	//"strconv"
@@ -14,19 +15,20 @@ import (
 	//"mayday/src/supports/responser/vo"
 	//"mayday/middleware/jwts"
 )
-func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
+
+func CreateOrder(ctx iris.Context, user *model.SdUser) (err error) {
 	var (
 		//taskList       []string
-		stateList      []interface{}    //节点列表
-		userInfo       model.SdUser   //请求用户信息
-		variableValue  []interface{}    //节点列表
-		workflowValue   model.SdWorkflow     //流程信息
+		stateList     []interface{}    //节点列表
+		userInfo      model.SdUser     //请求用户信息
+		variableValue []interface{}    //节点列表
+		workflowValue model.SdWorkflow //流程信息
 		//sendToUserList []model.SdUser //要通知的人的列表
 		//noticeList     []int            //流程的通知列表
 		//handle         Handle
-		processState   ProcessState //流程结构
+		processState ProcessState //流程结构
 		//condExprStatus bool
-		tpl            []byte
+		tpl []byte
 		//sourceEdges    []map[string]interface{}
 		//targetEdges    []map[string]interface{}
 		currentNode    map[string]interface{} //流程的开始节点（不知道为什么是个列表）
@@ -34,22 +36,22 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 			model.SdOrder
 			Tpls        map[string][]interface{} `json:"tpls"` //表单结构和数据
 			SourceState string                   `json:"source_state"`
-			Tasks       json.RawMessage          `json:"tasks"`   ////////
+			Tasks       json.RawMessage          `json:"tasks"` ////////
 			Source      string                   `json:"source"`
 			IsExecTask  bool                     `json:"is_exec_task"`
 		}
 		//paramsValue struct {
-			//Id       int           `json:"id"`
-			//Title    string        `json:"title"`
-			//Priority int           `json:"priority"`
-			//FormData []interface{} `json:"form_data"`
+		//Id       int           `json:"id"`
+		//Title    string        `json:"title"`
+		//Priority int           `json:"priority"`
+		//FormData []interface{} `json:"form_data"`
 		//}
 	)
 	//获取请求的全部数据
 	err = ctx.ReadJSON(&workOrderValue)
 	if err != nil {
 		log.Print("数据接收失败")
-		return 
+		return
 	}
 	//设置参与人
 	relatedPerson, err := json.Marshal([]int{user.Id})
@@ -61,9 +63,9 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 	err = json.Unmarshal(workOrderValue.State, &variableValue)
 	if err != nil {
 		log.Print("获取节点列表失败")
-		return 
+		return
 	}
-	
+
 	//检查节点处理人的ID是否存在数据库
 	err = GetVariableValue(variableValue, user.Id)
 	if err != nil {
@@ -74,13 +76,13 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 	// 创建工单数据    tx:数据库链接对象
 	tx := conn.MasterEngine().NewSession()
 	defer tx.Close()
-	err = tx.Begin()	
+	err = tx.Begin()
 	if err != nil {
 		tx.Rollback()
 		log.Print("数据库事务创建失败")
 		return
 	}
-	
+
 	// 从数据库查询流程信息
 	err = tx.Id(workOrderValue.WorkflowId).Find(&workflowValue)
 	if err != nil {
@@ -103,8 +105,8 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 	//获取第一个节点的详细信息
 	//nodeValue, err := processState.GetNode(variableValue[0].(map[string]interface{})["id"].(string))
 	//if err != nil {
-		//log.Print("获取第一个节点的详细信息失败")
-		//return
+	//log.Print("获取第一个节点的详细信息失败")
+	//return
 	//}
 
 	//获取请求中的表单数据
@@ -229,10 +231,10 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 		WorkflowId:    workOrderValue.WorkflowId,
 		State:         workOrderValue.State,
 		RelatedPerson: relatedPerson,
-		UserId:       user.Id,
+		UserId:        user.Id,
 	}
 	//数据库插入新订单的记录
-	affect1 , err2 := tx.Insert(&OrderInfo)
+	affect1, err2 := tx.Insert(&OrderInfo)
 	if affect1 <= 0 || err2 != nil {
 		err = err2
 		tx.Rollback()
@@ -266,7 +268,7 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 			FormData:      formDataJson,
 		}
 		//插入
-		effect,err1 := tx.Insert(formData)
+		effect, err1 := tx.Insert(formData)
 		if effect <= 0 || err1 != nil {
 			err = err1
 			tx.Rollback()
@@ -276,13 +278,13 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 	}
 
 	has, err1 := tx.Id(user.Id).Get(&userInfo)
-	if ( !has || err1 != nil || userInfo.IsDeleted == 1) {
+	if !has || err1 != nil || userInfo.IsDeleted == 1 {
 		tx.Rollback()
-		err = err1 
+		err = err1
 		log.Printf("数据库查询错误或用户名不存在")
-		return 
-	} 
-	
+		return
+	}
+
 	//当前用户昵称信息
 	nameValue := userInfo.Name
 
@@ -295,9 +297,9 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 		return
 	}
 	//插入操作
-	if affect , err1 := tx.Insert(model.SdOrderCirculationHistory{
+	if affect, err1 := tx.Insert(model.SdOrderCirculationHistory{
 		Title:       workOrderValue.Title,
-		OrderId:   OrderInfo.Id,
+		OrderId:     OrderInfo.Id,
 		State:       workOrderValue.SourceState,
 		Source:      workOrderValue.Source,
 		Target:      stateList[0].(map[string]interface{})["id"].(string),
@@ -305,22 +307,22 @@ func Create_order(ctx iris.Context , user *model.SdUser)(err error) {
 		Processor:   nameValue,
 		ProcessorId: userInfo.Id,
 		Status:      2, // 其他
-	}); (affect <= 0 || err1 != nil) {
+	}); affect <= 0 || err1 != nil {
 		tx.Rollback()
 		err = err1
 		log.Print("新建历史数据错误")
 		return
 	}
 
-	// 更新流程提交数量统计 
-	if affect , err1 := tx.
+	// 更新流程提交数量统计
+	if affect, err1 := tx.
 		Table(new(model.SdWorkflow)).
 		Id(workOrderValue.WorkflowId).
-		Update(map[string]interface{}{"ceiling_count":workflowValue.CeilingCount+1});(affect <= 0 || err1 != nil){
-			tx.Rollback()
-			err = err1
-			log.Print("更新流程统计数据失败")
-			return
+		Update(map[string]interface{}{"ceiling_count": workflowValue.CeilingCount + 1}); affect <= 0 || err1 != nil {
+		tx.Rollback()
+		err = err1
+		log.Print("更新流程统计数据失败")
+		return
 	}
 	//数据库保存
 	tx.Commit()

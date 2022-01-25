@@ -22,7 +22,7 @@ import (
 //   description: 流程ID
 //   type: int
 //   required: true
-func Workflow_delete_workflow(ctx iris.Context) {
+func WorkflowDeleteWorkflow(ctx iris.Context) {
 
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
@@ -51,7 +51,7 @@ func Workflow_delete_workflow(ctx iris.Context) {
 //   description: 表单ID
 //   type: int
 //   required: true
-func Workflow_delete_table(ctx iris.Context) {
+func WorkflowDeleteTable(ctx iris.Context) {
 	log.Print("删除流程表单1")
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
@@ -80,7 +80,7 @@ func Workflow_delete_table(ctx iris.Context) {
 //   description: 流程ID
 //   type: int
 //   required: true
-func Workflow_delete_workflow_draft(ctx iris.Context) {
+func WorkflowDeleteWorkflowDraft(ctx iris.Context) {
 
 	var workflowDraft model.SdWorkflowDraft
 	if err := ctx.ReadJSON(&workflowDraft); err != nil {
@@ -110,7 +110,7 @@ func Workflow_delete_workflow_draft(ctx iris.Context) {
 //   description: 表单草稿ID
 //   type: int
 //   required: true
-func Workflow_delete_table_draft(ctx iris.Context) {
+func WorkflowDeleteTableDraft(ctx iris.Context) {
 	log.Print("删除流程表单草稿")
 	var table model.SdTableDraft
 	if err := ctx.ReadJSON(&table); err != nil {

@@ -4,16 +4,11 @@ import (
 	"strconv"
 )
 
-/*
-  @Author : lanyulei
-  @Desc : 获取节点数据
-*/
-
 type ProcessState struct {
 	Structure map[string][]map[string]interface{}
 }
 
-// 获取节点信息
+// GetNode 获取节点信息
 func (p *ProcessState) GetNode(stateId string) (nodeValue map[string]interface{}, err error) {
 	for _, node := range p.Structure["nodes"] {
 		if node["id"] == stateId {
@@ -23,7 +18,7 @@ func (p *ProcessState) GetNode(stateId string) (nodeValue map[string]interface{}
 	return
 }
 
-// 获取流转信息
+// GetEdge 获取流转信息
 func (p *ProcessState) GetEdge(stateId string, classify string) (edgeValue []map[string]interface{}, err error) {
 	var (
 		leftSort  int

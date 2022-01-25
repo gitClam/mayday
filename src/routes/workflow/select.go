@@ -17,7 +17,7 @@ import (
 // ---
 // summary: 查询流程（已发布）
 // description: 查询流程（已发布）
-func Workflow_select_workflow(ctx iris.Context) {
+func WorkflowSelectWorkflow(ctx iris.Context) {
 
 	var workflows []model.SdWorkflow
 
@@ -41,7 +41,7 @@ func Workflow_select_workflow(ctx iris.Context) {
 //   description: 流程ID
 //   type: int
 //   required: true
-func Workflow_select_workflow_byId(ctx iris.Context) {
+func WorkflowSelectWorkflowById(ctx iris.Context) {
 
 	var workflow model.SdWorkflow
 	if err := ctx.ReadForm(&workflow); err != nil {
@@ -70,7 +70,7 @@ func Workflow_select_workflow_byId(ctx iris.Context) {
 //   description: 表单ID
 //   type: int
 //   required: true
-func Workflow_select_table(ctx iris.Context) {
+func WorkflowSelectTable(ctx iris.Context) {
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		log.Print(err)
@@ -98,7 +98,7 @@ func Workflow_select_table(ctx iris.Context) {
 //   description: 流程ID
 //   type: int
 //   required: true
-func Workflow_select_workflow_draft(ctx iris.Context) {
+func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
@@ -128,7 +128,7 @@ func Workflow_select_workflow_draft(ctx iris.Context) {
 //   description: 表单草稿ID
 //   type: int
 //   required: true
-func Workflow_select_table_draft(ctx iris.Context) {
+func WorkflowSelectTableDraft(ctx iris.Context) {
 	var tableDraft model.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
 		log.Print(err)
@@ -147,7 +147,7 @@ func Workflow_select_table_draft(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, tableDraft)
 }
 
-// swagger:operation Post /workflow/select/table-workSpace table Workflow_select_table_draft_workSpace
+// swagger:operation Post /workflow/select/table-workSpace table select_table_draft_workSpace_Workflow
 // ---
 // summary: 查询工作空间拥有的表单
 // description: 查询工作空间拥有的表单
@@ -156,7 +156,7 @@ func Workflow_select_table_draft(ctx iris.Context) {
 //   description: 工作空间ID
 //   type: int
 //   required: true
-func Workflow_select_table_draft_workSpace(ctx iris.Context) {
+func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
 		log.Print(err)
@@ -176,11 +176,11 @@ func Workflow_select_table_draft_workSpace(ctx iris.Context) {
 	responser.MakeSuccessRes(ctx, model.Success, table)
 }
 
-// swagger:operation Post /workflow/select/table-draft-user table Workflow_select_table_draft_user
+// swagger:operation Post /workflow/select/table-draft-user table select_table_draft_user_Workflow_select
 // ---
 // summary: 查询用户拥有的表单（草稿）
 // description: 查询用户拥有查询表单（草稿）
-func Workflow_select_table_draft_user(ctx iris.Context) {
+func WorkflowSelectTableDraftUser(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")

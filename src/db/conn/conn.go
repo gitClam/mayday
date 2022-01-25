@@ -7,16 +7,16 @@ import (
 	//"go-iris/utils"
 	"sync"
 
-	//"github.com/xorm.io/core"
-	"log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
+	//"github.com/xorm.io/core"
+	"log"
 )
 
 var (
 	masterEngine *xorm.Engine
 	//slaveEngine  *xorm.Engine
-	lock         sync.Mutex
+	lock sync.Mutex
 )
 
 func MasterEngine() *xorm.Engine {
@@ -32,21 +32,21 @@ func MasterEngine() *xorm.Engine {
 	}
 
 	master := parse.DBConfig.Master
-	
+
 	engine, err := xorm.NewEngine(master.Dialect, GetConnURL(&master))
 	if err != nil {
-		log.Print("@@@ Instance Master DB error!! %s", err)
+		log.Printf("@@@ Instance Master DB error!! %s", err)
 		return nil
 	}
 	//settings(engine, &master)
 	//engine.SetMapper(core.GonicMapper{})
 
 	masterEngine = engine
-	
+
 	return masterEngine
 }
 
-// 获取数据库连接的url
+// GetConnURL 获取数据库连接的url
 // true：master主库
 func GetConnURL(info *parse.DBConfigInfo) (url string) {
 	//db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
@@ -78,7 +78,7 @@ func GetConnURL(info *parse.DBConfigInfo) (url string) {
 
 //var db *sql.DB
 /*func Getconn() *sql.DB{
-	if(db == nil){	
+	if(db == nil){
 		var err error
 		db, err = sql.Open("mysql", "root:123456@tcp(localhost:3306)/jietong?charset=utf8")
 		if err != nil {

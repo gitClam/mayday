@@ -2,8 +2,8 @@ package jwts
 
 import (
 	"fmt"
-	"mayday/src/supports/responser"
 	"log"
+	"mayday/src/supports/responser"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
@@ -46,7 +46,7 @@ type (
 	// be treated as an error.  An empty string should be returned in that case.
 	TokenExtractor func(context.Context) (string, error)
 
-	// Middleware the middleware for JSON Web tokens authentication method
+	// Jwts Middleware the middleware for JSON Web tokens authentication method
 	Jwts struct {
 		Config Config
 	}
@@ -71,7 +71,7 @@ func Serve(ctx context.Context) bool {
 	//ctx.Next()
 }
 
-// 解析token的信息为当前用户
+// ParseToken 解析token的信息为当前用户
 func ParseToken(ctx context.Context) (*model.SdUser, bool) {
 	//ctx = ctx.(context.Context)
 	mapClaims := (jwts.Get(ctx).Claims).(jwt.MapClaims)
@@ -88,13 +88,13 @@ func ParseToken(ctx context.Context) (*model.SdUser, bool) {
 	}
 
 	user := model.SdUser{
-		Id:       int(id),
-		Name: 	name,
+		Id:   int(id),
+		Name: name,
 	}
 	return &user, true
 }
 
-// below 3 method is get token from url
+// FromAuthHeader below 3 method is get token from url
 // FromAuthHeader is a "TokenExtractor" that takes a give context and extracts
 // the JWT token from the Authorization header.
 func FromAuthHeader(ctx context.Context) (string, error) {
@@ -113,7 +113,7 @@ func FromAuthHeader(ctx context.Context) (string, error) {
 	return authHeaderParts[1], nil
 }
 
-// below 3 method is get token from url
+// FromParameter below 3 method is get token from url
 // FromParameter returns a function that extracts the token from the specified
 // query string parameter
 func FromParameter(param string) TokenExtractor {
@@ -233,7 +233,7 @@ func (m *Jwts) CheckJWT(ctx context.Context) error {
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
-// OnError default error handler
+// ConfigJWT OnError default error handler
 //func OnError(ctx context.Context, err string) {
 //	supports.Error(ctx, iris.StatusUnauthorized, supports.Token_Failur, nil)
 //}
@@ -264,7 +264,7 @@ func ConfigJWT() {
 		SigningMethod: jwt.SigningMethodHS256,
 		//验证未通过错误处理方式
 		ErrorHandler: func(ctx context.Context, errMsg string) {
-			
+
 			responser.MakeErrorRes(ctx, iris.StatusUnauthorized, errMsg, nil)
 		},
 		// 指定func用于提取请求中的token
@@ -279,14 +279,14 @@ func ConfigJWT() {
 }
 
 type Claims struct {
-	Id       int  `json:"id"`
+	Id   int    `json:"id"`
 	Name string `json:"name"`
 	//Password string `json:"password"`
 	//User models.User `json:"user"`
 	jwt.StandardClaims
 }
 
-// 在登录成功的时候生成token
+// GenerateToken 在登录成功的时候生成token
 func GenerateToken(user *model.SdUser) (string, error) {
 	//expireTime := time.Now().Add(60 * time.Second)
 	expireTime := time.Now().Add(time.Duration(parse.O.JWTTimeout) * time.Second)

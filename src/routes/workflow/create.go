@@ -37,7 +37,7 @@ import (
 //   description: 是否开启(默认为开启)
 //   type: bool
 //   required: false
-func Workflow_create_workflow(ctx iris.Context) {
+func WorkflowCreateWorkflow(ctx iris.Context) {
 	log.Print("创建流程（发布）")
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
@@ -84,7 +84,7 @@ func Workflow_create_workflow(ctx iris.Context) {
 //   description: 表单的名字
 //   type: string
 //   required: true
-func Workflow_create_table(ctx iris.Context) {
+func WorkflowCreateTable(ctx iris.Context) {
 	log.Print("创建流程表单")
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
@@ -113,7 +113,7 @@ func Workflow_create_table(ctx iris.Context) {
 //   description: 流程结构
 //   type: json(string)
 //   required: true
-func Workflow_create_workflow_draft(ctx iris.Context) {
+func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	log.Print("创建流程（草稿）")
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
@@ -144,7 +144,7 @@ func Workflow_create_workflow_draft(ctx iris.Context) {
 
 }
 
-// swagger:operation POST /workflow/create/table-draft table Workflow_create_table_draft-draft
+// swagger:operation POST /workflow/create/table-draft table Workflow_create_table-draft
 // ---
 // summary: 创建表单（草稿）
 // description: 创建表单（草稿）
@@ -157,7 +157,7 @@ func Workflow_create_workflow_draft(ctx iris.Context) {
 //   description: 表单的名字
 //   type: string
 //   required: true
-func Workflow_create_table_draft(ctx iris.Context) {
+func WorkflowCreateTableDraft(ctx iris.Context) {
 	log.Print("创建表单（草稿）")
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
