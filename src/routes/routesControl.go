@@ -1,7 +1,7 @@
 package route_Controller
 
 import (
-	"mayday/middleware"
+	"mayday/src/middleware"
 	"mayday/src/routes/user"
 	"mayday/src/routes/workflow"
 	"mayday/src/routes/workspace"

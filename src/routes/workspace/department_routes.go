@@ -3,10 +3,14 @@ package workspace_routes
 import (
 	"github.com/kataras/iris/v12"
 	"log"
-	"mayday/middleware/jwts"
 	"mayday/src/db/conn"
+	"mayday/src/middleware/jwts"
 	"mayday/src/models"
 	"mayday/src/supports/responser"
+)
+
+const (
+	SelectSql string = "select * from sd_department where id in (select department_id from sd_job where id in(select job_id from sd_user_job where user_id = ?))"
 )
 
 // swagger:operation GET /workspace/department/select/user department select_user_Department
@@ -25,7 +29,7 @@ func DepartmentSelectUser(ctx iris.Context) {
 	var department []model.SdDepartment
 
 	e := conn.MasterEngine()
-	err := e.Sql("select * from sd_department where id in (select department_id from sd_job where id in(select job_id from sd_user_job where user_id = ?))", user.Id).Find(&department)
+	err := e.SQL(SelectSql, user.Id).Find(&department)
 	if err != nil {
 		log.Printf("数据库查询错误")
 		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)

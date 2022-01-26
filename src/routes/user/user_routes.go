@@ -4,8 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"io"
 	"log"
-	"mayday/middleware/jwts"
 	"mayday/src/db/conn"
+	"mayday/src/middleware/jwts"
 	"mayday/src/models"
 	"mayday/src/supports/responser"
 	"mayday/src/supports/responser/vo"
@@ -99,7 +99,7 @@ func UserRegister(ctx iris.Context) {
 	}
 
 	responser.MakeSuccessRes(ctx, model.Success, nil)
-	log.Print("ok")
+	log.Println("ok")
 }
 
 // swagger:operation POST /user/login user login
