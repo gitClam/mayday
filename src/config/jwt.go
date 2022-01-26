@@ -1,6 +1,6 @@
 package config
 
-type Jwt struct {
+type JWT struct {
 	JWTTimeout int    `yaml:"jwtTimeout"` //second
 	Secret     string `yaml:"secret"`     //加密方式
 }

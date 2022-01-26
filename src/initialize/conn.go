@@ -1,5 +1,5 @@
 //connDB
-package conn
+package initialize
 
 import (
 	"fmt"
@@ -60,32 +60,3 @@ func GetConnURL(info *parse.DBConfigInfo) (url string) {
 	//golog.Infof("@@@ DB conn==>> %s", url)
 	return
 }
-
-/*func settings(engine *xorm.Engine, info *parse.DBConfigInfo) {
-	engine.ShowSQL(info.ShowSql)
-	engine.SetTZLocation(utils.SysTimeLocation)
-	if info.MaxIdleConns > 0 {
-		engine.SetMaxIdleConns(info.MaxIdleConns)
-	}
-	if info.MaxOpenConns > 0 {
-		engine.SetMaxOpenConns(info.MaxOpenConns)
-	}
-
-	// 性能优化的时候才考虑，加上本机的SQL缓存
-	//cacher := xorm.NewLRUCacher(xorm.NewMemoryStore(), 1000)
-	//engine.SetDefaultCacher(cacher)
-}*/
-
-//var db *sql.DB
-/*func Getconn() *sql.DB{
-	if(db == nil){
-		var err error
-		db, err = sql.Open("mysql", "root:123456@tcp(localhost:3306)/jietong?charset=utf8")
-		if err != nil {
-			log.Print(err)
-		}
-		db.SetMaxOpenConns(50)
-     	db.SetMaxIdleConns(10)
-	}
-	return db
-}*/

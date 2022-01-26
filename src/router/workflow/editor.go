@@ -2,13 +2,12 @@ package workflow_routes
 
 import (
 	_ "encoding/json"
+	"mayday/src/initialize"
 	"mayday/src/utils"
 
+	"github.com/kataras/iris/v12"
 	//"mayday/middleware/jwts"
 	"log"
-	"mayday/src/db/conn"
-
-	"github.com/kataras/iris/v12"
 	//"time"
 	"mayday/src/model"
 )
@@ -47,7 +46,7 @@ func WorkflowEditorWorkflow(ctx iris.Context) {
 		return
 	}
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	affected, err := e.Id(workflow.Id).Update(workflow)
 	if affected <= 0 || err != nil {
 		log.Print(err)
@@ -77,7 +76,7 @@ func WorkflowEditorWorkflowState(ctx iris.Context) {
 		return
 	}
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Id(workflow.Id).Get(&workflow)
 	if !has || err != nil {
 		log.Print(err)
@@ -127,7 +126,7 @@ func WorkflowEditorTable(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Id(table.Id).Update(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)
@@ -184,7 +183,7 @@ func WorkflowEditorTableDraft(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Id(table.Id).Update(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)

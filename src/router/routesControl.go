@@ -2,9 +2,9 @@ package route_Controller
 
 import (
 	"mayday/src/middleware"
-	"mayday/src/routes/user"
-	"mayday/src/routes/workflow"
-	"mayday/src/routes/workspace"
+	"mayday/src/router/user"
+	"mayday/src/router/workflow"
+	"mayday/src/router/workspace"
 
 	"github.com/kataras/iris/v12"
 	//"github.com/iris-contrib/middleware/cors"

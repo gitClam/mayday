@@ -3,7 +3,7 @@ package workflow_routes
 import (
 	_ "encoding/json"
 	"log"
-	"mayday/src/db/conn"
+	"mayday/src/initialize"
 	"mayday/src/middleware/jwts"
 	"mayday/src/model"
 	"mayday/src/utils"
@@ -56,7 +56,7 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	workflow.IsDeleted = 0
 	workflow.CreateTime = model.LocalTime(time.Now())
 	workflow.CreateUser = user.Id
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Insert(workflow)
 	if effect <= 0 || err != nil {
 		log.Print(err)
@@ -92,7 +92,7 @@ func WorkflowCreateTable(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Insert(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)
@@ -132,7 +132,7 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	workflowDraft.IsDeleted = 0
 	workflowDraft.OwnerId = user.Id
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Insert(workflowDraft)
 	if effect <= 0 || err != nil {
 		log.Print(err)
@@ -172,7 +172,7 @@ func WorkflowCreateTableDraft(ctx iris.Context) {
 		return
 	}
 	tableDraft.UserId = user.Id
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Insert(tableDraft)
 	if effect <= 0 || err != nil {
 		log.Print(err)

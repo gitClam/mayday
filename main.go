@@ -5,7 +5,7 @@ import (
 	"log"
 	"mayday/src/initialize"
 	"mayday/src/initialize/parse"
-	"mayday/src/routes"
+	"mayday/src/router"
 )
 
 //

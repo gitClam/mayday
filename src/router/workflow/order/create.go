@@ -2,14 +2,15 @@ package order
 
 import (
 	"github.com/kataras/iris/v12"
+	"mayday/src/initialize"
+
 	//"strconv"
 	//"time"
 	"log"
 	//"io"
 	//"os"
 	"encoding/json"
-	//"strconv"
-	"mayday/src/db/conn"
+
 	"mayday/src/model"
 	//"mayday/src/utils/responser"
 	//"mayday/src/utils/responser/vo"
@@ -74,7 +75,7 @@ func CreateOrder(ctx iris.Context, user *model.SdUser) (err error) {
 	}
 
 	// 创建工单数据    tx:数据库链接对象
-	tx := conn.MasterEngine().NewSession()
+	tx := initialize.MasterEngine().NewSession()
 	defer tx.Close()
 	err = tx.Begin()
 	if err != nil {

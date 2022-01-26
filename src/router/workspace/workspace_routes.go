@@ -3,7 +3,7 @@ package workspace_routes
 import (
 	"github.com/kataras/iris/v12"
 	"log"
-	"mayday/src/db/conn"
+	"mayday/src/initialize"
 	"mayday/src/middleware/jwts"
 	"mayday/src/model"
 	"mayday/src/utils"
@@ -24,7 +24,7 @@ func WorkspaceSelectWorkspaceUserid(ctx iris.Context) {
 
 	var Workspace []model.SdWorkspace
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	err := e.SQL("select * from sd_workspace where id in (select workspace_id from sd_department where id in (select department_id from sd_job where id in(select job_id from sd_user_job where user_id = ?)))", user.Id).Find(&Workspace)
 	if err != nil {
 		log.Printf("数据库查询错误")
@@ -51,7 +51,7 @@ func WorkspaceSelectWorkspace(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Where("is_deleted = 0").Get(&Workspace)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
@@ -92,7 +92,7 @@ func WorkspaceCreate(ctx iris.Context) {
 		return
 	}
 	Workspace.IsDeleted = 0
-	e := conn.MasterEngine().NewSession()
+	e := initialize.MasterEngine().NewSession()
 	defer e.Close()
 	e.Begin()
 	log.Print(Workspace)
@@ -193,7 +193,7 @@ func WorkspaceEditor(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	affect, err := e.Id(Workspace.Id).Update(&Workspace)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -219,7 +219,7 @@ func WorkspaceDelete(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine().NewSession()
+	e := initialize.MasterEngine().NewSession()
 	defer e.Close()
 	e.Begin()
 	_, err := e.Exec("delete from sd_user_job where job_id in( select id from sd_job where department_id in (select id from sd_department where workspace_id = ?))", Workspace.Id)

@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"io"
 	"log"
-	"mayday/src/db/conn"
+	"mayday/src/initialize"
 	"mayday/src/middleware/jwts"
 	"mayday/src/model"
 	"mayday/src/utils"
@@ -89,7 +89,7 @@ func UserRegister(ctx iris.Context) {
 	user.IsDeleted = 0
 	user.CreateDate = model.LocalTime(time.Now())
 	log.Print(user)
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	effect, err := e.Insert(user)
 	if effect <= 0 || err != nil {
 		log.Printf("用户注册失败")
@@ -132,7 +132,7 @@ func UserLogin(ctx iris.Context) {
 	var mUser model.SdUser
 	mUser.Mail = user.Mail
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Where("is_deleted != 1").Get(&mUser)
 	if !has || err != nil || mUser.IsDeleted == 1 {
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, nil)
@@ -174,7 +174,7 @@ func UserPhoto(ctx iris.Context) {
 		return
 	}
 	user.Id = Id
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Get(&user)
 	if !has || err != nil {
 		log.Printf("数据库查询错误或用户名不存在")
@@ -215,7 +215,7 @@ func SetUserPhoto(ctx iris.Context) {
 	var mUser model.SdUser
 	mUser.Id = user.Id
 	mUser.Name = user.Name
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Get(&mUser)
 	if !has || err != nil {
 
@@ -272,7 +272,7 @@ func UserCancellation(ctx iris.Context) {
 	}
 	var mUser model.SdUser
 	mUser.Id = user.Id
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	log.Print(mUser.Id)
 	has, err := e.Id(mUser.Id).Get(&mUser)
 	if !has || err != nil {
@@ -309,7 +309,7 @@ func UserMessage(ctx iris.Context) {
 	mUser.Id = user.Id
 	mUser.Name = user.Name
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Where(" is_deleted != 1 ").Get(&mUser)
 	if !has || err != nil {
 		log.Printf("数据库查询错误或用户名不存在")
@@ -405,7 +405,7 @@ func SetUserMessage(ctx iris.Context) {
 		return
 	}
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	affected, err := e.Id(user.Id).Update(mUser)
 	if affected <= 0 || err != nil {
 		log.Print(err)

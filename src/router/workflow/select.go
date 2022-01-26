@@ -3,7 +3,7 @@ package workflow_routes
 import (
 	_ "encoding/json"
 	"log"
-	"mayday/src/db/conn"
+	"mayday/src/initialize"
 	"mayday/src/middleware/jwts"
 	"mayday/src/utils"
 
@@ -20,7 +20,7 @@ func WorkflowSelectWorkflow(ctx iris.Context) {
 
 	var workflows []model.SdWorkflow
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	err := e.Sql("select * from sd_workflow where is_deleted != 1").Find(&workflows)
 	if err != nil {
 		log.Print(err)
@@ -49,7 +49,7 @@ func WorkflowSelectWorkflowById(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Id(workflow.Id).Get(&workflow)
 	if !has || err != nil {
 		log.Print(err)
@@ -77,7 +77,7 @@ func WorkflowSelectTable(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Id(table.Id).Get(&table)
 	if !has || err != nil {
 		log.Print(err)
@@ -107,7 +107,7 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 
 	var workflowDrafts []model.SdWorkflowDraft
 
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	err := e.Sql("select * from sd_workflow_draft where owner_id = ? and is_deleted != 1", user.Id).Find(&workflowDrafts)
 	if err != nil {
 		log.Print(err)
@@ -135,7 +135,7 @@ func WorkflowSelectTableDraft(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	has, err := e.Id(tableDraft.Id).Get(&tableDraft)
 	if !has || err != nil {
 		log.Print(err)
@@ -164,7 +164,7 @@ func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 		return
 	}
 	var table []model.SdTable
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	err := e.Where("workspace_id = ?", workflow.Id).Find(&table)
 	if err != nil {
 		log.Print(err)
@@ -187,7 +187,7 @@ func WorkflowSelectTableDraftUser(ctx iris.Context) {
 		return
 	}
 	var tableDraft []model.SdTableDraft
-	e := conn.MasterEngine()
+	e := initialize.MasterEngine()
 	err := e.Where("user_id = ?", user.Id).Find(&tableDraft)
 	if err != nil {
 		log.Print(err)
