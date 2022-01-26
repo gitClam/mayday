@@ -1,11 +1,8 @@
 package main
 
 import (
-	"github.com/kataras/iris/v12"
-	"log"
-	"mayday/src/initialize"
-	"mayday/src/initialize/parse"
-	"mayday/src/router"
+	"mayday/src/core"
+	"mayday/src/global"
 )
 
 //
@@ -36,14 +33,23 @@ import (
 
 func main() {
 
-	app := iris.New()
+	//app := iris.New()
+	//
+	//initialize.Init(app)
+	//route_Controller.Hub(app)
+	//
+	//err := app.Run(iris.Addr(parse.O.Port))
+	//if err != nil {
+	//	log.Print("服务器启动失败 " + err.Error())
+	//	return
+	//}
 
-	initialize.Init(app)
-	route_Controller.Hub(app)
+	//配置文件初始化
+	global.GVA_VP = core.Viper()
 
-	err := app.Run(iris.Addr(parse.O.Port))
-	if err != nil {
-		log.Print("服务器启动失败 " + err.Error())
-		return
-	}
+	//日志工具初始化
+	global.GVA_LOG = core.Zap()
+
+	//启服
+	core.RunServer()
 }

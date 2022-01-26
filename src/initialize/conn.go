@@ -49,7 +49,6 @@ func MasterEngine() *xorm.Engine {
 // GetConnURL 获取数据库连接的url
 // true：master主库
 func GetConnURL(info *parse.DBConfigInfo) (url string) {
-	//db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 	url = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s",
 		info.User,
 		info.Password,
@@ -57,6 +56,6 @@ func GetConnURL(info *parse.DBConfigInfo) (url string) {
 		info.Port,
 		info.Database,
 		info.Charset)
-	//golog.Infof("@@@ DB conn==>> %s", url)
+	//log.Printf("@@@ DB conn==>> %s", url)
 	return
 }

@@ -7,14 +7,12 @@ import (
 )
 
 var DbConfigPath = "config/db.yml"
-var (
-	DBConfig DB
-)
+var DBConfig DB
 
 func DBSettingParse() {
 	log.Print("### Init db conf")
 
-	dbData, err := utils.Load(DbConfigPath)
+	dbData, err := utils.IO.Load(DbConfigPath)
 	if err != nil {
 		log.Print("err : ", err)
 	}

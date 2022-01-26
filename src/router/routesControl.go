@@ -1,4 +1,4 @@
-package route_Controller
+package router
 
 import (
 	"mayday/src/middleware"

@@ -4,6 +4,16 @@ system:
   photoPath: "./data/photo"
   env: ""
 
+zap:
+  level: 'info'
+  format: 'console'
+  prefix: '[jietong]'
+  director: 'log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
+  timeFormat: '2006/01/02 - 15:04:05.000'
 
 mysql:
   dialect: mysql
