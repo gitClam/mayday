@@ -3,6 +3,7 @@ package core
 import (
 	"github.com/kataras/iris/v12"
 	"log"
+	"mayday/src/global"
 	"mayday/src/initialize"
 )
 

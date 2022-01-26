@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"mayday/src/global"
 	"mayday/src/middleware/jwts"
 
 	"github.com/kataras/iris/v12/context"

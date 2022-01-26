@@ -2,6 +2,7 @@ package workflow_routes
 
 import (
 	_ "encoding/json"
+	"mayday/src/global"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
