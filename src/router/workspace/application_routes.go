@@ -3,7 +3,7 @@ package workspace_routes
 import (
 	"github.com/kataras/iris/v12"
 	"log"
-	"mayday/src/initialize"
+	"mayday/src/global"
 	"mayday/src/model"
 	"mayday/src/utils"
 	//"mayday/middleware/jwts"
@@ -25,7 +25,7 @@ func ApplicationSelect(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	has, err := e.Where("is_deleted = 0").Get(&application)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
@@ -55,7 +55,7 @@ func ApplicationSelectWorkspace(ctx iris.Context) {
 
 	var applications []model.SdApplication
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	has, err := e.Where("is_deleted = 0 and workspace_id = ?", application.WorkspaceId).Get(&applications)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
@@ -90,7 +90,7 @@ func ApplicationCreate(ctx iris.Context) {
 		return
 	}
 	application.IsDeleted = 0
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Insert(&application)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -125,7 +125,7 @@ func ApplicationEditor(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Id(application.Id).Update(&application)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -147,7 +147,7 @@ func ApplicationDelete(ctx iris.Context) {
 		return
 	}
 	application.IsDeleted = 1
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Id(application.Id).Update(&application)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -177,7 +177,7 @@ func ApplicationInsert(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Insert(&workflowApplication)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -207,7 +207,7 @@ func ApplicationDeleteWorkflow(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Delete(&workflowApplication)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")

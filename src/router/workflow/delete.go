@@ -2,7 +2,6 @@ package workflow_routes
 
 import (
 	_ "encoding/json"
-	"mayday/src/initialize"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
@@ -30,7 +29,7 @@ func WorkflowDeleteWorkflow(ctx iris.Context) {
 		return
 	}
 	workflow.IsDeleted = 1
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affected, err := e.Id(workflow.Id).Cols("is_deleted").Update(workflow)
 	if affected <= 0 || err != nil {
 		log.Print(err)
@@ -58,7 +57,7 @@ func WorkflowDeleteTable(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	effect, err := e.Id(table.Id).Delete(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)
@@ -89,7 +88,7 @@ func WorkflowDeleteWorkflowDraft(ctx iris.Context) {
 	}
 	workflowDraft.IsDeleted = 1
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affected, err := e.Id(workflowDraft.Id).Cols("is_deleted").Update(workflowDraft)
 	if affected <= 0 || err != nil {
 		log.Print(err)
@@ -117,7 +116,7 @@ func WorkflowDeleteTableDraft(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	effect, err := e.Id(table.Id).Delete(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)

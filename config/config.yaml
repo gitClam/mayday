@@ -38,3 +38,4 @@ redis:
 jwt:
   jwtTimeout: 6048000 #second
   secret: xxx-Secret #加密方式
+  defaultContextKey: "iris-jwt"

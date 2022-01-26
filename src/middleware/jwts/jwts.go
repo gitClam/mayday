@@ -3,13 +3,12 @@ package jwts
 import (
 	"fmt"
 	"log"
+	"mayday/src/global"
 	"mayday/src/utils"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"time"
-
-	"mayday/src/initialize/parse"
 
 	"mayday/src/model"
 
@@ -164,11 +163,11 @@ func ConfigJWT() {
 	}
 
 	c := Config{
-		ContextKey: DefaultContextKey,
+		ContextKey: global.GVA_CONFIG.JWT.DefaultContextKey,
 		//这个方法将验证jwt的token
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
 			//自己加密的秘钥或者说盐值
-			return []byte(parse.O.Secret), nil
+			return []byte(global.GVA_CONFIG.JWT.Secret), nil
 		},
 		//设置后，中间件会验证令牌是否使用特定的签名算法进行签名
 		//如果签名方法不是常量，则可以使用ValidationKeyGetter回调来实现其他检查
@@ -198,7 +197,7 @@ type Claims struct {
 // GenerateToken 在登录成功的时候生成token
 func GenerateToken(user *model.SdUser) (string, error) {
 
-	expireTime := time.Now().Add(time.Duration(parse.O.JWTTimeout) * time.Second)
+	expireTime := time.Now().Add(time.Duration(global.GVA_CONFIG.JWT.JWTTimeout) * time.Second)
 
 	claims := Claims{
 		user.Id,
@@ -210,6 +209,42 @@ func GenerateToken(user *model.SdUser) (string, error) {
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	token, err := tokenClaims.SignedString([]byte(parse.O.Secret))
+	token, err := tokenClaims.SignedString([]byte(global.GVA_CONFIG.JWT.Secret))
 	return token, err
+}
+
+type Config struct {
+	// The function that will return the Key to validate the JWT.
+	// It can be either a shared secret or a public key.
+	// Default value: nil
+	ValidationKeyGetter jwt.Keyfunc
+	// The name of the property in the request where the user (&token) information
+	// from the JWT will be stored.
+	// Default value: "jwts"
+	ContextKey string
+	// The function that will be called when there's an error validating the token
+	// Default value:
+	ErrorHandler errorHandler
+	// A boolean indicating if the credentials are required or not
+	// Default value: false
+	CredentialsOptional bool
+	// A function that extracts the token from the request
+	// Default: FromAuthHeader (i.e., from Authorization header as bearer token)
+	Extractor TokenExtractor
+	// Debug flag turns on debugging output
+	// Default: false
+	Debug bool
+	// When set, all requests with the OPTIONS method will use authentication
+	// if you enable this option you should register your route with iris.Options(...) also
+	// Default: false
+	EnableAuthOnOptions bool
+	// When set, the middelware verifies that tokens are signed with the specific signing algorithm
+	// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks
+	// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
+	// Default: nil
+	SigningMethod jwt.SigningMethod
+	// When set, the expiration time of token will be check every time
+	// if the token was expired, expiration error will be returned
+	// Default: false
+	Expiration bool
 }

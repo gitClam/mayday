@@ -38,7 +38,7 @@ func main() {
 	//initialize.Init(app)
 	//route_Controller.Hub(app)
 	//
-	//err := app.Run(iris.Addr(parse.O.Port))
+	//err := app.Run(iris.Addr(global.GVA_CONFIG.System.Port))
 	//if err != nil {
 	//	log.Print("服务器启动失败 " + err.Error())
 	//	return

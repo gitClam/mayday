@@ -2,7 +2,6 @@ package workflow_routes
 
 import (
 	_ "encoding/json"
-	"mayday/src/initialize"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
@@ -46,7 +45,7 @@ func WorkflowEditorWorkflow(ctx iris.Context) {
 		return
 	}
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affected, err := e.Id(workflow.Id).Update(workflow)
 	if affected <= 0 || err != nil {
 		log.Print(err)
@@ -76,7 +75,7 @@ func WorkflowEditorWorkflowState(ctx iris.Context) {
 		return
 	}
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	has, err := e.Id(workflow.Id).Get(&workflow)
 	if !has || err != nil {
 		log.Print(err)
@@ -126,7 +125,7 @@ func WorkflowEditorTable(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	effect, err := e.Id(table.Id).Update(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)
@@ -183,7 +182,7 @@ func WorkflowEditorTableDraft(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	effect, err := e.Id(table.Id).Update(table)
 	if effect <= 0 || err != nil {
 		log.Print(err)

@@ -3,7 +3,7 @@ package workspace_routes
 import (
 	"github.com/kataras/iris/v12"
 	"log"
-	"mayday/src/initialize"
+	"mayday/src/global"
 	"mayday/src/middleware/jwts"
 	"mayday/src/model"
 	"mayday/src/utils"
@@ -28,7 +28,7 @@ func DepartmentSelectUser(ctx iris.Context) {
 
 	var department []model.SdDepartment
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	err := e.SQL(SelectSql, user.Id).Find(&department)
 	if err != nil {
 		log.Printf("数据库查询错误")
@@ -55,7 +55,7 @@ func DepartmentSelect(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	has, err := e.Where("is_deleted = 0").Get(&department)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
@@ -84,7 +84,7 @@ func DepartmentSelectWorkspace(ctx iris.Context) {
 
 	var departments []model.SdDepartment
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	err := e.Where("workspace_id = ? and is_deleted = 0", Workspace.Id).Find(&departments)
 	if err != nil {
 		log.Print(err)
@@ -124,7 +124,7 @@ func DepartmentCreate(ctx iris.Context) {
 		return
 	}
 	department.IsDeleted = 0
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Insert(&department)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -166,7 +166,7 @@ func DepartmentEditor(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Id(department.Id).Update(&department)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -193,7 +193,7 @@ func DepartmentDelete(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine().NewSession()
+	e := global.GVA_DB.NewSession()
 	defer e.Close()
 	e.Begin()
 	_, err := e.Exec("delete from sd_user_job where job_id in( select id from sd_job where department_id = ?)", department.Id)

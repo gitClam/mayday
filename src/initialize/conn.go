@@ -2,8 +2,7 @@
 package initialize
 
 import (
-	"fmt"
-	"mayday/src/initialize/parse"
+	"mayday/src/global"
 	//"go-iris/utils"
 	"sync"
 
@@ -14,48 +13,30 @@ import (
 )
 
 var (
-	masterEngine *xorm.Engine
-	//slaveEngine  *xorm.Engine
 	lock sync.Mutex
 )
 
-func MasterEngine() *xorm.Engine {
-	if masterEngine != nil {
-		return masterEngine
+func XormMysql() *xorm.Engine {
+	if global.GVA_DB != nil {
+		return global.GVA_DB
 	}
 
 	lock.Lock()
+
 	defer lock.Unlock()
 
-	if masterEngine != nil {
-		return masterEngine
+	if global.GVA_DB != nil {
+		return global.GVA_DB
 	}
 
-	master := parse.DBConfig.Master
-
-	engine, err := xorm.NewEngine(master.Dialect, GetConnURL(&master))
+	master := global.GVA_CONFIG.Mysql
+	engine, err := xorm.NewEngine(master.Dialect, master.GetConnURL())
 	if err != nil {
 		log.Printf("@@@ Instance Master DB error!! %s", err)
 		return nil
 	}
-	//settings(engine, &master)
-	//engine.SetMapper(core.GonicMapper{})
 
-	masterEngine = engine
+	global.GVA_DB = engine
 
-	return masterEngine
-}
-
-// GetConnURL 获取数据库连接的url
-// true：master主库
-func GetConnURL(info *parse.DBConfigInfo) (url string) {
-	url = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s",
-		info.User,
-		info.Password,
-		info.Host,
-		info.Port,
-		info.Database,
-		info.Charset)
-	//log.Printf("@@@ DB conn==>> %s", url)
-	return
+	return global.GVA_DB
 }

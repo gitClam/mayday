@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"github.com/iris-contrib/schema"
 	_ "github.com/iris-contrib/schema"
-	"log"
 	"reflect"
 	"time"
 	_ "unsafe"
@@ -16,7 +15,7 @@ type LocalTime time.Time
 
 var nt = LocalTime{}
 
-func (n *LocalTime) Converter(s string) reflect.Value {
+func (t *LocalTime) Converter(s string) reflect.Value {
 	if t, err := time.Parse(TimeFormat, s); err == nil {
 		return reflect.ValueOf(LocalTime(t))
 	}
@@ -24,8 +23,6 @@ func (n *LocalTime) Converter(s string) reflect.Value {
 }
 
 func RegisterLocalTimeDecoder() {
-	log.Print("123123")
-	var nt = LocalTime{}
 	schema.Form.RegisterConverter(nt, nt.Converter)
 }
 
@@ -61,6 +58,6 @@ func (t *LocalTime) Scan(v interface{}) error {
 	return nil
 }
 
-func (t LocalTime) String(Timeformat string) string {
-	return time.Time(t).Format(Timeformat)
+func (t LocalTime) String(TimeFormat string) string {
+	return time.Time(t).Format(TimeFormat)
 }

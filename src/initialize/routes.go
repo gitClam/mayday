@@ -1,4 +1,4 @@
-package router
+package initialize
 
 import (
 	"mayday/src/middleware"
@@ -10,7 +10,7 @@ import (
 	//"github.com/iris-contrib/middleware/cors"
 )
 
-func Hub(app *iris.Application) {
+func Routers(app *iris.Application) {
 	main := app.Party("/")
 	main.Options("/*", func(ctx iris.Context) {})
 	main.Use(middleware.ServeHTTP)

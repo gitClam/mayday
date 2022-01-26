@@ -2,7 +2,7 @@ package order
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/initialize"
+	"mayday/src/global"
 
 	//"strconv"
 	//"time"
@@ -75,7 +75,7 @@ func CreateOrder(ctx iris.Context, user *model.SdUser) (err error) {
 	}
 
 	// 创建工单数据    tx:数据库链接对象
-	tx := initialize.MasterEngine().NewSession()
+	tx := global.GVA_DB.NewSession()
 	defer tx.Close()
 	err = tx.Begin()
 	if err != nil {

@@ -1,15 +1,11 @@
 package middleware
 
 import (
-	"mayday/src/initialize/parse"
 	"mayday/src/middleware/jwts"
 
 	"github.com/kataras/iris/v12/context"
 	"regexp"
 )
-
-type Middleware struct {
-}
 
 func ServeHTTP(ctx context.Context) {
 	path := ctx.Path()
@@ -38,7 +34,7 @@ func ServeHTTP(ctx context.Context) {
 
 func checkURL(reqPath string) bool {
 
-	for _, v := range parse.O.IgnoreURLs {
+	for _, v := range global.GVA_CONFIG.System.IgnoreURLs {
 		if yes, _ := regexp.Match(v, []byte(reqPath)); yes {
 			return true
 		}

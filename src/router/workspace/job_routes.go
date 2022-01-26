@@ -3,7 +3,6 @@ package workspace_routes
 import (
 	"github.com/kataras/iris/v12"
 	"log"
-	"mayday/src/initialize"
 	"mayday/src/middleware/jwts"
 	"mayday/src/model"
 	"mayday/src/utils"
@@ -26,7 +25,7 @@ func JobSelect(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	has, err := e.Where("is_deleted = 0").Get(&job)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
@@ -55,7 +54,7 @@ func Job_select_department(ctx iris.Context) {
 
 	var job []model.SdJob
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	err := e.Where("department_id = ?", department.Id).And("is_delete = 0").Find(&job)
 	if err != nil {
 		log.Print(err)
@@ -80,7 +79,7 @@ func Job_select_user(ctx iris.Context) {
 	log.Print(user)
 	var job []model.SdJob
 
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	err := e.Sql("select * from sd_job where id in(select job_id from sd_user_job where user_id = ?)", user.Id).Find(&job)
 	if err != nil {
 		log.Printf("数据库查询错误")
@@ -112,7 +111,7 @@ func Job_create(ctx iris.Context) {
 		return
 	}
 	job.IsDelete = 0
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Insert(&job)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -142,7 +141,7 @@ func Job_editor(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Id(job.Id).Update(&job)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
@@ -168,7 +167,7 @@ func Job_delete(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine().NewSession()
+	e := global.GVA_DB.NewSession()
 	defer e.Close()
 	e.Begin()
 	_, err := e.Exec("delete from sd_user_job where job_id = ?", job.Id)
@@ -212,7 +211,7 @@ func JobSelectUser(ctx iris.Context) {
 	}
 
 	var users []model.SdUser
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	err := e.Sql("select * from sd_user where id in(select user_id from sd_user_job where job_id = ?)", job.Id).Find(&users)
 	if err != nil {
 		log.Printf("数据库查询错误")
@@ -246,7 +245,7 @@ func JobInsert(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	has, err := e.Get(&user)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
@@ -283,7 +282,7 @@ func JobDeleteUser(ctx iris.Context) {
 		log.Print("数据接收失败")
 		return
 	}
-	e := initialize.MasterEngine()
+	e := global.GVA_DB
 	affect, err := e.Delete(&userJob)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
