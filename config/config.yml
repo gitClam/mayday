@@ -26,5 +26,5 @@ redis:
   password: ''
 
 jwt:
-  JWTTimeout: 6048000 #second
-  Secret: xxx-Secret #加密方式
+  jwtTimeout: 6048000 #second
+  secret: xxx-Secret #加密方式
