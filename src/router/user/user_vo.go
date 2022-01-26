@@ -1,4 +1,4 @@
-package utils
+package user_routes
 
 import (
 	"mayday/src/model"

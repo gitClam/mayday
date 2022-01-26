@@ -4,7 +4,7 @@ import (
 	_ "encoding/json"
 	"log"
 	"mayday/src/global"
-	"mayday/src/middleware/jwts"
+	"mayday/src/middleware"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
@@ -98,7 +98,7 @@ func WorkflowSelectTable(ctx iris.Context) {
 //   type: int
 //   required: true
 func WorkflowSelectWorkflowDraft(ctx iris.Context) {
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
@@ -180,7 +180,7 @@ func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 // summary: 查询用户拥有的表单（草稿）
 // description: 查询用户拥有查询表单（草稿）
 func WorkflowSelectTableDraftUser(ctx iris.Context) {
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)

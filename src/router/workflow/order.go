@@ -2,7 +2,7 @@ package workflow_routes
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/middleware/jwts"
+	"mayday/src/middleware"
 	"mayday/src/utils"
 
 	//"strconv"
@@ -27,7 +27,7 @@ import (
 //   required: true
 func WorkflowOrderCreateOrder(ctx iris.Context) {
 	//检查请求的用户
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)

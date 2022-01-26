@@ -4,8 +4,9 @@ import (
 	"github.com/kataras/iris/v12"
 	"log"
 	"mayday/src/global"
-	"mayday/src/middleware/jwts"
+	"mayday/src/middleware"
 	"mayday/src/model"
+	"mayday/src/router/user"
 	"mayday/src/utils"
 	"strconv"
 )
@@ -71,7 +72,7 @@ func Job_select_department(ctx iris.Context) {
 // summary: 获取用户职位信息
 // description: 获取用户职位信息
 func Job_select_user(ctx iris.Context) {
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
@@ -219,7 +220,7 @@ func JobSelectUser(ctx iris.Context) {
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, utils.TransformUserVOList(users))
+	utils.MakeSuccessRes(ctx, model.Success, user_routes.TransformUserVOList(users))
 }
 
 // swagger:operation POST /workspace/job/insert-user job insert_job

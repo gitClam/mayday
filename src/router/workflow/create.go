@@ -4,7 +4,7 @@ import (
 	_ "encoding/json"
 	"log"
 	"mayday/src/global"
-	"mayday/src/middleware/jwts"
+	"mayday/src/middleware"
 	"mayday/src/model"
 	"mayday/src/utils"
 	"time"
@@ -39,7 +39,7 @@ import (
 //   required: false
 func WorkflowCreateWorkflow(ctx iris.Context) {
 	log.Print("创建流程（发布）")
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
@@ -115,7 +115,7 @@ func WorkflowCreateTable(ctx iris.Context) {
 //   required: true
 func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	log.Print("创建流程（草稿）")
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
@@ -159,7 +159,7 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 //   required: true
 func WorkflowCreateTableDraft(ctx iris.Context) {
 	log.Print("创建表单（草稿）")
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)

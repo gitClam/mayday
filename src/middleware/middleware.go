@@ -1,10 +1,8 @@
 package middleware
 
 import (
-	"mayday/src/global"
-	"mayday/src/middleware/jwts"
-
 	"github.com/kataras/iris/v12/context"
+	"mayday/src/global"
 	"regexp"
 )
 
@@ -17,7 +15,7 @@ func ServeHTTP(ctx context.Context) {
 	}
 
 	// jwt token拦截
-	if !jwts.Serve(ctx) {
+	if !Serve(ctx) {
 		return
 	}
 

@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"log"
 	"mayday/src/global"
-	"mayday/src/middleware/jwts"
+	"mayday/src/middleware"
 	"mayday/src/model"
 	"mayday/src/utils"
 )
@@ -19,7 +19,7 @@ const (
 // description: 根据用户ID获取部门信息
 func DepartmentSelectUser(ctx iris.Context) {
 
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)

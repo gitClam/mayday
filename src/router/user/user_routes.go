@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 	"mayday/src/global"
-	"mayday/src/middleware/jwts"
+	"mayday/src/middleware"
 	"mayday/src/model"
 	"mayday/src/utils"
 	"os"
@@ -148,7 +148,7 @@ func UserLogin(ctx iris.Context) {
 		return
 	}
 
-	token, err := jwts.GenerateToken(&mUser)
+	token, err := middleware.GenerateToken(&mUser)
 	log.Printf("用户[%s], 登录生成token [%s]", mUser.Name, token)
 	if err != nil {
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenCreateFailur, nil)
@@ -156,7 +156,7 @@ func UserLogin(ctx iris.Context) {
 		return
 	}
 
-	utils.MakeSuccessRes(ctx, model.Success, utils.TransformUserVOToken(token, &mUser))
+	utils.MakeSuccessRes(ctx, model.Success, TransformUserVOToken(token, &mUser))
 }
 
 // swagger:operation GET /user/photo/{id:int} user get_photo
@@ -205,7 +205,7 @@ func UserPhoto(ctx iris.Context) {
 //   type: file
 //   required: true
 func SetUserPhoto(ctx iris.Context) {
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
@@ -264,7 +264,7 @@ func SetUserPhoto(ctx iris.Context) {
 // description: 用户注销
 
 func UserCancellation(ctx iris.Context) {
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
@@ -299,7 +299,7 @@ func UserCancellation(ctx iris.Context) {
 
 func UserMessage(ctx iris.Context) {
 
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
@@ -317,7 +317,7 @@ func UserMessage(ctx iris.Context) {
 		return
 	}
 
-	utils.MakeSuccessRes(ctx, model.Success, utils.TransformUserVO(&mUser))
+	utils.MakeSuccessRes(ctx, model.Success, TransformUserVO(&mUser))
 
 }
 
@@ -390,7 +390,7 @@ func UserMessage(ctx iris.Context) {
 
 func SetUserMessage(ctx iris.Context) {
 
-	user, ok := jwts.ParseToken(ctx)
+	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
 		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
