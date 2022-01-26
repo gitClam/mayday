@@ -10,9 +10,9 @@ import (
 	"encoding/json"
 	//"strconv"
 	"mayday/src/db/conn"
-	"mayday/src/models"
-	//"mayday/src/supports/responser"
-	//"mayday/src/supports/responser/vo"
+	"mayday/src/model"
+	//"mayday/src/utils/responser"
+	//"mayday/src/utils/responser/vo"
 	//"mayday/middleware/jwts"
 )
 

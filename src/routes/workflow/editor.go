@@ -2,15 +2,15 @@ package workflow_routes
 
 import (
 	_ "encoding/json"
+	"mayday/src/utils"
+
 	//"mayday/middleware/jwts"
 	"log"
 	"mayday/src/db/conn"
 
-	//"time"
-	"mayday/src/models"
-	"mayday/src/supports/responser"
-
 	"github.com/kataras/iris/v12"
+	//"time"
+	"mayday/src/model"
 )
 
 // swagger:operation POST /workflow/editor/workflow workflow editor_workflow
@@ -42,7 +42,7 @@ func WorkflowEditorWorkflow(ctx iris.Context) {
 
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil || workflow.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -52,10 +52,10 @@ func WorkflowEditorWorkflow(ctx iris.Context) {
 	if affected <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程更新失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workflow/editor/workflow-state workflow editor_workflow_state
@@ -72,7 +72,7 @@ func WorkflowEditorWorkflowState(ctx iris.Context) {
 	var workflow model.SdWorkflow
 	if err := ctx.ReadForm(&workflow); err != nil || workflow.Id == 0 {
 		log.Print(workflow.Id)
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -82,7 +82,7 @@ func WorkflowEditorWorkflowState(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程更新失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 
@@ -96,10 +96,10 @@ func WorkflowEditorWorkflowState(ctx iris.Context) {
 	if affected <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程更新失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workflow/editor/table table editor_table
@@ -123,7 +123,7 @@ func WorkflowEditorTable(ctx iris.Context) {
 	log.Print("修改流程表单")
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -132,10 +132,10 @@ func WorkflowEditorTable(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workflow/editor/workflow-draft workflow editor_workflow_draft
@@ -180,7 +180,7 @@ func WorkflowEditorTableDraft(ctx iris.Context) {
 	log.Print("修改流程表单草稿")
 	var table model.SdTableDraft
 	if err := ctx.ReadJSON(&table); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -189,8 +189,8 @@ func WorkflowEditorTableDraft(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }

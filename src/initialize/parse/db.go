@@ -3,7 +3,7 @@ package parse
 import (
 	"gopkg.in/yaml.v2"
 	"log"
-	"mayday/src/supports/fio"
+	"mayday/src/utils"
 )
 
 var DbConfigPath = "config/db.yml"
@@ -14,7 +14,7 @@ var (
 func DBSettingParse() {
 	log.Print("### Init db conf")
 
-	dbData, err := file_io.Load(DbConfigPath)
+	dbData, err := utils.Load(DbConfigPath)
 	if err != nil {
 		log.Print("err : ", err)
 	}

@@ -2,32 +2,32 @@ package model
 
 import (
 	"database/sql/driver"
-	"time"
+	"github.com/iris-contrib/schema"
+	_ "github.com/iris-contrib/schema"
 	"log"
-    "github.com/iris-contrib/schema"
-    _ "github.com/iris-contrib/schema"
-    "reflect"
-    _ "unsafe"
+	"reflect"
+	"time"
+	_ "unsafe"
 )
 
 const TimeFormat = "2006-01-02 15:04:05"
 
 type LocalTime time.Time
+
 var nt = LocalTime{}
+
 func (n *LocalTime) Converter(s string) reflect.Value {
-    if t, err := time.Parse(TimeFormat, s); err == nil {
-        return reflect.ValueOf(LocalTime(t))
-    }
-    return reflect.Value{}
+	if t, err := time.Parse(TimeFormat, s); err == nil {
+		return reflect.ValueOf(LocalTime(t))
+	}
+	return reflect.Value{}
 }
 
-func RegisterLocalTimeDecoder() {	
+func RegisterLocalTimeDecoder() {
 	log.Print("123123")
 	var nt = LocalTime{}
 	schema.Form.RegisterConverter(nt, nt.Converter)
 }
-
-
 
 func (t *LocalTime) UnmarshalJSON(data []byte) (err error) {
 	if len(data) == 2 {

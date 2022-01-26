@@ -1,4 +1,4 @@
-package responser
+package utils
 
 import (
 	"github.com/kataras/iris/v12"

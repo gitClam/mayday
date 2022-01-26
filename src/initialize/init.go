@@ -1,13 +1,13 @@
-package inits
+package initialize
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/models"
-	"mayday/src/inits/parse"
-	"mayday/src/inits/cors"
+	"mayday/src/initialize/cors"
+	"mayday/src/initialize/parse"
+	"mayday/src/model"
 )
 
-func Init(app *iris.Application){
+func Init(app *iris.Application) {
 	app.Use(cors.Cors)
 	parse.AppOtherParse()
 	parse.DBSettingParse()

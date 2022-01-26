@@ -3,7 +3,7 @@ package conn
 
 import (
 	"fmt"
-	"mayday/src/inits/parse"
+	"mayday/src/initialize/parse"
 	//"go-iris/utils"
 	"sync"
 

@@ -5,8 +5,8 @@ import (
 	"log"
 	"mayday/src/db/conn"
 	"mayday/src/middleware/jwts"
-	"mayday/src/models"
-	"mayday/src/supports/responser"
+	"mayday/src/model"
+	"mayday/src/utils"
 )
 
 // swagger:operation GET /workspace/select/user workspace select_workspace_userId
@@ -18,7 +18,7 @@ func WorkspaceSelectWorkspaceUserid(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 
@@ -28,11 +28,11 @@ func WorkspaceSelectWorkspaceUserid(ctx iris.Context) {
 	err := e.SQL("select * from sd_workspace where id in (select workspace_id from sd_department where id in (select department_id from sd_job where id in(select job_id from sd_user_job where user_id = ?)))", user.Id).Find(&Workspace)
 	if err != nil {
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 
-	responser.MakeSuccessRes(ctx, model.Success, Workspace)
+	utils.MakeSuccessRes(ctx, model.Success, Workspace)
 }
 
 // swagger:operation Post /workspace/select/workspace workspace select_workspace_workspaceId
@@ -47,7 +47,7 @@ func WorkspaceSelectWorkspaceUserid(ctx iris.Context) {
 func WorkspaceSelectWorkspace(ctx iris.Context) {
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); err != nil || Workspace.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -55,10 +55,10 @@ func WorkspaceSelectWorkspace(ctx iris.Context) {
 	has, err := e.Where("is_deleted = 0").Get(&Workspace)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, Workspace)
+	utils.MakeSuccessRes(ctx, model.Success, Workspace)
 }
 
 // swagger:operation Post /workspace/create/workspace workspace create_workspace
@@ -82,12 +82,12 @@ func WorkspaceCreate(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -101,14 +101,14 @@ func WorkspaceCreate(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	has, err1 := e.Get(&Workspace)
 	if !has || err1 != nil {
 		e.Rollback()
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	department := model.SdDepartment{
@@ -121,14 +121,14 @@ func WorkspaceCreate(ctx iris.Context) {
 	if affect <= 0 || err != nil {
 		e.Rollback()
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	has, err1 = e.Get(&department)
 	if !has || err1 != nil {
 		e.Rollback()
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	job := model.SdJob{
@@ -140,14 +140,14 @@ func WorkspaceCreate(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	has, err1 = e.Get(&job)
 	if !has || err1 != nil {
 		e.Rollback()
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	userJob := model.SdUserJob{
@@ -158,11 +158,11 @@ func WorkspaceCreate(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	e.Commit()
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workspace/editor/workspace workspace editor_workspace
@@ -189,7 +189,7 @@ func WorkspaceCreate(ctx iris.Context) {
 func WorkspaceEditor(ctx iris.Context) {
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); err != nil || Workspace.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -197,10 +197,10 @@ func WorkspaceEditor(ctx iris.Context) {
 	affect, err := e.Id(Workspace.Id).Update(&Workspace)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workspace/delete/workspace workspace delete_Workspace
@@ -215,7 +215,7 @@ func WorkspaceEditor(ctx iris.Context) {
 func WorkspaceDelete(ctx iris.Context) {
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); err != nil || Workspace.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -227,7 +227,7 @@ func WorkspaceDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	_, err = e.Exec("delete from sd_job where department_id in (select id from sd_department where workspace_id = ?)", Workspace.Id)
@@ -235,7 +235,7 @@ func WorkspaceDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	_, err = e.Exec("delete from sd_department where workspace_id = ?", Workspace.Id)
@@ -243,7 +243,7 @@ func WorkspaceDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	_, err = e.Exec("delete from sd_workspace where id = ?", Workspace.Id)
@@ -251,9 +251,9 @@ func WorkspaceDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	e.Commit()
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }

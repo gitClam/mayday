@@ -1,10 +1,10 @@
 package model
 
-const (	
-	SuccessCode  	int	=		1200
-	NotFoundCode   int	=  		1404
-	DbErrorCode  	int	=		1403
-	OtherErrorCode int	=  		1402
+const (
+	SuccessCode    int = 1200
+	NotFoundCode   int = 1404
+	DbErrorCode    int = 1403
+	OtherErrorCode int = 1402
 )
 const (
 	// key定义
@@ -39,8 +39,8 @@ const (
 	NotFound                   string = "您请求的url不存在"
 	PermissionsLess            string = "权限不足"
 
-	RoleCreateFailur   string = "创建角色失败"
-	RoleCreateSuccess  string = "创建角色成功"
+	RoleCreateFailur  string = "创建角色失败"
+	RoleCreateSuccess string = "创建角色成功"
 
 	// value define
 

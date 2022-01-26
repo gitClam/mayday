@@ -1,7 +1,7 @@
-package vo
+package utils
 
 import (
-	"mayday/src/models"
+	"mayday/src/model"
 	//"log"
 )
 

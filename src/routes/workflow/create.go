@@ -5,8 +5,8 @@ import (
 	"log"
 	"mayday/src/db/conn"
 	"mayday/src/middleware/jwts"
-	"mayday/src/models"
-	"mayday/src/supports/responser"
+	"mayday/src/model"
+	"mayday/src/utils"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -42,13 +42,13 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 	log.Print(user)
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -61,10 +61,10 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程创建失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workflow/create/table table create_table
@@ -88,7 +88,7 @@ func WorkflowCreateTable(ctx iris.Context) {
 	log.Print("创建流程表单")
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -97,10 +97,10 @@ func WorkflowCreateTable(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 
 }
 
@@ -118,13 +118,13 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 	log.Print(user.Name)
 	var workflowDraft model.SdWorkflowDraft
 	if err := ctx.ReadJSON(&workflowDraft); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -137,10 +137,10 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程创建失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 
 }
 
@@ -162,12 +162,12 @@ func WorkflowCreateTableDraft(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 	var tableDraft model.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -177,8 +177,8 @@ func WorkflowCreateTableDraft(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }

@@ -5,9 +5,8 @@ import (
 	"log"
 	"mayday/src/db/conn"
 	"mayday/src/middleware/jwts"
-	"mayday/src/models"
-	"mayday/src/supports/responser"
-	"mayday/src/supports/responser/vo"
+	"mayday/src/model"
+	"mayday/src/utils"
 	"strconv"
 )
 
@@ -23,7 +22,7 @@ import (
 func JobSelect(ctx iris.Context) {
 	var job model.SdJob
 	if err := ctx.ReadForm(&job); err != nil || job.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -31,10 +30,10 @@ func JobSelect(ctx iris.Context) {
 	has, err := e.Where("is_deleted = 0").Get(&job)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, job)
+	utils.MakeSuccessRes(ctx, model.Success, job)
 }
 
 // swagger:operation Post /workspace/job/select/department job Job_select_department
@@ -49,7 +48,7 @@ func JobSelect(ctx iris.Context) {
 func Job_select_department(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -61,10 +60,10 @@ func Job_select_department(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, job)
+	utils.MakeSuccessRes(ctx, model.Success, job)
 }
 
 // swagger:operation GET /workspace/job/select/user job Job_select_user
@@ -75,7 +74,7 @@ func Job_select_user(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 	log.Print(user)
@@ -85,11 +84,11 @@ func Job_select_user(ctx iris.Context) {
 	err := e.Sql("select * from sd_job where id in(select job_id from sd_user_job where user_id = ?)", user.Id).Find(&job)
 	if err != nil {
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 
-	responser.MakeSuccessRes(ctx, model.Success, job)
+	utils.MakeSuccessRes(ctx, model.Success, job)
 }
 
 // swagger:operation POST /workspace/job/create job job_create
@@ -108,7 +107,7 @@ func Job_select_user(ctx iris.Context) {
 func Job_create(ctx iris.Context) {
 	var job model.SdJob
 	if err := ctx.ReadForm(&job); err != nil {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -117,10 +116,10 @@ func Job_create(ctx iris.Context) {
 	affect, err := e.Insert(&job)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workspace/job/editor job job_editor
@@ -139,7 +138,7 @@ func Job_create(ctx iris.Context) {
 func Job_editor(ctx iris.Context) {
 	var job model.SdJob
 	if err := ctx.ReadForm(&job); err != nil || job.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -147,10 +146,10 @@ func Job_editor(ctx iris.Context) {
 	affect, err := e.Id(job.Id).Update(&job)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation DELETE /workspace/job/delete job job_delete
@@ -165,7 +164,7 @@ func Job_editor(ctx iris.Context) {
 func Job_delete(ctx iris.Context) {
 	var job model.SdJob
 	if err := ctx.ReadForm(&job); err != nil || job.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -177,7 +176,7 @@ func Job_delete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	_, err = e.Exec("delete from sd_job where id = ?", job.Id)
@@ -188,11 +187,11 @@ func Job_delete(ctx iris.Context) {
 		}
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	e.Commit()
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation Post /workspace/job/select-user job selectUser_Job
@@ -207,7 +206,7 @@ func Job_delete(ctx iris.Context) {
 func JobSelectUser(ctx iris.Context) {
 	var job model.SdJob
 	if err := ctx.ReadForm(&job); err != nil || job.Id == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -217,10 +216,10 @@ func JobSelectUser(ctx iris.Context) {
 	err := e.Sql("select * from sd_user where id in(select user_id from sd_user_job where job_id = ?)", job.Id).Find(&users)
 	if err != nil {
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, vo.TransformUserVOList(users))
+	utils.MakeSuccessRes(ctx, model.Success, utils.TransformUserVOList(users))
 }
 
 // swagger:operation POST /workspace/job/insert-user job insert_job
@@ -243,7 +242,7 @@ func JobInsert(ctx iris.Context) {
 	user.Mail = ctx.FormValue("Mail")
 	userJob.JobId, _ = strconv.Atoi(ctx.FormValue("JobId"))
 	if user.Mail == "" || userJob.JobId == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -251,17 +250,17 @@ func JobInsert(ctx iris.Context) {
 	has, err := e.Get(&user)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
 	userJob.UserId = user.Id
 	affect, err := e.Insert(&userJob)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }
 
 // swagger:operation POST /workspace/job/delete-user job delete_user_Job
@@ -280,7 +279,7 @@ func JobInsert(ctx iris.Context) {
 func JobDeleteUser(ctx iris.Context) {
 	var userJob model.SdUserJob
 	if err := ctx.ReadForm(&userJob); err != nil || userJob.UserId == 0 || userJob.JobId == 0 {
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -288,8 +287,8 @@ func JobDeleteUser(ctx iris.Context) {
 	affect, err := e.Delete(&userJob)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, nil)
+	utils.MakeSuccessRes(ctx, model.Success, nil)
 }

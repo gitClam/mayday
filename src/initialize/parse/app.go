@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"gopkg.in/yaml.v2"
 	"log"
-	"mayday/src/supports/fio"
+	"mayday/src/utils"
 )
 
 var (
@@ -31,7 +31,6 @@ type (
 		IgnoreURLs []string
 		Port       string
 		JWTTimeout int64
-		LogLevel   string
 		Secret     string
 	}
 )
@@ -40,7 +39,7 @@ func AppOtherParse() {
 
 	log.Print("### Init app conf")
 
-	appData, err := file_io.Load(confPath)
+	appData, err := utils.Load(confPath)
 	if err != nil {
 		log.Print("err : ", err)
 	}
@@ -61,7 +60,6 @@ func AppOtherParse() {
 
 	jTimeout := c.GetOther()[jwtTimeout].(int)
 	O.JWTTimeout = int64(jTimeout)
-	O.LogLevel = c.GetOther()[logLevel].(string)
 	O.Secret = c.GetOther()[secret].(string)
 
 }

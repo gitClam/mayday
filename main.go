@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/kataras/iris/v12"
 	"log"
-	"mayday/src/inits"
-	"mayday/src/inits/parse"
+	"mayday/src/initialize"
+	"mayday/src/initialize/parse"
 	"mayday/src/routes"
 )
 
@@ -38,7 +38,7 @@ func main() {
 
 	app := iris.New()
 
-	inits.Init(app)
+	initialize.Init(app)
 	route_Controller.Hub(app)
 
 	err := app.Run(iris.Addr(parse.O.Port))

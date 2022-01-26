@@ -1,11 +1,10 @@
 package middleware
 
 import (
-	"mayday/src/inits/parse"
+	"mayday/src/initialize/parse"
 	"mayday/src/middleware/jwts"
 
 	"github.com/kataras/iris/v12/context"
-	//"strings"
 	"regexp"
 )
 
@@ -34,9 +33,9 @@ func ServeHTTP(ctx context.Context) {
 		}
 	}*/
 
-	// Pass to real API
 	ctx.Next()
 }
+
 func checkURL(reqPath string) bool {
 
 	for _, v := range parse.O.IgnoreURLs {

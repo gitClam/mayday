@@ -5,12 +5,11 @@ import (
 	"log"
 	"mayday/src/db/conn"
 	"mayday/src/middleware/jwts"
-
-	//"time"
-	"mayday/src/models"
-	"mayday/src/supports/responser"
+	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
+	//"time"
+	"mayday/src/model"
 )
 
 // swagger:operation GET /workflow/select/workflow workflow select_workflow
@@ -26,10 +25,10 @@ func WorkflowSelectWorkflow(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, workflows)
+	utils.MakeSuccessRes(ctx, model.Success, workflows)
 }
 
 // swagger:operation GET /workflow/select/workflow-byId workflow select_workflow_byId
@@ -46,7 +45,7 @@ func WorkflowSelectWorkflowById(ctx iris.Context) {
 	var workflow model.SdWorkflow
 	if err := ctx.ReadForm(&workflow); err != nil {
 		log.Print(err)
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -55,10 +54,10 @@ func WorkflowSelectWorkflowById(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, workflow)
+	utils.MakeSuccessRes(ctx, model.Success, workflow)
 }
 
 // swagger:operation Post /workflow/select/table table select_table
@@ -74,7 +73,7 @@ func WorkflowSelectTable(ctx iris.Context) {
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		log.Print(err)
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -83,10 +82,10 @@ func WorkflowSelectTable(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, table)
+	utils.MakeSuccessRes(ctx, model.Success, table)
 }
 
 // swagger:operation GET /workflow/select/workflow-draft workflow select_workflow-draft
@@ -102,7 +101,7 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 
@@ -113,10 +112,10 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("流程草稿查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, workflowDrafts)
+	utils.MakeSuccessRes(ctx, model.Success, workflowDrafts)
 }
 
 // swagger:operation Post /workflow/select/table-draft table select_table-draft
@@ -132,7 +131,7 @@ func WorkflowSelectTableDraft(ctx iris.Context) {
 	var tableDraft model.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
 		log.Print(err)
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -141,10 +140,10 @@ func WorkflowSelectTableDraft(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, tableDraft)
+	utils.MakeSuccessRes(ctx, model.Success, tableDraft)
 }
 
 // swagger:operation Post /workflow/select/table-workSpace table select_table_draft_workSpace_Workflow
@@ -160,7 +159,7 @@ func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
 		log.Print(err)
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -170,10 +169,10 @@ func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("工作空间流程草稿查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, table)
+	utils.MakeSuccessRes(ctx, model.Success, table)
 }
 
 // swagger:operation Post /workflow/select/table-draft-user table select_table_draft_user_Workflow_select
@@ -184,7 +183,7 @@ func WorkflowSelectTableDraftUser(ctx iris.Context) {
 	user, ok := jwts.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
 		return
 	}
 	var tableDraft []model.SdTableDraft
@@ -193,8 +192,8 @@ func WorkflowSelectTableDraftUser(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("个人流程草稿查询失败")
-		responser.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
 		return
 	}
-	responser.MakeSuccessRes(ctx, model.Success, tableDraft)
+	utils.MakeSuccessRes(ctx, model.Success, tableDraft)
 }
