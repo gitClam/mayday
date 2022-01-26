@@ -1,4 +1,4 @@
-package model
+package utils
 
 import (
 	"database/sql/driver"
@@ -13,7 +13,12 @@ const TimeFormat = "2006-01-02 15:04:05"
 
 type LocalTime time.Time
 
-var nt = LocalTime{}
+type timeDecoder struct{}
+
+var (
+	TimeDecoder *timeDecoder
+	nt          = LocalTime{}
+)
 
 func (t *LocalTime) Converter(s string) reflect.Value {
 	if t, err := time.Parse(TimeFormat, s); err == nil {
@@ -22,7 +27,7 @@ func (t *LocalTime) Converter(s string) reflect.Value {
 	return reflect.Value{}
 }
 
-func RegisterLocalTimeDecoder() {
+func (t *timeDecoder) RegisterLocalTimeDecoder() {
 	schema.Form.RegisterConverter(nt, nt.Converter)
 }
 

@@ -13,6 +13,7 @@ import (
 func Routers(app *iris.Application) {
 	main := app.Party("/")
 	main.Options("/*", func(ctx iris.Context) {})
+	main.Use(middleware.Cors)
 	main.Use(middleware.ServeHTTP)
 	user := main.Party("/user")
 	{

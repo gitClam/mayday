@@ -87,7 +87,7 @@ func UserRegister(ctx iris.Context) {
 	log.Print(user)
 	user.Photo = "./data/photo/2.png"
 	user.IsDeleted = 0
-	user.CreateDate = model.LocalTime(time.Now())
+	user.CreateDate = utils.LocalTime(time.Now())
 	log.Print(user)
 	e := global.GVA_DB
 	effect, err := e.Insert(user)

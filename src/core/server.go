@@ -8,9 +8,13 @@ import (
 )
 
 func RunServer() {
-	app := iris.New()
+	//初始化数据库连接
+	initialize.Mysql()
+	//初始化时间格式解析器
+	initialize.RegisterLocalTimeDecoder()
 
-	initialize.Init(app)
+	app := iris.New()
+	//路由分配
 	initialize.Routers(app)
 
 	err := app.Run(iris.Addr(global.GVA_CONFIG.System.Port))

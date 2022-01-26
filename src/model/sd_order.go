@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"mayday/src/utils"
 	//"time"
 )
 
@@ -9,9 +10,9 @@ type SdOrder struct {
 	Id            int             `xorm:"not null pk autoincr INT(11)"`
 	UserId        int             `xorm:"not null index INT(11)"`
 	WorkflowId    int             `xorm:"not null index INT(11)"`
-	CreateTime    LocalTime       `xorm:"not null DATETIME"`
+	CreateTime    utils.LocalTime `xorm:"not null DATETIME"`
 	Title         string          `xorm:"VARCHAR(20)"`
-	UrgeLastTime  LocalTime       `xorm:"DATETIME"`
+	UrgeLastTime  utils.LocalTime `xorm:"DATETIME"`
 	UrgeCount     int             `xorm:"INT(11)"`
 	RelatedPerson json.RawMessage `xorm:"not null JSON"`
 	IsDenied      int             `xorm:"not null INT(11)"`

@@ -54,7 +54,7 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	}
 
 	workflow.IsDeleted = 0
-	workflow.CreateTime = model.LocalTime(time.Now())
+	workflow.CreateTime = utils.LocalTime(time.Now())
 	workflow.CreateUser = user.Id
 	e := global.GVA_DB
 	effect, err := e.Insert(workflow)
