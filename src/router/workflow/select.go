@@ -25,10 +25,10 @@ func WorkflowSelectWorkflow(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, workflows)
+	utils.Responser.OkWithDetails(ctx, utils.Success, workflows)
 }
 
 // swagger:operation GET /workflow/select/workflow-byId workflow select_workflow_byId
@@ -45,7 +45,7 @@ func WorkflowSelectWorkflowById(ctx iris.Context) {
 	var workflow model.SdWorkflow
 	if err := ctx.ReadForm(&workflow); err != nil {
 		log.Print(err)
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -54,10 +54,10 @@ func WorkflowSelectWorkflowById(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, workflow)
+	utils.Responser.OkWithDetails(ctx, utils.Success, workflow)
 }
 
 // swagger:operation Post /workflow/select/table table select_table
@@ -73,7 +73,7 @@ func WorkflowSelectTable(ctx iris.Context) {
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		log.Print(err)
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -82,10 +82,10 @@ func WorkflowSelectTable(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, table)
+	utils.Responser.OkWithDetails(ctx, utils.Success, table)
 }
 
 // swagger:operation GET /workflow/select/workflow-draft workflow select_workflow-draft
@@ -101,7 +101,7 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 
@@ -112,10 +112,10 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("流程草稿查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, workflowDrafts)
+	utils.Responser.OkWithDetails(ctx, utils.Success, workflowDrafts)
 }
 
 // swagger:operation Post /workflow/select/table-draft table select_table-draft
@@ -131,7 +131,7 @@ func WorkflowSelectTableDraft(ctx iris.Context) {
 	var tableDraft model.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
 		log.Print(err)
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -140,10 +140,10 @@ func WorkflowSelectTableDraft(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("流程查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, tableDraft)
+	utils.Responser.OkWithDetails(ctx, utils.Success, tableDraft)
 }
 
 // swagger:operation Post /workflow/select/table-workSpace table select_table_draft_workSpace_Workflow
@@ -159,7 +159,7 @@ func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
 		log.Print(err)
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -169,10 +169,10 @@ func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("工作空间流程草稿查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, table)
+	utils.Responser.OkWithDetails(ctx, utils.Success, table)
 }
 
 // swagger:operation Post /workflow/select/table-draft-user table select_table_draft_user_Workflow_select
@@ -183,7 +183,7 @@ func WorkflowSelectTableDraftUser(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var tableDraft []model.SdTableDraft
@@ -192,8 +192,8 @@ func WorkflowSelectTableDraftUser(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("个人流程草稿查询失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, tableDraft)
+	utils.Responser.OkWithDetails(ctx, utils.Success, tableDraft)
 }

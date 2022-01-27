@@ -80,7 +80,7 @@ import (
 func UserRegister(ctx iris.Context) {
 	var sdUser user.SdUser
 	if err := ctx.ReadForm(&sdUser); err != nil {
-		utils.FailWithDetails(ctx, utils.RegisteFailur, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
 		log.Print("用户注册失败，数据接收失败")
 		return
 	}
@@ -93,11 +93,11 @@ func UserRegister(ctx iris.Context) {
 	effect, err := e.Insert(sdUser)
 	if effect <= 0 || err != nil {
 		log.Printf("用户注册失败")
-		utils.FailWithDetails(ctx, utils.RegisteFailur, "用户注册失败")
+		utils.Responser.FailWithMsg(ctx, "用户注册失败")
 		return
 	}
 
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 	log.Println("ok")
 }
 
@@ -118,13 +118,13 @@ func UserLogin(ctx iris.Context) {
 
 	var sdUser user.SdUser
 	if err := ctx.ReadForm(&sdUser); err != nil {
-		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "用户数据接收失败")
 		log.Print("用户登录失败，数据接收失败")
 		return
 	}
 
 	if sdUser.Mail == "" || sdUser.Password == "" {
-		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "用户名或密码为空")
 		log.Print("用户登录失败,邮箱或密码为空")
 		return
 	}
@@ -135,7 +135,7 @@ func UserLogin(ctx iris.Context) {
 	e := global.GVA_DB
 	has, err := e.Where("is_deleted != 1").Get(&mUser)
 	if !has || err != nil || mUser.IsDeleted == 1 {
-		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		log.Printf("数据库查询错误或用户名不存在")
 		return
 	}
@@ -143,7 +143,7 @@ func UserLogin(ctx iris.Context) {
 	log.Print(mUser)
 
 	if mUser.Password != sdUser.Password {
-		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "密码错误")
 		log.Printf("密码错误")
 		return
 	}
@@ -151,12 +151,12 @@ func UserLogin(ctx iris.Context) {
 	token, err := middleware.GenerateToken(&mUser)
 	log.Printf("用户[%s], 登录生成token [%s]", mUser.Name, token)
 	if err != nil {
-		utils.FailWithDetails(ctx, utils.TokenCreateFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "TOKEN生成失败")
 		log.Printf("数据库查询错误或用户名不存在")
 		return
 	}
 
-	utils.OkWithDetails(ctx, utils.Success, user.TransformUserVOToken(token, &mUser))
+	utils.Responser.OkWithDetails(ctx, utils.Success, user.TransformUserVOToken(token, &mUser))
 }
 
 // swagger:operation GET /user/photo/{id:int} user get_photo
@@ -170,7 +170,7 @@ func UserPhoto(ctx iris.Context) {
 	Id, err := strconv.Atoi(ctx.Params().Get("id"))
 	if err != nil {
 		log.Printf("数据接收失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
 	user.Id = Id
@@ -178,19 +178,19 @@ func UserPhoto(ctx iris.Context) {
 	has, err := e.Get(&user)
 	if !has || err != nil {
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
+		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		return
 	}
 
 	if user.Photo == "" {
 		log.Printf("用户头像获取出错")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "用户头像获取出错")
+		utils.Responser.FailWithMsg(ctx, "用户头像获取出错")
 		return
 	}
 	err1 := ctx.ServeFile(user.Photo, false)
 	if err1 != nil {
 		log.Printf("用户头像文件读取错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "用户头像获取出错")
+		utils.Responser.FailWithMsg(ctx, "头像文件读取错误")
 		return
 	}
 }
@@ -208,7 +208,7 @@ func SetUserPhoto(ctx iris.Context) {
 	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var mUser user.SdUser
@@ -219,7 +219,7 @@ func SetUserPhoto(ctx iris.Context) {
 	if !has || err != nil {
 
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
+		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		return
 	}
 
@@ -227,7 +227,7 @@ func SetUserPhoto(ctx iris.Context) {
 	file, _, err := ctx.FormFile("UserPhoto")
 	if err != nil {
 		log.Print("图片文件不存在")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "图片文件不存在")
+		utils.Responser.FailWithMsg(ctx, "图片接收失败")
 		return
 	}
 	defer file.Close()
@@ -237,7 +237,7 @@ func SetUserPhoto(ctx iris.Context) {
 		affected, err := e.Id(mUser.Id).Update(mUser)
 		if affected <= 0 || err != nil {
 			log.Printf("数据库更新失败")
-			utils.FailWithDetails(ctx, utils.OptionFailur, "更新失败")
+			utils.Responser.FailWithMsg(ctx, "图片更新失败")
 			return
 		}
 	}
@@ -245,14 +245,14 @@ func SetUserPhoto(ctx iris.Context) {
 	out, err := os.OpenFile(mUser.Photo, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		log.Print("文件打开失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "文件打开失败")
+		utils.Responser.FailWithMsg(ctx, "图片文件保存失败")
 		return
 	}
 	defer out.Close()
 
 	io.Copy(out, file)
 
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 
 	log.Print("图片已保存")
 }
@@ -266,7 +266,7 @@ func UserCancellation(ctx iris.Context) {
 	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var mUser user.SdUser
@@ -277,7 +277,7 @@ func UserCancellation(ctx iris.Context) {
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
+		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		return
 	}
 	mUser.IsDeleted = 1
@@ -285,10 +285,10 @@ func UserCancellation(ctx iris.Context) {
 	if affected <= 0 || err1 != nil {
 		log.Print(err)
 		log.Printf("数据库修改失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "注销失败")
+		utils.Responser.FailWithMsg(ctx, "注销失败")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }
 
 // swagger:operation GET /user/message user message
@@ -301,7 +301,7 @@ func UserMessage(ctx iris.Context) {
 	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var mUser user.SdUser
@@ -312,11 +312,11 @@ func UserMessage(ctx iris.Context) {
 	has, err := e.Where(" is_deleted != 1 ").Get(&mUser)
 	if !has || err != nil {
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
+		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		return
 	}
 
-	utils.OkWithDetails(ctx, utils.Success, user.TransformUserVO(&mUser))
+	utils.Responser.OkWithDetails(ctx, utils.Success, user.TransformUserVO(&mUser))
 
 }
 
@@ -392,14 +392,14 @@ func SetUserMessage(ctx iris.Context) {
 	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 
 	var mUser user.SdUser
 	if err := ctx.ReadForm(&mUser); err != nil {
 		log.Print(err)
-		utils.FailWithDetails(ctx, utils.OptionFailur, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
 		log.Print("数据接收失败")
 		return
 	}
@@ -409,10 +409,10 @@ func SetUserMessage(ctx iris.Context) {
 	if affected <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库更新失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, "数据库更新失败")
+		utils.Responser.FailWithMsg(ctx, "数据更新失败")
 		return
 	}
 
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 
 }

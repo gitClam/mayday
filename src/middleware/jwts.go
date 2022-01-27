@@ -50,7 +50,7 @@ func ParseToken(ctx context.Context) (*user.SdUser, bool) {
 	//log.Printf("*** MapClaims=%v, [id=%f, ok1=%t]; [username=%s, ok2=%t]", mapClaims, id, ok1, name, ok2)
 	if !ok1 || !ok2 {
 		log.Print(utils.TokenParseFailur)
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return nil, false
 	}
 
@@ -176,7 +176,7 @@ func ConfigJWT() {
 		//验证未通过错误处理方式
 		ErrorHandler: func(ctx context.Context, errMsg string) {
 
-			utils.FailWithDetails(ctx, errMsg, nil)
+			utils.Responser.FailWithMsg(ctx, "TOKEN验证失败")
 		},
 		// 指定func用于提取请求中的token
 		Extractor:           FromAuthHeader,

@@ -22,7 +22,7 @@ func DepartmentSelectUser(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 
@@ -32,11 +32,11 @@ func DepartmentSelectUser(ctx iris.Context) {
 	err := e.SQL(SelectSql, user.Id).Find(&department)
 	if err != nil {
 		log.Printf("数据库查询错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
 
-	utils.OkWithDetails(ctx, utils.Success, department)
+	utils.Responser.OkWithDetails(ctx, utils.Success, department)
 }
 
 // swagger:operation Post /workspace/department/select department select_department
@@ -51,7 +51,7 @@ func DepartmentSelectUser(ctx iris.Context) {
 func DepartmentSelect(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -59,10 +59,10 @@ func DepartmentSelect(ctx iris.Context) {
 	has, err := e.Where("is_deleted = 0").Get(&department)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, department)
+	utils.Responser.OkWithDetails(ctx, utils.Success, department)
 }
 
 // swagger:operation Post /workspace/department/select/workspace department select_workspace_Department
@@ -77,7 +77,7 @@ func DepartmentSelect(ctx iris.Context) {
 func DepartmentSelectWorkspace(ctx iris.Context) {
 	var Workspace model.SdWorkspace
 	if err := ctx.ReadForm(&Workspace); err != nil || Workspace.Id == 0 {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -89,10 +89,10 @@ func DepartmentSelectWorkspace(ctx iris.Context) {
 	if err != nil {
 		log.Print(err)
 		log.Printf("数据库查询错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, departments)
+	utils.Responser.OkWithDetails(ctx, utils.Success, departments)
 }
 
 // swagger:operation POST /workspace/department/create department create_department
@@ -119,7 +119,7 @@ func DepartmentSelectWorkspace(ctx iris.Context) {
 func DepartmentCreate(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -128,10 +128,10 @@ func DepartmentCreate(ctx iris.Context) {
 	affect, err := e.Insert(&department)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }
 
 // swagger:operation POST /workspace/department/editor department editor_department
@@ -162,7 +162,7 @@ func DepartmentCreate(ctx iris.Context) {
 func DepartmentEditor(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -170,10 +170,10 @@ func DepartmentEditor(ctx iris.Context) {
 	affect, err := e.Id(department.Id).Update(&department)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }
 
 // swagger:operation DELETE /workspace/department/delete department delete_department
@@ -189,7 +189,7 @@ func DepartmentEditor(ctx iris.Context) {
 func DepartmentDelete(ctx iris.Context) {
 	var department model.SdDepartment
 	if err := ctx.ReadForm(&department); err != nil || department.Id == 0 {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -201,7 +201,7 @@ func DepartmentDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
 	_, err = e.Exec("delete from sd_job where department_id = ?", department.Id)
@@ -209,7 +209,7 @@ func DepartmentDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
 	_, err = e.Exec("delete from sd_department where id = ?", department.Id)
@@ -217,9 +217,9 @@ func DepartmentDelete(ctx iris.Context) {
 		e.Rollback()
 		log.Print(err)
 		log.Printf("数据库插入错误")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
 	e.Commit()
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }

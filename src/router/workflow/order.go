@@ -26,16 +26,16 @@ func WorkflowOrderCreateOrder(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	err := order.CreateOrder(ctx, user)
 	if err != nil {
 		log.Print(err)
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }
 
 // swagger:operation POST /workflow/order/fill-table workflow fill_table_Workflow_order_fill_table

@@ -42,13 +42,13 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	log.Print(user)
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -61,10 +61,10 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程创建失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }
 
 // swagger:operation POST /workflow/create/table table create_table
@@ -88,7 +88,7 @@ func WorkflowCreateTable(ctx iris.Context) {
 	log.Print("创建流程表单")
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -97,10 +97,10 @@ func WorkflowCreateTable(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 
 }
 
@@ -118,13 +118,13 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	log.Print(user.Name)
 	var workflowDraft model.SdWorkflowDraft
 	if err := ctx.ReadJSON(&workflowDraft); err != nil {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -137,10 +137,10 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程创建失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 
 }
 
@@ -162,12 +162,12 @@ func WorkflowCreateTableDraft(ctx iris.Context) {
 	user, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
 	var tableDraft model.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
@@ -177,8 +177,8 @@ func WorkflowCreateTableDraft(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
+		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.OkWithDetails(ctx, utils.Success, nil)
+	utils.Responser.Ok(ctx)
 }
