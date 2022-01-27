@@ -25,7 +25,7 @@ func WorkflowDeleteWorkflow(ctx iris.Context) {
 
 	var workflow model.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -35,10 +35,10 @@ func WorkflowDeleteWorkflow(ctx iris.Context) {
 	if affected <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程删除失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }
 
 // swagger:operation POST /workflow/delete/table table delete_table
@@ -54,7 +54,7 @@ func WorkflowDeleteTable(ctx iris.Context) {
 	log.Print("删除流程表单1")
 	var table model.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -63,10 +63,10 @@ func WorkflowDeleteTable(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 
 }
 
@@ -83,7 +83,7 @@ func WorkflowDeleteWorkflowDraft(ctx iris.Context) {
 
 	var workflowDraft model.SdWorkflowDraft
 	if err := ctx.ReadJSON(&workflowDraft); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -94,10 +94,10 @@ func WorkflowDeleteWorkflowDraft(ctx iris.Context) {
 	if affected <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("流程删除失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }
 
 // swagger:operation POST /workflow/delete/table-draft table delete_table-draft
@@ -113,7 +113,7 @@ func WorkflowDeleteTableDraft(ctx iris.Context) {
 	log.Print("删除流程表单草稿")
 	var table model.SdTableDraft
 	if err := ctx.ReadJSON(&table); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -122,8 +122,8 @@ func WorkflowDeleteTableDraft(ctx iris.Context) {
 	if effect <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库操作失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }

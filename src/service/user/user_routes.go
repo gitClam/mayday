@@ -6,7 +6,7 @@ import (
 	"log"
 	"mayday/src/global"
 	"mayday/src/middleware"
-	"mayday/src/model"
+	"mayday/src/model/user"
 	"mayday/src/utils"
 	"os"
 	"strconv"
@@ -78,26 +78,26 @@ import (
 //           $ref: '#/responses/forbidden'
 
 func UserRegister(ctx iris.Context) {
-	var user model.SdUser
-	if err := ctx.ReadForm(&user); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.RegisteFailur, "数据接收失败")
+	var sdUser user.SdUser
+	if err := ctx.ReadForm(&sdUser); err != nil {
+		utils.FailWithDetails(ctx, utils.RegisteFailur, "数据接收失败")
 		log.Print("用户注册失败，数据接收失败")
 		return
 	}
-	log.Print(user)
-	user.Photo = "./data/photo/2.png"
-	user.IsDeleted = 0
-	user.CreateDate = utils.LocalTime(time.Now())
-	log.Print(user)
+	log.Print(sdUser)
+	sdUser.Photo = "./data/photo/2.png"
+	sdUser.IsDeleted = 0
+	sdUser.CreateDate = utils.LocalTime(time.Now())
+	log.Print(sdUser)
 	e := global.GVA_DB
-	effect, err := e.Insert(user)
+	effect, err := e.Insert(sdUser)
 	if effect <= 0 || err != nil {
 		log.Printf("用户注册失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.RegisteFailur, "用户注册失败")
+		utils.FailWithDetails(ctx, utils.RegisteFailur, "用户注册失败")
 		return
 	}
 
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 	log.Println("ok")
 }
 
@@ -116,34 +116,34 @@ func UserRegister(ctx iris.Context) {
 //   required: true
 func UserLogin(ctx iris.Context) {
 
-	var user model.SdUser
-	if err := ctx.ReadForm(&user); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, nil)
+	var sdUser user.SdUser
+	if err := ctx.ReadForm(&sdUser); err != nil {
+		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
 		log.Print("用户登录失败，数据接收失败")
 		return
 	}
 
-	if user.Mail == "" || user.Password == "" {
-		utils.MakeErrorRes(ctx, 3333, model.LoginFailur, nil)
+	if sdUser.Mail == "" || sdUser.Password == "" {
+		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
 		log.Print("用户登录失败,邮箱或密码为空")
 		return
 	}
 
-	var mUser model.SdUser
-	mUser.Mail = user.Mail
+	var mUser user.SdUser
+	mUser.Mail = sdUser.Mail
 
 	e := global.GVA_DB
 	has, err := e.Where("is_deleted != 1").Get(&mUser)
 	if !has || err != nil || mUser.IsDeleted == 1 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, nil)
+		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
 		log.Printf("数据库查询错误或用户名不存在")
 		return
 	}
 
 	log.Print(mUser)
 
-	if mUser.Password != user.Password {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.LoginFailur, nil)
+	if mUser.Password != sdUser.Password {
+		utils.FailWithDetails(ctx, utils.LoginFailur, nil)
 		log.Printf("密码错误")
 		return
 	}
@@ -151,12 +151,12 @@ func UserLogin(ctx iris.Context) {
 	token, err := middleware.GenerateToken(&mUser)
 	log.Printf("用户[%s], 登录生成token [%s]", mUser.Name, token)
 	if err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenCreateFailur, nil)
+		utils.FailWithDetails(ctx, utils.TokenCreateFailur, nil)
 		log.Printf("数据库查询错误或用户名不存在")
 		return
 	}
 
-	utils.MakeSuccessRes(ctx, model.Success, TransformUserVOToken(token, &mUser))
+	utils.OkWithDetails(ctx, utils.Success, user.TransformUserVOToken(token, &mUser))
 }
 
 // swagger:operation GET /user/photo/{id:int} user get_photo
@@ -166,11 +166,11 @@ func UserLogin(ctx iris.Context) {
 
 func UserPhoto(ctx iris.Context) {
 
-	var user model.SdUser
+	var user user.SdUser
 	Id, err := strconv.Atoi(ctx.Params().Get("id"))
 	if err != nil {
 		log.Printf("数据接收失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
 	user.Id = Id
@@ -178,19 +178,19 @@ func UserPhoto(ctx iris.Context) {
 	has, err := e.Get(&user)
 	if !has || err != nil {
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
 		return
 	}
 
 	if user.Photo == "" {
 		log.Printf("用户头像获取出错")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户头像获取出错")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "用户头像获取出错")
 		return
 	}
 	err1 := ctx.ServeFile(user.Photo, false)
 	if err1 != nil {
 		log.Printf("用户头像文件读取错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户头像获取出错")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "用户头像获取出错")
 		return
 	}
 }
@@ -205,22 +205,21 @@ func UserPhoto(ctx iris.Context) {
 //   type: file
 //   required: true
 func SetUserPhoto(ctx iris.Context) {
-	user, ok := middleware.ParseToken(ctx)
+	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
-	log.Print(user)
-	var mUser model.SdUser
-	mUser.Id = user.Id
-	mUser.Name = user.Name
+	var mUser user.SdUser
+	mUser.Id = token.Id
+	mUser.Name = token.Name
 	e := global.GVA_DB
 	has, err := e.Get(&mUser)
 	if !has || err != nil {
 
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
 		return
 	}
 
@@ -228,7 +227,7 @@ func SetUserPhoto(ctx iris.Context) {
 	file, _, err := ctx.FormFile("UserPhoto")
 	if err != nil {
 		log.Print("图片文件不存在")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "图片文件不存在")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "图片文件不存在")
 		return
 	}
 	defer file.Close()
@@ -238,7 +237,7 @@ func SetUserPhoto(ctx iris.Context) {
 		affected, err := e.Id(mUser.Id).Update(mUser)
 		if affected <= 0 || err != nil {
 			log.Printf("数据库更新失败")
-			utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "更新失败")
+			utils.FailWithDetails(ctx, utils.OptionFailur, "更新失败")
 			return
 		}
 	}
@@ -246,14 +245,14 @@ func SetUserPhoto(ctx iris.Context) {
 	out, err := os.OpenFile(mUser.Photo, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		log.Print("文件打开失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "文件打开失败")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "文件打开失败")
 		return
 	}
 	defer out.Close()
 
 	io.Copy(out, file)
 
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 
 	log.Print("图片已保存")
 }
@@ -264,21 +263,21 @@ func SetUserPhoto(ctx iris.Context) {
 // description: 用户注销
 
 func UserCancellation(ctx iris.Context) {
-	user, ok := middleware.ParseToken(ctx)
+	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
-	var mUser model.SdUser
-	mUser.Id = user.Id
+	var mUser user.SdUser
+	mUser.Id = token.Id
 	e := global.GVA_DB
 	log.Print(mUser.Id)
 	has, err := e.Id(mUser.Id).Get(&mUser)
 	if !has || err != nil {
 		log.Print(err)
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
 		return
 	}
 	mUser.IsDeleted = 1
@@ -286,10 +285,10 @@ func UserCancellation(ctx iris.Context) {
 	if affected <= 0 || err1 != nil {
 		log.Print(err)
 		log.Printf("数据库修改失败")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "注销失败")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "注销失败")
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }
 
 // swagger:operation GET /user/message user message
@@ -299,25 +298,25 @@ func UserCancellation(ctx iris.Context) {
 
 func UserMessage(ctx iris.Context) {
 
-	user, ok := middleware.ParseToken(ctx)
+	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
-	var mUser model.SdUser
-	mUser.Id = user.Id
-	mUser.Name = user.Name
+	var mUser user.SdUser
+	mUser.Id = token.Id
+	mUser.Name = token.Name
 
 	e := global.GVA_DB
 	has, err := e.Where(" is_deleted != 1 ").Get(&mUser)
 	if !has || err != nil {
 		log.Printf("数据库查询错误或用户名不存在")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, "用户名不存在")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "用户名不存在")
 		return
 	}
 
-	utils.MakeSuccessRes(ctx, model.Success, TransformUserVO(&mUser))
+	utils.OkWithDetails(ctx, utils.Success, user.TransformUserVO(&mUser))
 
 }
 
@@ -390,30 +389,30 @@ func UserMessage(ctx iris.Context) {
 
 func SetUserMessage(ctx iris.Context) {
 
-	user, ok := middleware.ParseToken(ctx)
+	token, ok := middleware.ParseToken(ctx)
 	if !ok {
 		log.Printf("解析TOKEN出错，请重新登录")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, "解析TOKEN出错，请重新登录")
+		utils.FailWithDetails(ctx, utils.TokenParseFailur, "解析TOKEN出错，请重新登录")
 		return
 	}
 
-	var mUser model.SdUser
+	var mUser user.SdUser
 	if err := ctx.ReadForm(&mUser); err != nil {
 		log.Print(err)
-		utils.MakeErrorRes(ctx, model.OtherErrorCode, model.OptionFailur, "数据接收失败")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "数据接收失败")
 		log.Print("数据接收失败")
 		return
 	}
 
 	e := global.GVA_DB
-	affected, err := e.Id(user.Id).Update(mUser)
+	affected, err := e.Id(token.Id).Update(mUser)
 	if affected <= 0 || err != nil {
 		log.Print(err)
 		log.Printf("数据库更新失败")
-		utils.MakeErrorRes(ctx, model.OtherErrorCode, model.OptionFailur, "数据库更新失败")
+		utils.FailWithDetails(ctx, utils.OptionFailur, "数据库更新失败")
 		return
 	}
 
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 
 }

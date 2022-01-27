@@ -1,17 +1,6 @@
-package model
+package utils
 
 const (
-	SuccessCode    int = 1200
-	NotFoundCode   int = 1404
-	DbErrorCode    int = 1403
-	OtherErrorCode int = 1402
-)
-const (
-	// key定义
-	CODE string = "code"
-	MSG  string = "msg"
-	DATA string = "data"
-
 	// msg define
 	Success           string = "成功"
 	OptionSuccess     string = "操作成功"

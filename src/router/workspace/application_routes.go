@@ -21,7 +21,7 @@ import (
 func ApplicationSelect(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.Id == 0 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -29,10 +29,10 @@ func ApplicationSelect(ctx iris.Context) {
 	has, err := e.Where("is_deleted = 0").Get(&application)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, application)
+	utils.OkWithDetails(ctx, utils.Success, application)
 }
 
 // swagger:operation Post /workspace/application/select/workspace application select_workspace_Application
@@ -48,7 +48,7 @@ func ApplicationSelectWorkspace(ctx iris.Context) {
 
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.WorkspaceId == 0 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -59,10 +59,10 @@ func ApplicationSelectWorkspace(ctx iris.Context) {
 	has, err := e.Where("is_deleted = 0 and workspace_id = ?", application.WorkspaceId).Get(&applications)
 	if !has || err != nil {
 		log.Printf("数据库查询错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, applications)
+	utils.OkWithDetails(ctx, utils.Success, applications)
 }
 
 // swagger:operation POST /workspace/application/create application create_application
@@ -85,7 +85,7 @@ func ApplicationSelectWorkspace(ctx iris.Context) {
 func ApplicationCreate(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -94,10 +94,10 @@ func ApplicationCreate(ctx iris.Context) {
 	affect, err := e.Insert(&application)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 
 }
 
@@ -121,7 +121,7 @@ func ApplicationCreate(ctx iris.Context) {
 func ApplicationEditor(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.Id == 0 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -129,10 +129,10 @@ func ApplicationEditor(ctx iris.Context) {
 	affect, err := e.Id(application.Id).Update(&application)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }
 
 // swagger:operation DELETE /workspace/application/delete application delete_application
@@ -142,7 +142,7 @@ func ApplicationEditor(ctx iris.Context) {
 func ApplicationDelete(ctx iris.Context) {
 	var application model.SdApplication
 	if err := ctx.ReadForm(&application); err != nil || application.Id == 0 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -151,10 +151,10 @@ func ApplicationDelete(ctx iris.Context) {
 	affect, err := e.Id(application.Id).Update(&application)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }
 
 // swagger:operation POST /workspace/application/insert-workflow application insert_application
@@ -173,7 +173,7 @@ func ApplicationDelete(ctx iris.Context) {
 func ApplicationInsert(ctx iris.Context) {
 	var workflowApplication model.SdWorkflowApplication
 	if err := ctx.ReadForm(&workflowApplication); err != nil || workflowApplication.WorkflowId == 0 || workflowApplication.ApplicationId == 0 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -181,10 +181,10 @@ func ApplicationInsert(ctx iris.Context) {
 	affect, err := e.Insert(&workflowApplication)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }
 
 // swagger:operation DELETE /workspace/application/delete-workflow application delete_workflow_Application
@@ -203,7 +203,7 @@ func ApplicationInsert(ctx iris.Context) {
 func ApplicationDeleteWorkflow(ctx iris.Context) {
 	var workflowApplication model.SdWorkflowApplication
 	if err := ctx.ReadForm(&workflowApplication); err != nil || workflowApplication.WorkflowId == 0 || workflowApplication.ApplicationId == 0 {
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		log.Print("数据接收失败")
 		return
 	}
@@ -211,8 +211,8 @@ func ApplicationDeleteWorkflow(ctx iris.Context) {
 	affect, err := e.Delete(&workflowApplication)
 	if affect <= 0 || err != nil {
 		log.Printf("数据库插入错误")
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.OptionFailur, nil)
+		utils.FailWithDetails(ctx, utils.OptionFailur, nil)
 		return
 	}
-	utils.MakeSuccessRes(ctx, model.Success, nil)
+	utils.OkWithDetails(ctx, utils.Success, nil)
 }

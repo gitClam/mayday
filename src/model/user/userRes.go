@@ -1,12 +1,7 @@
-package user_routes
+package user
 
-import (
-	"mayday/src/model"
-	//"log"
-)
-
-// UserVO 前端需要的数据结构
-type UserVO struct {
+// UserRes 前端需要的数据结构
+type UserRes struct {
 	Id         int
 	Name       string
 	RealName   string
@@ -26,7 +21,7 @@ type UserVO struct {
 }
 
 // TransformUserVOToken 携带token
-func TransformUserVOToken(token string, user *model.SdUser) (uVO UserVO) {
+func TransformUserVOToken(token string, user *SdUser) (uVO UserRes) {
 	uVO.Id = user.Id
 	uVO.Name = user.Name
 	uVO.RealName = user.Realname
@@ -43,29 +38,28 @@ func TransformUserVOToken(token string, user *model.SdUser) (uVO UserVO) {
 	uVO.Phone = user.Phone
 	uVO.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")
 	uVO.Token = token
-
 	return
 }
 
 // TransformUserVOList 用户列表，不带啊token
-func TransformUserVOList(userList []model.SdUser) (userVOList []UserVO) {
-	for _, user := range userList {
-		uVO := UserVO{}
+func TransformUserVOList(userList []SdUser) (userVOList []UserRes) {
+	for _, sdUser := range userList {
+		uVO := UserRes{}
 
-		uVO.Id = user.Id
-		uVO.Name = user.Name
-		uVO.Age = user.Age
-		uVO.Sex = user.Sex
-		uVO.Mail = user.Mail
-		uVO.Phone = user.Phone
+		uVO.Id = sdUser.Id
+		uVO.Name = sdUser.Name
+		uVO.Age = sdUser.Age
+		uVO.Sex = sdUser.Sex
+		uVO.Mail = sdUser.Mail
+		uVO.Phone = sdUser.Phone
+
 		userVOList = append(userVOList, uVO)
 	}
 	return
 }
 
 // TransformUserVO 用户，不带啊token
-func TransformUserVO(user *model.SdUser) (userVO UserVO) {
-
+func TransformUserVO(user *SdUser) (userVO UserRes) {
 	userVO.Id = user.Id
 	userVO.Name = user.Name
 	userVO.RealName = user.Realname

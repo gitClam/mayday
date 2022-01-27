@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"log"
 	"mayday/src/global"
+	"mayday/src/model/user"
 	"mayday/src/utils"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"time"
-
-	"mayday/src/model"
 
 	"sync"
 
@@ -43,19 +42,19 @@ func Serve(ctx context.Context) bool {
 }
 
 // ParseToken 解析token的信息为当前用户
-func ParseToken(ctx context.Context) (*model.SdUser, bool) {
+func ParseToken(ctx context.Context) (*user.SdUser, bool) {
 	mapClaims := (jwts.Get(ctx).Claims).(jwt.MapClaims)
 
 	id, ok1 := mapClaims["id"].(float64)
 	name, ok2 := mapClaims["name"].(string)
 	//log.Printf("*** MapClaims=%v, [id=%f, ok1=%t]; [username=%s, ok2=%t]", mapClaims, id, ok1, name, ok2)
 	if !ok1 || !ok2 {
-		log.Print(model.TokenParseFailur)
-		utils.MakeErrorRes(ctx, iris.StatusInternalServerError, model.TokenParseFailur, nil)
+		log.Print(utils.TokenParseFailur)
+		utils.FailWithDetails(ctx, utils.TokenParseFailur, nil)
 		return nil, false
 	}
 
-	user := model.SdUser{
+	user := user.SdUser{
 		Id:   int(id),
 		Name: name,
 	}
@@ -97,7 +96,7 @@ func (m *Jwts) CheckJWT(ctx context.Context) error {
 	token, err := m.Config.Extractor(ctx)
 	if err != nil {
 		m.logf("Error extracting JWT: %v", err)
-		m.Config.ErrorHandler(ctx, model.TokenExactFailur)
+		m.Config.ErrorHandler(ctx, utils.TokenExactFailur)
 		return fmt.Errorf("Error extracting token: %v", err)
 	}
 
@@ -108,14 +107,14 @@ func (m *Jwts) CheckJWT(ctx context.Context) error {
 		}
 
 		m.logf("  Error: No credentials found (CredentialsOptional=false)")
-		m.Config.ErrorHandler(ctx, model.TokenParseFailurAndEmpty)
-		return fmt.Errorf(model.TokenParseFailurAndEmpty)
+		m.Config.ErrorHandler(ctx, utils.TokenParseFailurAndEmpty)
+		return fmt.Errorf(utils.TokenParseFailurAndEmpty)
 	}
 
 	parsedToken, err := jwt.Parse(token, m.Config.ValidationKeyGetter)
 	if err != nil {
 		m.logf("Error parsing token1: %v", err)
-		m.Config.ErrorHandler(ctx, model.TokenExpire)
+		m.Config.ErrorHandler(ctx, utils.TokenExpire)
 		return fmt.Errorf("Error parsing token2: %v", err)
 	}
 
@@ -124,20 +123,20 @@ func (m *Jwts) CheckJWT(ctx context.Context) error {
 			m.Config.SigningMethod.Alg(),
 			parsedToken.Header["alg"])
 		m.logf("Error validating token algorithm: %s", message)
-		m.Config.ErrorHandler(ctx, model.TokenParseFailur) // 算法错误
+		m.Config.ErrorHandler(ctx, utils.TokenParseFailur) // 算法错误
 		return fmt.Errorf("Error validating token algorithm: %s", message)
 	}
 
 	if !parsedToken.Valid {
-		m.logf(model.TokenParseFailurAndInvalid)
-		m.Config.ErrorHandler(ctx, model.TokenParseFailurAndInvalid)
-		return fmt.Errorf(model.TokenParseFailurAndInvalid)
+		m.logf(utils.TokenParseFailurAndInvalid)
+		m.Config.ErrorHandler(ctx, utils.TokenParseFailurAndInvalid)
+		return fmt.Errorf(utils.TokenParseFailurAndInvalid)
 	}
 
 	if m.Config.Expiration {
 		if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok {
 			if expired := claims.VerifyExpiresAt(time.Now().Unix(), true); !expired {
-				return fmt.Errorf(model.TokenExpire)
+				return fmt.Errorf(utils.TokenExpire)
 			}
 		}
 	}
@@ -177,7 +176,7 @@ func ConfigJWT() {
 		//验证未通过错误处理方式
 		ErrorHandler: func(ctx context.Context, errMsg string) {
 
-			utils.MakeErrorRes(ctx, iris.StatusUnauthorized, errMsg, nil)
+			utils.FailWithDetails(ctx, errMsg, nil)
 		},
 		// 指定func用于提取请求中的token
 		Extractor:           FromAuthHeader,
@@ -195,7 +194,7 @@ type Claims struct {
 }
 
 // GenerateToken 在登录成功的时候生成token
-func GenerateToken(user *model.SdUser) (string, error) {
+func GenerateToken(user *user.SdUser) (string, error) {
 
 	expireTime := time.Now().Add(time.Duration(global.GVA_CONFIG.JWT.JWTTimeout) * time.Second)
 

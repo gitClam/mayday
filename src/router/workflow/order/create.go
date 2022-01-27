@@ -3,6 +3,7 @@ package order
 import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
+	"mayday/src/model/user"
 
 	//"strconv"
 	//"time"
@@ -12,16 +13,17 @@ import (
 	"encoding/json"
 
 	"mayday/src/model"
+	userModel "mayday/src/model/user"
 	//"mayday/src/utils/responser"
 	//"mayday/src/utils/responser/vo"
 	//"mayday/middleware/jwts"
 )
 
-func CreateOrder(ctx iris.Context, user *model.SdUser) (err error) {
+func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 	var (
 		//taskList       []string
 		stateList     []interface{}    //节点列表
-		userInfo      model.SdUser     //请求用户信息
+		userInfo      userModel.SdUser //请求用户信息
 		variableValue []interface{}    //节点列表
 		workflowValue model.SdWorkflow //流程信息
 		//sendToUserList []model.SdUser //要通知的人的列表

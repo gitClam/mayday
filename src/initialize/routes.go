@@ -1,30 +1,29 @@
 package initialize
 
 import (
+	"github.com/iris-contrib/swagger/v12"
+	"github.com/iris-contrib/swagger/v12/swaggerFiles"
+	"github.com/kataras/iris/v12"
+	_ "mayday/docs"
 	"mayday/src/middleware"
-	"mayday/src/router/user"
+	UserRouter "mayday/src/router/user"
 	"mayday/src/router/workflow"
 	"mayday/src/router/workspace"
-
-	"github.com/kataras/iris/v12"
 	//"github.com/iris-contrib/middleware/cors"
 )
 
 func Routers(app *iris.Application) {
+
+	app.Get("/swagger/{any:path}", swagger.WrapHandler(swaggerFiles.Handler))
+
 	main := app.Party("/")
+	// Option 请求直接返回
 	main.Options("/*", func(ctx iris.Context) {})
-	main.Use(middleware.Cors)
-	main.Use(middleware.ServeHTTP)
-	user := main.Party("/user")
-	{
-		user.Post("/registe", user_routes.UserRegister)            //用户注册
-		user.Post("/login", user_routes.UserLogin)                 //用户登录
-		user.Delete("/cancellation", user_routes.UserCancellation) //用户注销
-		user.Post("/editor/message", user_routes.SetUserMessage)   //修改用户信息
-		user.Get("/message", user_routes.UserMessage)              //获取用户信息
-		user.Get("/photo/{id:int}", user_routes.UserPhoto)         //获取用户头像
-		user.Post("/set_photo", user_routes.SetUserPhoto)          //设置用户头像头像
-	}
+	//解决跨域和路由拦截
+	main.Use(middleware.Cors, middleware.ServeHTTP)
+
+	UserRouter.InitUserRouter(main) //用户组
+
 	workflow := main.Party("/workflow")
 	{
 		select1 := workflow.Party("/select")
@@ -111,8 +110,8 @@ func Routers(app *iris.Application) {
 			job.Post("/select/department", workspace_routes.Job_select_department) //查询职位信息
 			job.Get("/select/user", workspace_routes.Job_select_user)              //查询职位信息
 			job.Post("/create", workspace_routes.Job_create)                       //创建职位
-			job.Post("/editor", workspace_routes.Job_editor)                       //修改职位信息
-			job.Post("/delete", workspace_routes.Job_delete)                       //删除职位
+			job.Post("/editor", workspace_routes.JobEditor)                        //修改职位信息
+			job.Post("/delete", workspace_routes.JobDelete)                        //删除职位
 			job.Post("/insert-user", workspace_routes.JobInsert)                   //添加用户
 			job.Post("/delete-user", workspace_routes.JobDeleteUser)               //删除
 		}
