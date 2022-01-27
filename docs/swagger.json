@@ -1,21 +1,21 @@
 {
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server Petstore server.",
-        "title": "Swagger Example API",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
-        },
+        "description": "除了用户登录和注册以及头像获取三个接口",
+        "title": "JieTong API",
+        "contact": {},
         "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "name": "ha 1.0"
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
-    "basePath": "/v2",
+    "host": "47.107.108.127:80",
+    "basePath": "/",
     "paths": {}
 }

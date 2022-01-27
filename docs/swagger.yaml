@@ -1,16 +1,15 @@
-basePath: /v2
-host: localhost:8080
+basePath: /
+consumes:
+- application/json
+host: 47.107.108.127:80
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
-  description: This is a sample server Petstore server.
+  contact: {}
+  description: 除了用户登录和注册以及头像获取三个接口
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
+    name: ha 1.0
+  title: JieTong API
   version: "1.0"
 paths: {}
+produces:
+- application/json
 swagger: "2.0"
