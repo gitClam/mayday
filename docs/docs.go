@@ -50,7 +50,7 @@ var SwaggerInfo = swaggerInfo{
 	BasePath:    "/",
 	Schemes:     []string{},
 	Title:       "JieTong API",
-	Description: "除了用户登录和注册以及头像获取三个接口\n其他的都需要用户携带TOKEN进行用户验证，否则无法访问接口\n",
+	Description: "除了用户登录和注册以及头像获取三个接口\n其他的都需要用户携带TOKEN进行用户验证，否则无法访问接口\n\nTOKEN 格式 ： KEY：Authorization VALUE： \"JWT \" + 登录时返回的对应TOKEN   （放在请求的header中）\n",
 }
 
 type s struct{}
