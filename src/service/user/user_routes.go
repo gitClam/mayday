@@ -14,69 +14,6 @@ import (
 	"time"
 )
 
-// swagger:operation POST /user/registe user registe
-// ---
-// summary: 用户注册
-// description: 用户注册
-// parameters:
-// - name: name
-//   description: 用户昵称
-//   type: string
-//   required: true
-// - name: password
-//   description: 用户 密码
-//   type: string
-//   required: true
-// - name: realname
-//   description: 真实姓名
-//   type: string
-//   required: false
-// - name: age
-//   description: 用户年龄
-//   type: int
-//   required: false
-// - name: birthday
-//   description: 用户生日
-//   type: datetime
-//   required: false
-// - name: sex
-//   in: 男/女
-//   description: 用户性别
-//   type: string
-//   required: true
-// - name: Wechat
-//   description: 微信
-//   type: string
-//   required: false
-// - name: Qqnumber
-//   description: QQ
-//   type: string
-//   required: false
-// - name: Info
-//   description: 备注
-//   type: string
-//   required: false
-// - name: mail
-//   description: 邮箱
-//   type: string
-//   required: true
-// - name: company
-//   description: 公司
-//   type: string
-//   required: false
-// - name: vocation
-//   description: 职业
-//   type: string
-//   required: false
-// - name: department
-//   description: 部门
-//   type: string
-//   required: false
-// Responses:
-//       '200':
-//         schema:
-//           $ref: '#/responses/forbidden'
-
 func UserRegister(ctx iris.Context) {
 	var sdUser user.SdUser
 	if err := ctx.ReadForm(&sdUser); err != nil {
@@ -101,19 +38,6 @@ func UserRegister(ctx iris.Context) {
 	log.Println("ok")
 }
 
-// swagger:operation POST /user/login user login
-// ---
-// summary: 用户登录
-// description: 用户登录
-// parameters:
-// - name: mail
-//   description: 用户邮箱
-//   type: string
-//   required: true
-// - name: password
-//   description: 用户密码
-//   type: string
-//   required: true
 func UserLogin(ctx iris.Context) {
 
 	var sdUser user.SdUser
@@ -159,11 +83,6 @@ func UserLogin(ctx iris.Context) {
 	utils.Responser.OkWithDetails(ctx, utils.Success, user.TransformUserVOToken(token, &mUser))
 }
 
-// swagger:operation GET /user/photo/{id:int} user get_photo
-// ---
-// summary: 获取用户头像
-// description: 获取用户头像
-
 func UserPhoto(ctx iris.Context) {
 
 	var user user.SdUser
@@ -195,15 +114,6 @@ func UserPhoto(ctx iris.Context) {
 	}
 }
 
-// swagger:operation POST /user/set_photo user set_photo
-// ---
-// summary: 设置用户头像
-// description: 设置用户头像
-// parameters:
-// - name: UserPhoto
-//   description: 用户头像
-//   type: file
-//   required: true
 func SetUserPhoto(ctx iris.Context) {
 	token, ok := middleware.ParseToken(ctx)
 	if !ok {
@@ -257,11 +167,6 @@ func SetUserPhoto(ctx iris.Context) {
 	log.Print("图片已保存")
 }
 
-// swagger:operation Delete /user/cancellation user cancellation
-// ---
-// summary: 用户注销
-// description: 用户注销
-
 func UserCancellation(ctx iris.Context) {
 	token, ok := middleware.ParseToken(ctx)
 	if !ok {
@@ -291,11 +196,6 @@ func UserCancellation(ctx iris.Context) {
 	utils.Responser.Ok(ctx)
 }
 
-// swagger:operation GET /user/message user message
-// ---
-// summary: 获取用户信息
-// description: 获取用户信息
-
 func UserMessage(ctx iris.Context) {
 
 	token, ok := middleware.ParseToken(ctx)
@@ -319,73 +219,6 @@ func UserMessage(ctx iris.Context) {
 	utils.Responser.OkWithDetails(ctx, utils.Success, user.TransformUserVO(&mUser))
 
 }
-
-// swagger:operation POST /user/editor/message user editor_message
-// ---
-// summary: 修改用户信息
-// description: 修改用户信息
-// parameters:
-// - name: name
-//   description: 用户昵称
-//   type: string
-//   required: false
-// - name: password
-//   description: 用户 密码
-//   type: string
-//   required: false
-// - name: realname
-//   description: 真实姓名
-//   type: string
-//   required: false
-// - name: age
-//   description: 用户年龄
-//   type: int
-//   required: false
-// - name: birthday
-//   description: 用户生日
-//   type: datetime
-//   required: false
-// - name: sex
-//   in: 男/女
-//   description: 用户性别
-//   type: string
-//   required: false
-// - name: Wechat
-//   description: 微信
-//   type: string
-//   required: false
-// - name: Qqnumber
-//   description: QQ
-//   type: string
-//   required: false
-// - name: Info
-//   description: 备注
-//   type: string
-//   required: false
-// - name: mail
-//   description: 邮箱
-//   type: string
-//   required: false
-// - name: company
-//   description: 公司
-//   type: string
-//   required: false
-// - name: vocation
-//   description: 职业
-//   type: string
-//   required: false
-// - name: phone
-//   description: 联系电话
-//   type: string
-//   required: false
-// - name: department
-//   description: 部门
-//   type: string
-//   required: false
-// Responses:
-//       '200':
-//         schema:
-//           $ref: '#/responses/forbidden'
 
 func SetUserMessage(ctx iris.Context) {
 
