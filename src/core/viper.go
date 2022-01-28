@@ -20,7 +20,7 @@ const (
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param userReq body user.UserReq true "用户模型"
-// @Success 200 {object} utils.Response{msg=string} "创建用户"
+// @Success 200 {object} utils.Response{data=user.UserRes} "创建用户"
 // @Router /autoCodeExample/createAutoCodeExample [post]
 func Viper(path ...string) *viper.Viper {
 	var config string

@@ -71,8 +71,8 @@ var doc = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "msg": {
-                                            "type": "string"
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserRes"
                                         }
                                     }
                                 }
@@ -138,6 +138,59 @@ var doc = `{
                 "wechat": {
                     "type": "string",
                     "example": "小明"
+                }
+            }
+        },
+        "user.UserRes": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "company": {
+                    "type": "string"
+                },
+                "createDate": {
+                    "type": "string"
+                },
+                "department": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "info": {
+                    "type": "string"
+                },
+                "mail": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "qqNumber": {
+                    "type": "string"
+                },
+                "realName": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "vocation": {
+                    "type": "string"
+                },
+                "wechat": {
+                    "type": "string"
                 }
             }
         },
