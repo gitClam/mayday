@@ -220,7 +220,7 @@ func JobSelectUser(ctx iris.Context) {
 		utils.Responser.FailWithMsg(ctx, "")
 		return
 	}
-	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.TransformUserVOList(users))
+	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserAbstractResList(users))
 }
 
 // swagger:operation POST /workspace/job/insert-user job insert_job

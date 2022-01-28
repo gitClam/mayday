@@ -10,81 +10,70 @@ import (
 	"mayday/src/utils"
 	"os"
 	"strconv"
-	//"strconv"
 	"time"
 )
 
-// @Tags AutoCodeExample
-// @Summary 创建AutoCodeExample
-// @Security ApiKeyAuth
-// @accept application/json
-// @Produce application/json
-// @Param data body autocode.AutoCodeExample true "AutoCodeExample模型"
-// @Success 200 {object} response.Response{msg=string} "创建AutoCodeExample"
-// @Router /autoCodeExample/createAutoCodeExample [post]
-
-// @Tags UserRegister
+// @Tags User
 // @Summary 用户注册
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param userReq body model.user.UserReq true "用户模型"
-// @Success 200 {object} utils.Response{msg=string} "创建用户"
-// @Router /autoCodeExample/createAutoCodeExample [post]
-
+// @Param userReq body user.UserReq true "用户信息"
+// @Success 200 {object} utils.Response
+// @Router /user/registe [post]
 func UserRegister(ctx iris.Context) {
 	var sdUser user.SdUser
 	if err := ctx.ReadForm(&sdUser); err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据接收失败")
-		log.Print("用户注册失败，数据接收失败")
+		global.GVA_LOG.Error("用户注册失败，数据接收失败")
 		return
 	}
-	log.Print(sdUser)
+
 	sdUser.Photo = "./data/photo/2.png"
-	sdUser.IsDeleted = 0
 	sdUser.CreateDate = utils.LocalTime(time.Now())
-	log.Print(sdUser)
+
 	e := global.GVA_DB
 	effect, err := e.Insert(sdUser)
 	if effect <= 0 || err != nil {
-		log.Printf("用户注册失败")
 		utils.Responser.FailWithMsg(ctx, "用户注册失败")
+		global.GVA_LOG.Error("用户注册失败")
 		return
 	}
 
 	utils.Responser.Ok(ctx)
-	log.Println("ok")
+	global.GVA_LOG.Info("用户: " + sdUser.Mail + " 注册成功")
 }
 
-// @Tags UserLogin
+// @Tags User
 // @Summary 用户登录
-// @accept application/json
+// @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param data body autocode.AutoCodeExample true "AutoCodeExample模型"
-// @Success 200 {object} response.Response{msg=string} "创建AutoCodeExample"
-// @Router /autoCodeExample/createAutoCodeExample [post]
-
+// @Param Mail body string true "用户邮箱"
+// @Param Password body string true "用户密码"
+// @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是会有信息的"
+// @Router /user/login [post]
 func UserLogin(ctx iris.Context) {
 
-	var sdUser user.SdUser
-	if err := ctx.ReadForm(&sdUser); err != nil {
-		utils.Responser.FailWithMsg(ctx, "用户数据接收失败")
-		log.Print("用户登录失败，数据接收失败")
+	mail := ctx.FormValue("Mail")
+	if mail == "" {
+		utils.Responser.FailWithMsg(ctx, "用户邮箱为空")
+		log.Print("用户登录失败,邮箱为空")
 		return
 	}
-
-	if sdUser.Mail == "" || sdUser.Password == "" {
-		utils.Responser.FailWithMsg(ctx, "用户名或密码为空")
-		log.Print("用户登录失败,邮箱或密码为空")
+	password := ctx.FormValue("Password")
+	if ctx.FormValue("Password") == "" {
+		utils.Responser.FailWithMsg(ctx, "用户密码为空")
+		log.Print("用户登录失败,密码为空")
 		return
 	}
 
 	var mUser user.SdUser
-	mUser.Mail = sdUser.Mail
+	mUser.Mail = mail
 
 	e := global.GVA_DB
-	has, err := e.Where("is_deleted != 1").Get(&mUser)
-	if !has || err != nil || mUser.IsDeleted == 1 {
+	has, err := e.Get(&mUser)
+	if !has || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		log.Printf("数据库查询错误或用户名不存在")
 		return
@@ -92,7 +81,7 @@ func UserLogin(ctx iris.Context) {
 
 	log.Print(mUser)
 
-	if mUser.Password != sdUser.Password {
+	if mUser.Password != password {
 		utils.Responser.FailWithMsg(ctx, "密码错误")
 		log.Printf("密码错误")
 		return
@@ -106,7 +95,7 @@ func UserLogin(ctx iris.Context) {
 		return
 	}
 
-	utils.Responser.OkWithDetails(ctx, utils.Success, user.TransformUserVOToken(token, &mUser))
+	utils.Responser.OkWithDetails(ctx, utils.Success, user.GetUserDetailsResWithToken(token, &mUser))
 }
 
 func UserPhoto(ctx iris.Context) {
@@ -242,7 +231,7 @@ func UserMessage(ctx iris.Context) {
 		return
 	}
 
-	utils.Responser.OkWithDetails(ctx, utils.Success, user.TransformUserVO(&mUser))
+	utils.Responser.OkWithDetails(ctx, utils.Success, user.GetUserDetailsResWithOutToken(&mUser))
 
 }
 

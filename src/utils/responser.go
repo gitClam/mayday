@@ -10,16 +10,12 @@ var Responser *response
 type response struct{}
 
 type Response struct {
-	Code int         `json:"code"`
+	Code int         `json:"code" example:"200"`
 	Data interface{} `json:"data"`
-	Msg  string      `json:"msg"`
+	Msg  string      `json:"msg" example:"操作成功"`
 }
 
 const (
-	CODE string = "code"
-	MSG  string = "msg"
-	DATA string = "data"
-
 	SUCCESS int = 200
 	ERROR   int = 777
 )
