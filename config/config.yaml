@@ -1,6 +1,6 @@
 system:
   ignoreURLs: [ /user/login, /user/registe, /login_pwd,/user/photo/*] #考虑直接加到权限管理里去
-  port: ":3306"
+  port: ":80"
   photoPath: "./data/photo"
   env: ""
   defaultHeadPortrait: "./data/photo/2.png"
