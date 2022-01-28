@@ -7,12 +7,21 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	_ "mayday/src/model/user"
 )
 
 const (
 	ConfigFile = "./config/config.yaml"
 )
 
+// @Tags UserRegister
+// @Summary 用户注册
+// @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param userReq body user.UserReq true "用户模型"
+// @Success 200 {object} utils.Response{msg=string} "创建用户"
+// @Router /autoCodeExample/createAutoCodeExample [post]
 func Viper(path ...string) *viper.Viper {
 	var config string
 	if len(path) == 0 {

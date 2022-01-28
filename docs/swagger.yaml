@@ -1,6 +1,57 @@
 basePath: /
 consumes:
 - application/json
+definitions:
+  user.UserReq:
+    properties:
+      age:
+        example: 10
+        type: integer
+      birthday:
+        example: "0001-01-01 00:00:00"
+        type: string
+      company:
+        example: 小明
+        type: string
+      department:
+        example: 小明
+        type: string
+      info:
+        example: 小明
+        type: string
+      mail:
+        example: 小明
+        type: string
+      name:
+        example: 小明
+        type: string
+      password:
+        example: 小明
+        type: string
+      qqnumber:
+        example: 小明
+        type: string
+      realname:
+        example: 小明
+        type: string
+      sex:
+        example: 小明
+        type: string
+      vocation:
+        example: 小明
+        type: string
+      wechat:
+        example: 小明
+        type: string
+    type: object
+  utils.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
 host: 47.107.108.127:80
 info:
   contact: {}
@@ -13,7 +64,35 @@ info:
     name: ha 1.0
   title: JieTong API
   version: "1.0"
-paths: {}
+paths:
+  /autoCodeExample/createAutoCodeExample:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户模型
+        in: body
+        name: userReq
+        required: true
+        schema:
+          $ref: '#/definitions/user.UserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建用户
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用户注册
+      tags:
+      - UserRegister
 produces:
 - application/json
 swagger: "2.0"

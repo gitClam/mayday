@@ -14,6 +14,24 @@ import (
 	"time"
 )
 
+// @Tags AutoCodeExample
+// @Summary 创建AutoCodeExample
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body autocode.AutoCodeExample true "AutoCodeExample模型"
+// @Success 200 {object} response.Response{msg=string} "创建AutoCodeExample"
+// @Router /autoCodeExample/createAutoCodeExample [post]
+
+// @Tags UserRegister
+// @Summary 用户注册
+// @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param userReq body model.user.UserReq true "用户模型"
+// @Success 200 {object} utils.Response{msg=string} "创建用户"
+// @Router /autoCodeExample/createAutoCodeExample [post]
+
 func UserRegister(ctx iris.Context) {
 	var sdUser user.SdUser
 	if err := ctx.ReadForm(&sdUser); err != nil {
@@ -37,6 +55,14 @@ func UserRegister(ctx iris.Context) {
 	utils.Responser.Ok(ctx)
 	log.Println("ok")
 }
+
+// @Tags UserLogin
+// @Summary 用户登录
+// @accept application/json
+// @Produce application/json
+// @Param data body autocode.AutoCodeExample true "AutoCodeExample模型"
+// @Success 200 {object} response.Response{msg=string} "创建AutoCodeExample"
+// @Router /autoCodeExample/createAutoCodeExample [post]
 
 func UserLogin(ctx iris.Context) {
 

@@ -31,7 +31,129 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/autoCodeExample/createAutoCodeExample": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserRegister"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "description": "用户模型",
+                        "name": "userReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.UserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建用户",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "user.UserReq": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "birthday": {
+                    "type": "string",
+                    "example": "0001-01-01 00:00:00"
+                },
+                "company": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "department": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "info": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "mail": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "qqnumber": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "realname": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "sex": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "vocation": {
+                    "type": "string",
+                    "example": "小明"
+                },
+                "wechat": {
+                    "type": "string",
+                    "example": "小明"
+                }
+            }
+        },
+        "utils.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "msg": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 type swaggerInfo struct {

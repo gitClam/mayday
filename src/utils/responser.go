@@ -9,6 +9,12 @@ var Responser *response
 
 type response struct{}
 
+type Response struct {
+	Code int         `json:"code"`
+	Data interface{} `json:"data"`
+	Msg  string      `json:"msg"`
+}
+
 const (
 	CODE string = "code"
 	MSG  string = "msg"
@@ -20,10 +26,10 @@ const (
 
 func Result(code int, data interface{}, msg string, ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	_, err := ctx.JSON(iris.Map{
-		CODE: code,
-		MSG:  msg,
-		DATA: data,
+	_, err := ctx.JSON(Response{
+		code,
+		data,
+		msg,
 	})
 	if err != nil {
 		global.GVA_LOG.Error("Result err :" + err.Error())
