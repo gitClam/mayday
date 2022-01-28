@@ -116,7 +116,7 @@ func UserPhoto(ctx iris.Context) {
 	}
 
 	if sdUser.Photo == "" {
-		utils.Responser.FailWithMsg(ctx, "用户头像获取出错")
+		utils.Responser.FailWithMsg(ctx, "用户头像未设置")
 		return
 	}
 
