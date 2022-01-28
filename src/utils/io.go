@@ -2,13 +2,15 @@ package utils
 
 import (
 	"errors"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"os"
 )
 
-var IO *io
+var IO *Io
 
-type io struct{}
+type Io struct{}
 
 type FilErr struct {
 	msg string
@@ -23,7 +25,7 @@ func (filErr FilErr) Error() string {
 }
 
 // Load 读取文件
-func (io *io) Load(path string) ([]byte, *FilErr) {
+func (i *Io) Load(path string) ([]byte, *FilErr) {
 
 	data, err := ioutil.ReadFile(path)
 
@@ -34,19 +36,34 @@ func (io *io) Load(path string) ([]byte, *FilErr) {
 	return data, nil
 }
 
-// Save 保存文件
-func (io *io) Save(path string, data []byte) *FilErr {
-	//待修改
-	//如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
-	err := ioutil.WriteFile(path, data, 0777)
+// Save 保存文件（没有就创建，删除并覆盖）
+func (i *Io) Save(path string, file multipart.File) (err1 error) {
+
+	out, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		return &FilErr{"File saveing error"}
+		err1 = err
+		return
 	}
+
+	defer func(out *os.File) {
+		err := out.Close()
+		if err != nil {
+			err1 = err
+			return
+		}
+	}(out)
+
+	_, err = io.Copy(out, file)
+	if err != nil {
+		err1 = err
+		return
+	}
+
 	return nil
 }
 
 // PathExists 判断文件是否存在
-func (io *io) PathExists(path string) (bool, error) {
+func (i *Io) PathExists(path string) (bool, error) {
 	fi, err := os.Stat(path)
 	if err == nil {
 		if fi.IsDir() {

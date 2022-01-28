@@ -18,7 +18,76 @@
     "host": "47.107.108.127:80",
     "basePath": "/",
     "paths": {
-        "/autoCodeExample/createAutoCodeExample": {
+        "/user/cancellation": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用户注销",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/editor/message": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "修改用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "用户信息",
+                        "name": "userReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.UserReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
             "post": {
                 "security": [
                     {
@@ -32,12 +101,149 @@
                     "application/json"
                 ],
                 "tags": [
-                    "UserRegister"
+                    "User"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "用户邮箱",
+                        "name": "Mail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "用户密码",
+                        "name": "Password",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserDetailsRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/message": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "获取用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserDetailsRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/photo/{id:int}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "获取头像",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "直接返回文件的渲染视图",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/registe": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "用户注册",
                 "parameters": [
                     {
-                        "description": "用户模型",
+                        "description": "用户信息",
                         "name": "userReq",
                         "in": "body",
                         "required": true,
@@ -48,21 +254,46 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "创建用户",
+                        "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/user.UserRes"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/set_photo": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "设置头像",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "头像文件",
+                        "name": "UserPhoto",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
                         }
                     }
                 }
@@ -70,113 +301,141 @@
         }
     },
     "definitions": {
+        "user.UserDetailsRes": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "birthday": {
+                    "type": "string",
+                    "example": "2021-01-01 00:00:00"
+                },
+                "company": {
+                    "type": "string",
+                    "example": "罗智地产有限公司"
+                },
+                "createDate": {
+                    "type": "string",
+                    "example": "2021-01-01 00:00:00"
+                },
+                "department": {
+                    "type": "string",
+                    "example": "tnnd怎么还不点"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "info": {
+                    "type": "string",
+                    "example": "今晚点喂"
+                },
+                "mail": {
+                    "type": "string",
+                    "example": "123456@abc.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "M.Salah"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "12345678912"
+                },
+                "qqNumber": {
+                    "type": "string",
+                    "example": "123456789"
+                },
+                "realName": {
+                    "type": "string",
+                    "example": "罗智"
+                },
+                "sex": {
+                    "type": "string",
+                    "enum": [
+                        "男",
+                        "女"
+                    ],
+                    "example": "男"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "NDOAIIF@!Afaad21dAONF24b78B9b23br9B(HRbnv8020Bv893htb08BbivB082"
+                },
+                "vocation": {
+                    "type": "string",
+                    "example": "包工头"
+                },
+                "wechat": {
+                    "type": "string",
+                    "example": "M.Salah"
+                }
+            }
+        },
         "user.UserReq": {
             "type": "object",
             "properties": {
                 "age": {
                     "type": "integer",
-                    "example": 10
+                    "example": 3
                 },
                 "birthday": {
                     "type": "string",
-                    "example": "0001-01-01 00:00:00"
+                    "example": "2021-01-01 00:00:00"
                 },
                 "company": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "罗智地产有限公司"
                 },
                 "department": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "tnnd怎么还不点"
                 },
                 "info": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "今晚点喂"
                 },
                 "mail": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "123456@abc.com"
                 },
                 "name": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "M.Salah"
                 },
                 "password": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "123456"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "12345678912"
                 },
                 "qqnumber": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "123456789"
                 },
                 "realname": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "罗智"
                 },
                 "sex": {
                     "type": "string",
-                    "example": "小明"
+                    "enum": [
+                        "男",
+                        "女"
+                    ],
+                    "example": "男"
                 },
                 "vocation": {
                     "type": "string",
-                    "example": "小明"
+                    "example": "包工头"
                 },
                 "wechat": {
                     "type": "string",
-                    "example": "小明"
-                }
-            }
-        },
-        "user.UserRes": {
-            "type": "object",
-            "properties": {
-                "age": {
-                    "type": "integer"
-                },
-                "birthday": {
-                    "type": "string"
-                },
-                "company": {
-                    "type": "string"
-                },
-                "createDate": {
-                    "type": "string"
-                },
-                "department": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "info": {
-                    "type": "string"
-                },
-                "mail": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "qqNumber": {
-                    "type": "string"
-                },
-                "realName": {
-                    "type": "string"
-                },
-                "sex": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                },
-                "vocation": {
-                    "type": "string"
-                },
-                "wechat": {
-                    "type": "string"
+                    "example": "M.Salah"
                 }
             }
         },
@@ -184,11 +443,13 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200
                 },
                 "data": {},
                 "msg": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "操作成功"
                 }
             }
         }
