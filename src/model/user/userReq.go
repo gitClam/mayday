@@ -18,3 +18,23 @@ type UserReq struct {
 	Department string          `example:"tnnd怎么还不点"`
 	Phone      string          `example:"12345678912"`
 }
+
+func (req *UserReq) GetSdUser() (sd SdUser) {
+
+	sd.Name = req.Name
+	sd.Password = req.Password
+	sd.Realname = req.Realname
+	sd.Age = req.Age
+	sd.Birthday = req.Birthday
+	sd.Sex = req.Sex
+	sd.Wechat = req.Wechat
+	sd.Qqnumber = req.Qqnumber
+	sd.Info = req.Info
+	sd.Mail = req.Mail
+	sd.Company = req.Company
+	sd.Vocation = req.Vocation
+	sd.Department = req.Department
+	sd.Phone = req.Phone
+
+	return
+}

@@ -1,4 +1,4 @@
-package user_routes
+package user_Server
 
 import (
 	"fmt"
@@ -6,27 +6,15 @@ import (
 	"go.uber.org/zap"
 	"mayday/src/global"
 	"mayday/src/middleware"
-	"mayday/src/model/user"
+	userModel "mayday/src/model/user"
 	"mayday/src/utils"
-	"strconv"
 	"time"
 )
 
-// @Tags User
-// @Summary 用户注册
-// @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
-// @Produce application/json
-// @Param userReq body user.UserReq true "用户信息"
-// @Success 200 {object} utils.Response
-// @Router /user/registe [post]
-func UserRegister(ctx iris.Context) {
-	var sdUser user.SdUser
-	if err := ctx.ReadForm(&sdUser); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
-		return
-	}
+//用户注册
+func Register(ctx iris.Context, userReq userModel.UserReq) {
 
+	sdUser := userReq.GetSdUser()
 	sdUser.Photo = global.GVA_CONFIG.System.DefaultHeadPortrait
 	sdUser.CreateDate = utils.LocalTime(time.Now())
 
@@ -39,31 +27,13 @@ func UserRegister(ctx iris.Context) {
 
 	utils.Responser.Ok(ctx)
 	global.GVA_LOG.Info("用户: " + sdUser.Mail + " 注册成功")
+
 }
 
-// @Tags User
-// @Summary 用户登录
-// @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
-// @Produce application/json
-// @Param Mail body string true "用户邮箱"
-// @Param Password body string true "用户密码"
-// @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是会有信息的"
-// @Router /user/login [post]
-func UserLogin(ctx iris.Context) {
+//用户登录
+func Login(ctx iris.Context, mail string, password string) {
 
-	mail := ctx.FormValue("Mail")
-	if mail == "" {
-		utils.Responser.FailWithMsg(ctx, "用户邮箱为空")
-		return
-	}
-	password := ctx.FormValue("Password")
-	if ctx.FormValue("Password") == "" {
-		utils.Responser.FailWithMsg(ctx, "用户密码为空")
-		return
-	}
-
-	var mUser user.SdUser
+	var mUser userModel.SdUser
 	mUser.Mail = mail
 
 	e := global.GVA_DB
@@ -85,28 +55,15 @@ func UserLogin(ctx iris.Context) {
 		return
 	}
 
-	utils.Responser.OkWithDetails(ctx, utils.Success, user.GetUserDetailsResWithToken(token, &mUser))
+	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserDetailsResWithToken(token, &mUser))
 	global.GVA_LOG.Info("用户: " + mail + " 登录成功")
 }
 
-// @Tags User
-// @Summary 获取头像
-// @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
-// @Produce application/json
-// @Param id path int true "用户id"
-// @Success 200 {string}  string  "直接返回文件的渲染视图"
-// @Router /user/photo/{id:int} [get]
-func UserPhoto(ctx iris.Context) {
+//获取用户头像
+func GetUserPhoto(ctx iris.Context, id int) {
 
-	Id, err := strconv.Atoi(ctx.Params().Get("id"))
-	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
-		return
-	}
-
-	var sdUser user.SdUser
-	sdUser.Id = Id
+	var sdUser userModel.SdUser
+	sdUser.Id = id
 
 	e := global.GVA_DB
 	has, err := e.Get(&sdUser)
@@ -127,38 +84,22 @@ func UserPhoto(ctx iris.Context) {
 	}
 }
 
-// @Tags User
-// @Summary 设置头像
-// @Security ApiKeyAuth
-// @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param UserPhoto formData string true "头像文件"
-// @Success 200 {object} utils.Response
-// @Router /user/set_photo [post]
-func SetUserPhoto(ctx iris.Context) {
+//设置头像
+func SetUserPhoto(ctx iris.Context, user userModel.SdUser) {
 
-	token, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-
-	var mUser user.SdUser
-	mUser.Id = token.Id
-	mUser.Name = token.Name
-
-	has, err := global.GVA_DB.Get(&mUser)
+	has, err := global.GVA_DB.Get(&user)
 	if !has || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		return
 	}
 
-	file, _, err := ctx.FormFile("UserPhoto")
+	file, _, err := ctx.FormFile("GetPhoto")
 	if err != nil {
 		utils.Responser.FailWithMsg(ctx, "图片接收失败")
 		return
 	}
 
-	photoPath := global.GVA_CONFIG.System.PhotoPath + mUser.Mail
+	photoPath := global.GVA_CONFIG.System.PhotoPath + user.Mail
 
 	err = utils.IO.Save(photoPath, file)
 	if err != nil {
@@ -167,35 +108,20 @@ func SetUserPhoto(ctx iris.Context) {
 		return
 	}
 
-	mUser.Photo = photoPath
-	affected, err := global.GVA_DB.Id(mUser.Id).Update(mUser)
+	user.Photo = photoPath
+	affected, err := global.GVA_DB.Id(user.Id).Update(user)
 	if affected <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "图片更新失败")
 		return
 	}
 
 	utils.Responser.Ok(ctx)
-	global.GVA_LOG.Info("用户: " + mUser.Mail + " 头像保存成功")
+	global.GVA_LOG.Info("用户: " + user.Mail + " 头像保存成功")
 }
 
-// @Tags User
-// @Summary 用户注销
-// @Security ApiKeyAuth
-// @Param Authorization header string true "用户登录返回的TOKEN"
-// @Success 200 {object} utils.Response
-// @Router /user/cancellation [Delete]
-func UserCancellation(ctx iris.Context) {
-
-	token, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-
-	var mUser user.SdUser
-	mUser.Id = token.Id
-
-	effect, err := global.GVA_DB.Id(mUser.Id).Delete(&mUser)
+//用户注销
+func Cancellation(ctx iris.Context, user userModel.SdUser) {
+	effect, err := global.GVA_DB.Id(user.Id).Delete(&user)
 	if effect <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户注销失败")
 		return
@@ -204,56 +130,23 @@ func UserCancellation(ctx iris.Context) {
 	utils.Responser.Ok(ctx)
 }
 
-// @Tags User
-// @Summary 获取用户信息
-// @Security ApiKeyAuth
-// @Param Authorization header string true "用户登录返回的TOKEN"
-// @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是没有信息的"
-// @Router /user/message [Get]
-func UserMessage(ctx iris.Context) {
+//获取用户信息
+func GetUserMessage(ctx iris.Context, user userModel.SdUser) {
 
-	token, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-
-	var mUser user.SdUser
-	mUser.Id = token.Id
-	mUser.Name = token.Name
-
-	has, err := global.GVA_DB.Get(&mUser)
+	has, err := global.GVA_DB.Get(&user)
 	if !has || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户名不存在")
 		return
 	}
 
-	utils.Responser.OkWithDetails(ctx, utils.Success, user.GetUserDetailsResWithOutToken(&mUser))
+	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserDetailsResWithOutToken(&user))
 
 }
 
-// @Tags User
-// @Summary 修改用户信息
-// @Security ApiKeyAuth
-// @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "用户信息"
-// @Success 200 {object} utils.Response
-// @Router /user/editor/message [post]
-func SetUserMessage(ctx iris.Context) {
+//修改用户信息
+func SetUserMessage(ctx iris.Context, user userModel.SdUser, msg userModel.UserReq) {
 
-	token, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-
-	var mUser user.SdUser
-	if err := ctx.ReadForm(&mUser); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
-		return
-	}
-
-	affected, err := global.GVA_DB.Id(token.Id).Update(mUser)
+	affected, err := global.GVA_DB.Id(user.Id).Update(msg)
 	if affected <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据更新失败")
 		return
