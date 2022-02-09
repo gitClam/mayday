@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/kataras/iris/v12/core/router"
-	userApi "mayday/src/api/user"
+	userApi "mayday/src/api/v1/user"
 )
 
 func InitUserRouter(Router router.Party) {

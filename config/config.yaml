@@ -34,7 +34,7 @@ casbin:
 redis:
   db: 0
   addr: '127.0.0.1:6379'
-  password: ''
+  password: Qq791285634
 
 jwt:
   jwtTimeout: 6048000 #second
