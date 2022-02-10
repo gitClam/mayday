@@ -3,11 +3,12 @@ package middleware
 import (
 	"github.com/kataras/iris/v12/context"
 	"mayday/src/global"
+	"mayday/src/model/user"
 	"regexp"
 )
 
 func ServeHTTP(ctx context.Context) {
-	ctx.Values().Set("user", "")
+	ctx.Values().Set("user", user.SdUser{Id: -1})
 	path := ctx.Path()
 	// 过滤静态资源、login接口、首页等...不需要验证
 	if checkURL(path) {
