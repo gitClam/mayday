@@ -64,11 +64,17 @@ func (r *response) OkWithData(ctx iris.Context, data interface{}) {
 }
 
 // FailWithDetails 带详细信息失败返回
-func (r *response) FailWithDetails(ctx iris.Context, msg string, data interface{}) {
+func (r *response) FailWithDetails(ctx iris.Context, msg string, data interface{}, err ...error) {
+	if len(err) != 0 {
+		ctx.Values().Set("err", err[0])
+	}
 	Result(ERROR, data, msg, ctx)
 }
 
 // FailWithMsg 带信息失败返回
-func (r *response) FailWithMsg(ctx iris.Context, msg string) {
+func (r *response) FailWithMsg(ctx iris.Context, msg string, err ...error) {
+	if len(err) != 0 {
+		ctx.Values().Set("err", err[0])
+	}
 	Result(ERROR, "", msg, ctx)
 }
