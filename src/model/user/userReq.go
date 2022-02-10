@@ -4,7 +4,7 @@ import "mayday/src/utils"
 
 type UserReq struct {
 	Name       string          `example:"M.Salah"`
-	Password   string          `example:"123456"`
+	Password   string          `validate:"123456"`
 	Realname   string          `example:"罗智"`
 	Age        int             `example:"3"`
 	Birthday   utils.LocalTime `example:"2021-01-01 00:00:00"`
