@@ -1,10 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
-	userModel "mayday/src/model/user"
-	"strconv"
 )
 
 var Responser *response
@@ -36,15 +35,11 @@ func Result(code int, data interface{}, msg string, ctx iris.Context) {
 		global.GVA_LOG.Error("Result err :" + err.Error())
 		return
 	}
-	user := ctx.Values().Get("user")
-	if user == nil {
-		user = userModel.SdUser{Id: -1}
-	}
 	//日志输出
 	if ctx.Values().Get("err") == nil {
-		global.GVA_LOG.Info("用户: " + strconv.Itoa(user.(userModel.SdUser).Id) + " " + ctx.Path() + " " + msg)
+		global.GVA_LOG.Info("用户: " + fmt.Sprint(ctx.Values().Get("user")) + " " + ctx.Path() + " " + msg)
 	} else {
-		global.GVA_LOG.Warn("用户: " + strconv.Itoa(user.(userModel.SdUser).Id) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
+		global.GVA_LOG.Warn("用户: " + fmt.Sprint(ctx.Values().Get("user")) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
 	}
 }
 
