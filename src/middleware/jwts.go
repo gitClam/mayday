@@ -47,7 +47,7 @@ func ParseTokenTest(ctx context.Context) bool {
 	name, ok2 := mapClaims["name"].(string)
 
 	if ok1 && ok2 {
-		ctx.Values().Set("user", &user.SdUser{Id: int(id), Name: name})
+		ctx.Values().Set("user", user.SdUser{Id: int(id), Name: name})
 		log.Print("get 1123123123213")
 		log.Print(ctx.Values().Get("user"))
 		return true
