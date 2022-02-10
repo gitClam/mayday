@@ -3,6 +3,8 @@ package utils
 import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
+	"mayday/src/model/user"
+	"strconv"
 )
 
 var Responser *response
@@ -37,9 +39,9 @@ func Result(code int, data interface{}, msg string, ctx iris.Context) {
 
 	//日志输出
 	if ctx.Values().Get("err") == nil {
-		global.GVA_LOG.Info("用户: " + ctx.Values().Get("user").(string) + " " + ctx.Path() + " " + msg)
+		global.GVA_LOG.Info("用户: " + strconv.Itoa(ctx.Values().Get("user").(user.SdUser).Id) + " " + ctx.Path() + " " + msg)
 	} else {
-		global.GVA_LOG.Warn("用户: " + ctx.Values().Get("user").(string) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
+		global.GVA_LOG.Warn("用户: " + strconv.Itoa(ctx.Values().Get("user").(user.SdUser).Id) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
 	}
 }
 
