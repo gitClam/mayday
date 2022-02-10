@@ -7,6 +7,7 @@ import (
 )
 
 func ServeHTTP(ctx context.Context) {
+	ctx.Values().Set("user", "")
 	path := ctx.Path()
 	// 过滤静态资源、login接口、首页等...不需要验证
 	if checkURL(path) {
