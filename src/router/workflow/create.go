@@ -5,7 +5,7 @@ import (
 	"log"
 	"mayday/src/global"
 	"mayday/src/middleware"
-	"mayday/src/model"
+	"mayday/src/model/workflow"
 	"mayday/src/utils"
 	"time"
 
@@ -46,7 +46,7 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 		return
 	}
 	log.Print(user)
-	var workflow model.SdWorkflow
+	var workflow workflow.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -86,7 +86,7 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 //   required: true
 func WorkflowCreateTable(ctx iris.Context) {
 	log.Print("创建流程表单")
-	var table model.SdTable
+	var table workflow.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -101,7 +101,6 @@ func WorkflowCreateTable(ctx iris.Context) {
 		return
 	}
 	utils.Responser.Ok(ctx)
-
 }
 
 // swagger:operation POST /workflow/create/workflow-draft workflow create_workflow-draft
@@ -122,7 +121,7 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 		return
 	}
 	log.Print(user.Name)
-	var workflowDraft model.SdWorkflowDraft
+	var workflowDraft workflow.SdWorkflowDraft
 	if err := ctx.ReadJSON(&workflowDraft); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -165,7 +164,7 @@ func WorkflowCreateTableDraft(ctx iris.Context) {
 		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
-	var tableDraft model.SdTableDraft
+	var tableDraft workflow.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")

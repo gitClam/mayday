@@ -5,11 +5,10 @@ import (
 	"log"
 	"mayday/src/global"
 	"mayday/src/middleware"
+	workflowModel "mayday/src/model/workflow"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
-	//"time"
-	"mayday/src/model"
 )
 
 // swagger:operation GET /workflow/select/workflow workflow select_workflow
@@ -18,7 +17,7 @@ import (
 // description: 查询流程（已发布）
 func WorkflowSelectWorkflow(ctx iris.Context) {
 
-	var workflows []model.SdWorkflow
+	var workflows []workflowModel.SdWorkflow
 
 	e := global.GVA_DB
 	err := e.Sql("select * from sd_workflow where is_deleted != 1").Find(&workflows)
@@ -42,7 +41,7 @@ func WorkflowSelectWorkflow(ctx iris.Context) {
 //   required: true
 func WorkflowSelectWorkflowById(ctx iris.Context) {
 
-	var workflow model.SdWorkflow
+	var workflow workflowModel.SdWorkflow
 	if err := ctx.ReadForm(&workflow); err != nil {
 		log.Print(err)
 		utils.Responser.FailWithMsg(ctx, "")
@@ -70,7 +69,7 @@ func WorkflowSelectWorkflowById(ctx iris.Context) {
 //   type: int
 //   required: true
 func WorkflowSelectTable(ctx iris.Context) {
-	var table model.SdTable
+	var table workflowModel.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		log.Print(err)
 		utils.Responser.FailWithMsg(ctx, "")
@@ -105,7 +104,7 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 		return
 	}
 
-	var workflowDrafts []model.SdWorkflowDraft
+	var workflowDrafts []workflowModel.SdWorkflowDraft
 
 	e := global.GVA_DB
 	err := e.Sql("select * from sd_workflow_draft where owner_id = ? and is_deleted != 1", user.Id).Find(&workflowDrafts)
@@ -128,7 +127,7 @@ func WorkflowSelectWorkflowDraft(ctx iris.Context) {
 //   type: int
 //   required: true
 func WorkflowSelectTableDraft(ctx iris.Context) {
-	var tableDraft model.SdTableDraft
+	var tableDraft workflowModel.SdTableDraft
 	if err := ctx.ReadJSON(&tableDraft); err != nil {
 		log.Print(err)
 		utils.Responser.FailWithMsg(ctx, "")
@@ -156,14 +155,14 @@ func WorkflowSelectTableDraft(ctx iris.Context) {
 //   type: int
 //   required: true
 func WorkflowSelectTableDraftWorkspace(ctx iris.Context) {
-	var workflow model.SdWorkflow
+	var workflow workflowModel.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
 		log.Print(err)
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
 		return
 	}
-	var table []model.SdTable
+	var table []workflowModel.SdTable
 	e := global.GVA_DB
 	err := e.Where("workspace_id = ?", workflow.Id).Find(&table)
 	if err != nil {
@@ -186,7 +185,7 @@ func WorkflowSelectTableDraftUser(ctx iris.Context) {
 		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return
 	}
-	var tableDraft []model.SdTableDraft
+	var tableDraft []workflowModel.SdTableDraft
 	e := global.GVA_DB
 	err := e.Where("user_id = ?", user.Id).Find(&tableDraft)
 	if err != nil {

@@ -38,7 +38,22 @@ func Serve(ctx context.Context) bool {
 		log.Printf("Check jwt error, %s", err)
 		return false
 	}
-	return true
+	return ParseTokenTest(ctx)
+}
+func ParseTokenTest(ctx context.Context) bool {
+	mapClaims := (jwts.Get(ctx).Claims).(jwt.MapClaims)
+
+	id, ok1 := mapClaims["id"].(float64)
+	name, ok2 := mapClaims["name"].(string)
+
+	if ok1 && ok2 {
+		ctx.Values().Set("user", &user.SdUser{Id: int(id), Name: name})
+		log.Print("get 1123123123213")
+		log.Print(ctx.Values().Get("user"))
+		return true
+	}
+
+	return false
 }
 
 // ParseToken 解析token的信息为当前用户
@@ -47,18 +62,11 @@ func ParseToken(ctx context.Context) (*user.SdUser, bool) {
 
 	id, ok1 := mapClaims["id"].(float64)
 	name, ok2 := mapClaims["name"].(string)
-	//log.Printf("*** MapClaims=%v, [id=%f, ok1=%t]; [username=%s, ok2=%t]", mapClaims, id, ok1, name, ok2)
+
 	if !ok1 || !ok2 {
-		log.Print(utils.TokenParseFailur)
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
 		return nil, false
 	}
-
-	user := user.SdUser{
-		Id:   int(id),
-		Name: name,
-	}
-	return &user, true
+	return &user.SdUser{Id: int(id), Name: name}, true
 }
 
 func FromAuthHeader(ctx context.Context) (string, error) {

@@ -4,6 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
 	"mayday/src/model/user"
+	"mayday/src/model/workflow"
 
 	//"strconv"
 	//"time"
@@ -22,10 +23,10 @@ import (
 func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 	var (
 		//taskList       []string
-		stateList     []interface{}    //节点列表
-		userInfo      userModel.SdUser //请求用户信息
-		variableValue []interface{}    //节点列表
-		workflowValue model.SdWorkflow //流程信息
+		stateList     []interface{}       //节点列表
+		userInfo      userModel.SdUser    //请求用户信息
+		variableValue []interface{}       //节点列表
+		workflowValue workflow.SdWorkflow //流程信息
 		//sendToUserList []model.SdUser //要通知的人的列表
 		//noticeList     []int            //流程的通知列表
 		//handle         Handle
@@ -319,7 +320,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 
 	// 更新流程提交数量统计
 	if affect, err1 := tx.
-		Table(new(model.SdWorkflow)).
+		Table(new(workflow.SdWorkflow)).
 		Id(workOrderValue.WorkflowId).
 		Update(map[string]interface{}{"ceiling_count": workflowValue.CeilingCount + 1}); affect <= 0 || err1 != nil {
 		tx.Rollback()

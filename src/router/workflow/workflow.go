@@ -11,27 +11,27 @@ func InitWorkflowRouter(Router router.Party) {
 	{
 		get := workflow.Party("/get")
 		{
-			get.Get("/workflow/{id:int}", workflowApi.WorkflowSelectWorkflow)            //查询流程
-			get.Get("/workflow-draft", workflowApi.WorkflowSelectWorkflowDraft)          //查询本人所有的流程草稿
-			get.Get("/workflow-draft/{id:int}", workflowApi.WorkflowSelectWorkflowDraft) //查询流程草稿详细信息
+			get.Get("/workflow/{id:int}", workflowApi.GetWorkflowById)            //查询流程
+			get.Get("/workflow-draft", workflowApi.GetWorkflowDraftByUser)        //查询本人所有的流程草稿
+			get.Get("/workflow-draft/{id:int}", workflowApi.GetWorkflowDraftById) //查询流程草稿详细信息
 		}
 		create := workflow.Party("/create")
 		{
-			create.Post("/workflow", workflowApi.WorkflowCreateWorkflow)            //创建流程
-			create.Post("/workflow-draft", workflowApi.WorkflowCreateWorkflowDraft) //创建流程草稿
+			create.Post("/workflow", workflowApi.CreateWorkflow)            //创建流程
+			create.Post("/workflow-draft", workflowApi.CreateWorkflowDraft) //创建流程草稿
 		}
 
 		update := workflow.Party("/update")
 		{
-			update.Post("/workflow", workflowApi.WorkflowEditorWorkflow)            //修改流程
-			update.Post("/workflow-state", workflowApi.WorkflowEditorWorkflowState) //修改流程状态
-			update.Post("/workflow-draft", workflowApi.WorkflowEditorWorkflowDraft) //修改流程草稿
+			update.Post("/workflow", workflowApi.UpdateWorkflow)            //修改流程
+			update.Post("/workflow-state", workflowApi.UpdateWorkflowState) //修改流程状态
+			update.Post("/workflow-draft", workflowApi.UpdateWorkflowDraft) //修改流程草稿
 		}
 
 		delete := workflow.Party("/delete")
 		{
-			delete.Delete("/workflow/{id:int}", workflowApi.WorkflowDeleteWorkflow)            //删除流程
-			delete.Delete("/workflow-draft/{id:int}", workflowApi.WorkflowDeleteWorkflowDraft) //删除流程草稿
+			delete.Delete("/workflow/{id:int}", workflowApi.DeleteWorkflow)            //删除流程
+			delete.Delete("/workflow-draft/{id:int}", workflowApi.DeleteWorkflowDraft) //删除流程草稿
 		}
 	}
 }

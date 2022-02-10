@@ -3,13 +3,12 @@ package workflow_routes
 import (
 	_ "encoding/json"
 	"mayday/src/global"
+	"mayday/src/model/workflow"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
 	//"mayday/middleware/jwts"
 	"log"
-	//"time"
-	"mayday/src/model"
 )
 
 // swagger:operation POST /workflow/editor/workflow workflow editor_workflow
@@ -39,7 +38,7 @@ import (
 //   required: false
 func WorkflowEditorWorkflow(ctx iris.Context) {
 
-	var workflow model.SdWorkflow
+	var workflow workflow.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil || workflow.Id == 0 {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -68,7 +67,7 @@ func WorkflowEditorWorkflow(ctx iris.Context) {
 //   required: true
 func WorkflowEditorWorkflowState(ctx iris.Context) {
 
-	var workflow model.SdWorkflow
+	var workflow workflow.SdWorkflow
 	if err := ctx.ReadForm(&workflow); err != nil || workflow.Id == 0 {
 		log.Print(workflow.Id)
 		utils.Responser.FailWithMsg(ctx, "")
@@ -120,7 +119,7 @@ func WorkflowEditorWorkflowState(ctx iris.Context) {
 //   required: true
 func WorkflowEditorTable(ctx iris.Context) {
 	log.Print("修改流程表单")
-	var table model.SdTable
+	var table workflow.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -177,7 +176,7 @@ func WorkflowEditorWorkflowDraft(ctx iris.Context) {
 //   required: true
 func WorkflowEditorTableDraft(ctx iris.Context) {
 	log.Print("修改流程表单草稿")
-	var table model.SdTableDraft
+	var table workflow.SdTableDraft
 	if err := ctx.ReadJSON(&table); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")

@@ -8,7 +8,7 @@ import (
 	"mayday/src/middleware"
 	UserRouter "mayday/src/router/user"
 	"mayday/src/router/workflow"
-	WorkflowRouter "mayday/src/router/workflow"
+	//WorkflowRouter "mayday/src/router/workflow"
 	"mayday/src/router/workspace"
 )
 
@@ -22,9 +22,9 @@ func Routers(app *iris.Application) {
 	//解决跨域和路由拦截
 	main.Use(middleware.Cors, middleware.ServeHTTP)
 
-	UserRouter.InitUserRouter(main)         //用户路由
-	WorkflowRouter.InitWorkflowRouter(main) //流程路由
-	WorkflowRouter.InitTableRouter(main)    //表单路由
+	UserRouter.InitUserRouter(main) //用户路由
+	//WorkflowRouter.InitWorkflowRouter(main) //流程路由
+	//WorkflowRouter.InitTableRouter(main)    //表单路由
 
 	workflow := main.Party("/workflow")
 	{

@@ -20,7 +20,10 @@ const (
 	ERROR   int = 777
 )
 
+//TODO 这里控制日志输出
 func Result(code int, data interface{}, msg string, ctx iris.Context) {
+
+	ctx.Values().Get("err")
 	ctx.StatusCode(iris.StatusOK)
 	_, err := ctx.JSON(Response{
 		code,
@@ -30,6 +33,13 @@ func Result(code int, data interface{}, msg string, ctx iris.Context) {
 	if err != nil {
 		global.GVA_LOG.Error("Result err :" + err.Error())
 		return
+	}
+
+	//日志输出
+	if ctx.Values().Get("err") == nil {
+		global.GVA_LOG.Info("用户: " + ctx.Values().Get("user").(string) + " " + ctx.Path() + " " + msg)
+	} else {
+		global.GVA_LOG.Warn("用户: " + ctx.Values().Get("user").(string) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
 	}
 }
 

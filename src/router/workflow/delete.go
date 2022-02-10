@@ -3,13 +3,12 @@ package workflow_routes
 import (
 	_ "encoding/json"
 	"mayday/src/global"
+	"mayday/src/model/workflow"
 	"mayday/src/utils"
 
 	"github.com/kataras/iris/v12"
 	//"mayday/middleware/jwts"
 	"log"
-	//"time"
-	"mayday/src/model"
 )
 
 // swagger:operation POST /workflow/delete/workflow workflow delete_workflow
@@ -23,7 +22,7 @@ import (
 //   required: true
 func WorkflowDeleteWorkflow(ctx iris.Context) {
 
-	var workflow model.SdWorkflow
+	var workflow workflow.SdWorkflow
 	if err := ctx.ReadJSON(&workflow); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -52,7 +51,7 @@ func WorkflowDeleteWorkflow(ctx iris.Context) {
 //   required: true
 func WorkflowDeleteTable(ctx iris.Context) {
 	log.Print("删除流程表单1")
-	var table model.SdTable
+	var table workflow.SdTable
 	if err := ctx.ReadJSON(&table); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -81,7 +80,7 @@ func WorkflowDeleteTable(ctx iris.Context) {
 //   required: true
 func WorkflowDeleteWorkflowDraft(ctx iris.Context) {
 
-	var workflowDraft model.SdWorkflowDraft
+	var workflowDraft workflow.SdWorkflowDraft
 	if err := ctx.ReadJSON(&workflowDraft); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")
@@ -111,7 +110,7 @@ func WorkflowDeleteWorkflowDraft(ctx iris.Context) {
 //   required: true
 func WorkflowDeleteTableDraft(ctx iris.Context) {
 	log.Print("删除流程表单草稿")
-	var table model.SdTableDraft
+	var table workflow.SdTableDraft
 	if err := ctx.ReadJSON(&table); err != nil {
 		utils.Responser.FailWithMsg(ctx, "")
 		log.Print("数据接收失败")

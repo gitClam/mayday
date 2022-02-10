@@ -26,8 +26,6 @@ func Register(ctx iris.Context, userReq userModel.UserReq) {
 	}
 
 	utils.Responser.Ok(ctx)
-	global.GVA_LOG.Info("用户: " + sdUser.Mail + " 注册成功")
-
 }
 
 //用户登录
@@ -49,14 +47,14 @@ func Login(ctx iris.Context, mail string, password string) {
 	}
 
 	token, err := middleware.GenerateToken(&mUser)
-	global.GVA_LOG.Info(fmt.Sprintf("用户[%s], 登录生成token [%s]", mUser.Name, token))
 	if err != nil {
 		utils.Responser.FailWithMsg(ctx, "TOKEN生成失败")
+		global.GVA_LOG.Warn("用户: "+mUser.Name+" TOKEN生成失败", zap.Error(err))
 		return
 	}
 
 	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserDetailsResWithToken(token, &mUser))
-	global.GVA_LOG.Info("用户: " + mail + " 登录成功")
+	global.GVA_LOG.Info(fmt.Sprintf("用户[%s], 登录生成token [%s]", mUser.Name, token))
 }
 
 //获取用户头像
@@ -103,16 +101,16 @@ func SetUserPhoto(ctx iris.Context, user userModel.SdUser) {
 
 	err = utils.IO.Save(photoPath, file)
 	if err != nil {
-		global.GVA_LOG.Error("头像文件保存出错：", zap.Error(err))
 		utils.Responser.FailWithMsg(ctx, "图片文件保存失败")
 		return
 	}
 
-	user.Photo = photoPath
-	affected, err := global.GVA_DB.Id(user.Id).Update(user)
-	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "图片更新失败")
-		return
+	if user.Photo != photoPath {
+		affected, err := global.GVA_DB.Id(user.Id).Update(user)
+		if affected <= 0 || err != nil {
+			utils.Responser.FailWithMsg(ctx, "图片更新失败")
+			return
+		}
 	}
 
 	utils.Responser.Ok(ctx)
@@ -128,6 +126,7 @@ func Cancellation(ctx iris.Context, user userModel.SdUser) {
 	}
 
 	utils.Responser.Ok(ctx)
+	global.GVA_LOG.Info("用户: " + user.Mail + " 已注销")
 }
 
 //获取用户信息
@@ -140,7 +139,7 @@ func GetUserMessage(ctx iris.Context, user userModel.SdUser) {
 	}
 
 	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserDetailsResWithOutToken(&user))
-
+	global.GVA_LOG.Info("用户: " + user.Mail + " 获取用户信息")
 }
 
 //修改用户信息
@@ -153,5 +152,5 @@ func SetUserMessage(ctx iris.Context, user userModel.SdUser, msg userModel.UserR
 	}
 
 	utils.Responser.Ok(ctx)
-
+	global.GVA_LOG.Info("用户: " + user.Mail + " 修改用户信息")
 }

@@ -61,7 +61,7 @@ func CreateTable(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param userReq body user.UserReq true "表单信息"
 // @Success 200 {object} utils.Response
-// @Router /table/update/table-draft [post]
+// @Router /table/create/table-draft [post]
 func CreateTableDraft(ctx iris.Context) {
 
 }
@@ -100,7 +100,7 @@ func UpdateTableDraft(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id"
 // @Success 200 {object} utils.Response
-// @Router /table/delete/table [post]
+// @Router /table/delete/table/{id:int} [delete]
 func DeleteTable(ctx iris.Context) {
 
 }
@@ -113,7 +113,7 @@ func DeleteTable(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id"
 // @Success 200 {object} utils.Response
-// @Router /table/delete/table-draft [post]
+// @Router /table/delete/table-draft/{id:int} [delete]
 func DeleteTableDraft(ctx iris.Context) {
 
 }
