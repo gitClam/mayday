@@ -80,6 +80,7 @@ definitions:
         example: M.Salah
         type: string
       password:
+        example: "123456"
         type: string
       phone:
         example: "12345678912"
@@ -102,6 +103,8 @@ definitions:
       wechat:
         example: M.Salah
         type: string
+    required:
+    - password
     type: object
   utils.Response:
     properties:

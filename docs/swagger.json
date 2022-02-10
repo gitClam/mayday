@@ -1269,6 +1269,9 @@
         },
         "user.UserReq": {
             "type": "object",
+            "required": [
+                "password"
+            ],
             "properties": {
                 "age": {
                     "type": "integer",
@@ -1299,7 +1302,8 @@
                     "example": "M.Salah"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "123456"
                 },
                 "phone": {
                     "type": "string",

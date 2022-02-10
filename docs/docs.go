@@ -1283,6 +1283,9 @@ var doc = `{
         },
         "user.UserReq": {
             "type": "object",
+            "required": [
+                "password"
+            ],
             "properties": {
                 "age": {
                     "type": "integer",
@@ -1313,7 +1316,8 @@ var doc = `{
                     "example": "M.Salah"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "123456"
                 },
                 "phone": {
                     "type": "string",
