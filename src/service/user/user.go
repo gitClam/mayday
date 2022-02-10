@@ -79,8 +79,8 @@ func GetUserPhoto(ctx iris.Context, id int) {
 }
 
 //设置头像
-func SetUserPhoto(ctx iris.Context, user userModel.SdUser) {
-
+func SetUserPhoto(ctx iris.Context) {
+	user := ctx.Values().Get("user").(userModel.SdUser)
 	has, err := global.GVA_DB.Get(&user)
 	if !has || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户名不存在", err)
@@ -113,7 +113,8 @@ func SetUserPhoto(ctx iris.Context, user userModel.SdUser) {
 }
 
 //用户注销
-func Cancellation(ctx iris.Context, user userModel.SdUser) {
+func Cancellation(ctx iris.Context) {
+	user := ctx.Values().Get("user").(userModel.SdUser)
 	effect, err := global.GVA_DB.Id(user.Id).Delete(&user)
 	if effect <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户注销失败", err)
@@ -124,8 +125,8 @@ func Cancellation(ctx iris.Context, user userModel.SdUser) {
 }
 
 //获取用户信息
-func GetUserMessage(ctx iris.Context, user userModel.SdUser) {
-
+func GetUserMessage(ctx iris.Context) {
+	user := ctx.Values().Get("user").(userModel.SdUser)
 	has, err := global.GVA_DB.Get(&user)
 	if !has || err != nil {
 		utils.Responser.FailWithMsg(ctx, "用户名不存在", err)
@@ -136,8 +137,8 @@ func GetUserMessage(ctx iris.Context, user userModel.SdUser) {
 }
 
 //修改用户信息
-func SetUserMessage(ctx iris.Context, user userModel.SdUser, msg userModel.UserReq) {
-
+func SetUserMessage(ctx iris.Context, msg userModel.UserReq) {
+	user := ctx.Values().Get("user").(userModel.SdUser)
 	affected, err := global.GVA_DB.Id(user.Id).Update(msg)
 	if affected <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据更新失败", err)

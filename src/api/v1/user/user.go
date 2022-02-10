@@ -2,7 +2,6 @@ package user_api
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/middleware"
 	userModel "mayday/src/model/user"
 	userSever "mayday/src/service/user"
 	"mayday/src/utils"
@@ -21,7 +20,7 @@ func Register(ctx iris.Context) {
 
 	var userReq userModel.UserReq
 	if err := ctx.ReadForm(&userReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
 	userSever.Register(ctx, userReq)
@@ -61,7 +60,7 @@ func Login(ctx iris.Context) {
 func GetPhoto(ctx iris.Context) {
 	id, err := strconv.Atoi(ctx.Params().Get("id"))
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
 	userSever.GetUserPhoto(ctx, id)
@@ -75,12 +74,7 @@ func GetPhoto(ctx iris.Context) {
 // @Success 200 {object} utils.Response
 // @Router /user/set_photo [post]
 func SetPhoto(ctx iris.Context) {
-	user, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-	userSever.SetUserPhoto(ctx, *user)
+	userSever.SetUserPhoto(ctx)
 }
 
 // @Tags User
@@ -90,12 +84,7 @@ func SetPhoto(ctx iris.Context) {
 // @Success 200 {object} utils.Response
 // @Router /user/cancellation [Delete]
 func Cancellation(ctx iris.Context) {
-	user, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-	userSever.Cancellation(ctx, *user)
+	userSever.Cancellation(ctx)
 }
 
 // @Tags User
@@ -105,12 +94,7 @@ func Cancellation(ctx iris.Context) {
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是没有信息的"
 // @Router /user/message [Get]
 func GetUserMessage(ctx iris.Context) {
-	user, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-	userSever.GetUserMessage(ctx, *user)
+	userSever.GetUserMessage(ctx)
 }
 
 // @Tags User
@@ -121,16 +105,10 @@ func GetUserMessage(ctx iris.Context) {
 // @Success 200 {object} utils.Response
 // @Router /user/editor/message [post]
 func SetUserMessage(ctx iris.Context) {
-	user, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-
 	var userReq userModel.UserReq
 	if err := ctx.ReadForm(&userReq); err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据接收失败")
 		return
 	}
-	userSever.SetUserMessage(ctx, *user, userReq)
+	userSever.SetUserMessage(ctx, userReq)
 }
