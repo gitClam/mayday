@@ -21,7 +21,6 @@ func Routers(app *iris.Application) {
 	main.Options("/*", func(ctx iris.Context) {})
 	//解决跨域和路由拦截
 	main.Use(middleware.Cors, middleware.ServeHTTP)
-
 	UserRouter.InitUserRouter(main) //用户路由
 	//WorkflowRouter.InitWorkflowRouter(main) //流程路由
 	//WorkflowRouter.InitTableRouter(main)    //表单路由
