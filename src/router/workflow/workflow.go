@@ -30,8 +30,8 @@ func InitWorkflowRouter(Router router.Party) {
 
 		delete := workflow.Party("/delete")
 		{
-			delete.Delete("/workflow/{id:int}", workflowApi.DeleteWorkflow)            //删除流程
-			delete.Delete("/workflow-draft/{id:int}", workflowApi.DeleteWorkflowDraft) //删除流程草稿
+			delete.Delete("/workflow/{id:int}", workflowApi.DeleteWorkflow)   //删除流程
+			delete.Delete("/workflow-draft", workflowApi.DeleteWorkflowDraft) //删除流程草稿
 		}
 	}
 }
