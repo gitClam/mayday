@@ -7,8 +7,7 @@ import (
 	_ "mayday/docs"
 	"mayday/src/middleware"
 	UserRouter "mayday/src/router/user"
-	"mayday/src/router/workflow"
-	//WorkflowRouter "mayday/src/router/workflow"
+	WorkflowRouter "mayday/src/router/workflow"
 	"mayday/src/router/workspace"
 )
 
@@ -21,56 +20,56 @@ func Routers(app *iris.Application) {
 	main.Options("/*", func(ctx iris.Context) {})
 	//解决跨域和路由拦截
 	main.Use(middleware.Cors, middleware.ServeHTTP)
-	UserRouter.InitUserRouter(main) //用户路由
-	//WorkflowRouter.InitWorkflowRouter(main) //流程路由
+	UserRouter.InitUserRouter(main)         //用户路由
+	WorkflowRouter.InitWorkflowRouter(main) //流程路由
 	//WorkflowRouter.InitTableRouter(main)    //表单路由
 
-	workflow := main.Party("/workflow")
-	{
-		select1 := workflow.Party("/select")
-		{
-			select1.Get("/workflow", workflow_routes.WorkflowSelectWorkflow)                    //查询流程（已发布）
-			select1.Post("/table", workflow_routes.WorkflowSelectTable)                         //查询表单（已发布）
-			select1.Get("/workflow-draft", workflow_routes.WorkflowSelectWorkflowDraft)         //查询流程（草稿）
-			select1.Post("/table-draft", workflow_routes.WorkflowSelectTableDraft)              //查询表单（草稿）
-			select1.Get("/workflow-byId", workflow_routes.WorkflowSelectWorkflowById)           //查询流程（已发布）
-			select1.Post("/table-workSpace", workflow_routes.WorkflowSelectTableDraftWorkspace) //查询表单（草稿）
-			select1.Post("/table-draft-user", workflow_routes.WorkflowSelectTableDraftUser)     //查询表单1（草稿）
-		}
-		create := workflow.Party("/create")
-		{
-			create.Post("/workflow", workflow_routes.WorkflowCreateWorkflow)            //创建流程（发布）
-			create.Post("/table", workflow_routes.WorkflowCreateTable)                  //创建表单（发布）
-			create.Post("/workflow-draft", workflow_routes.WorkflowCreateWorkflowDraft) //创建流程（草稿）
-			create.Post("/table-draft", workflow_routes.WorkflowCreateTableDraft)       //创建表单（草稿）
-		}
-
-		editor := workflow.Party("/editor")
-		{
-			editor.Post("/workflow", workflow_routes.WorkflowEditorWorkflow)            //修改流程（已发布）
-			editor.Post("/workflow-state", workflow_routes.WorkflowEditorWorkflowState) //修改流程状态
-			editor.Post("/table", workflow_routes.WorkflowEditorTable)                  //修改表单（已发布）
-			editor.Post("/workflow-draft", workflow_routes.WorkflowEditorWorkflowDraft) //修改流程（草稿）
-			editor.Post("/table-draft", workflow_routes.WorkflowEditorTableDraft)       //修改表单（草稿）
-		}
-
-		delete := workflow.Party("/delete")
-		{
-			delete.Post("/workflow", workflow_routes.WorkflowDeleteWorkflow)            //删除流程（已发布）
-			delete.Post("/table", workflow_routes.WorkflowDeleteTable)                  //删除表单（已发布）
-			delete.Post("/workflow-draft", workflow_routes.WorkflowDeleteWorkflowDraft) //删除流程（草稿）
-			delete.Post("/table-draft", workflow_routes.WorkflowDeleteTableDraft)       //删除表单（草稿）
-		}
-
-		participate := workflow.Party("/order")
-		{
-			participate.Post("/create-order", workflow_routes.WorkflowOrderCreateOrder) //创建流程申请
-			participate.Post("/fill-table", workflow_routes.WorkflowOrderFillTable)     //填写表单（会修改流程状态）
-			participate.Get("/notification", workflow_routes.WorkflowOrderNotification) //获取消息提醒
-			participate.Get("/order-state", workflow_routes.WorkflowOrderOrderState)    //获取流程状态
-		}
-
-	}
+	//workflow := main.Party("/workflow")
+	//{
+	//	select1 := workflow.Party("/select")
+	//	{
+	//		select1.Get("/workflow", workflow_routes.WorkflowSelectWorkflow)                    //查询流程（已发布）
+	//		select1.Post("/table", workflow_routes.WorkflowSelectTable)                         //查询表单（已发布）
+	//		select1.Get("/workflow-draft", workflow_routes.WorkflowSelectWorkflowDraft)         //查询流程（草稿）
+	//		select1.Post("/table-draft", workflow_routes.WorkflowSelectTableDraft)              //查询表单（草稿）
+	//		select1.Get("/workflow-byId", workflow_routes.WorkflowSelectWorkflowById)           //查询流程（已发布）
+	//		select1.Post("/table-workSpace", workflow_routes.WorkflowSelectTableDraftWorkspace) //查询表单（草稿）
+	//		select1.Post("/table-draft-user", workflow_routes.WorkflowSelectTableDraftUser)     //查询表单1（草稿）
+	//	}
+	//	create := workflow.Party("/create")
+	//	{
+	//		create.Post("/workflow", workflow_routes.WorkflowCreateWorkflow)            //创建流程（发布）
+	//		create.Post("/table", workflow_routes.WorkflowCreateTable)                  //创建表单（发布）
+	//		create.Post("/workflow-draft", workflow_routes.WorkflowCreateWorkflowDraft) //创建流程（草稿）
+	//		create.Post("/table-draft", workflow_routes.WorkflowCreateTableDraft)       //创建表单（草稿）
+	//	}
+	//
+	//	editor := workflow.Party("/editor")
+	//	{
+	//		editor.Post("/workflow", workflow_routes.WorkflowEditorWorkflow)            //修改流程（已发布）
+	//		editor.Post("/workflow-state", workflow_routes.WorkflowEditorWorkflowState) //修改流程状态
+	//		editor.Post("/table", workflow_routes.WorkflowEditorTable)                  //修改表单（已发布）
+	//		editor.Post("/workflow-draft", workflow_routes.WorkflowEditorWorkflowDraft) //修改流程（草稿）
+	//		editor.Post("/table-draft", workflow_routes.WorkflowEditorTableDraft)       //修改表单（草稿）
+	//	}
+	//
+	//	delete := workflow.Party("/delete")
+	//	{
+	//		delete.Post("/workflow", workflow_routes.WorkflowDeleteWorkflow)            //删除流程（已发布）
+	//		delete.Post("/table", workflow_routes.WorkflowDeleteTable)                  //删除表单（已发布）
+	//		delete.Post("/workflow-draft", workflow_routes.WorkflowDeleteWorkflowDraft) //删除流程（草稿）
+	//		delete.Post("/table-draft", workflow_routes.WorkflowDeleteTableDraft)       //删除表单（草稿）
+	//	}
+	//
+	//	participate := workflow.Party("/order")
+	//	{
+	//		participate.Post("/create-order", workflow_routes.WorkflowOrderCreateOrder) //创建流程申请
+	//		participate.Post("/fill-table", workflow_routes.WorkflowOrderFillTable)     //填写表单（会修改流程状态）
+	//		participate.Get("/notification", workflow_routes.WorkflowOrderNotification) //获取消息提醒
+	//		participate.Get("/order-state", workflow_routes.WorkflowOrderOrderState)    //获取流程状态
+	//	}
+	//
+	//}
 	workspace := main.Party("/workspace")
 	{
 		select1 := workspace.Party("/select")
