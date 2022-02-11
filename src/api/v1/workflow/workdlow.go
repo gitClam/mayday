@@ -158,7 +158,7 @@ func DeleteWorkflow(ctx iris.Context) {
 // @Router /workflow/delete/workflow-draft/{id:int} [delete]
 func DeleteWorkflowDraft(ctx iris.Context) {
 	var workflowsId []int
-	for _, id := range strings.Split(ctx.Params().Get("id"), ",") {
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
 			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
