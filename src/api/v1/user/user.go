@@ -58,7 +58,7 @@ func Login(ctx iris.Context) {
 // @Success 200 {string}  string  "直接返回文件的渲染视图"
 // @Router /user/photo/{id:int} [get]
 func GetPhoto(ctx iris.Context) {
-	id, err := strconv.Atoi(ctx.Params().Get("id"))
+	id, err := strconv.Atoi(ctx.URLParam("id"))
 	if err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
