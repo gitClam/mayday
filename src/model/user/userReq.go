@@ -12,7 +12,7 @@ type UserReq struct {
 	Wechat     string          `example:"M.Salah"`
 	Qqnumber   string          `example:"123456789"`
 	Info       string          `example:"今晚点喂"`
-	Mail       string          `example:"123456@abc.com"`
+	Mail       string          `validate:"required" example:"123456@abc.com"`
 	Company    string          `example:"罗智地产有限公司"`
 	Vocation   string          `example:"包工头"`
 	Department string          `example:"tnnd怎么还不点"`

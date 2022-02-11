@@ -2,7 +2,6 @@ package workflow
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/middleware"
 	workflowModel "mayday/src/model/workflow"
 	workflowSever "mayday/src/service/workflow"
 	"mayday/src/utils"
@@ -52,24 +51,17 @@ func GetWorkflowDraftById(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "流程信息"
+// @Param userReq body workflowModel.WorkflowReq true "流程信息"
 // @Success 200 {object} utils.Response
 // @Router /workflow/create/workflow [post]
 func CreateWorkflow(ctx iris.Context) {
 
-	user, ok := middleware.ParseToken(ctx)
-	if !ok {
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-
-	var workflow workflowModel.SdWorkflow
-	if err := ctx.ReadJSON(&workflow); err != nil {
+	var workflowReq workflowModel.WorkflowReq
+	if err := ctx.ReadJSON(&workflowReq); err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据接收失败")
 		return
 	}
-	workflowSever.CreateWorkflow(ctx, *user, workflow)
-
+	workflowSever.CreateWorkflow(ctx, workflowReq)
 }
 
 // @Tags Workflow
@@ -78,11 +70,17 @@ func CreateWorkflow(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "流程信息"
+// @Param userReq body workflowModel.WorkflowReq true "流程信息"
 // @Success 200 {object} utils.Response
 // @Router /workflow/create/workflow-draft [post]
 func CreateWorkflowDraft(ctx iris.Context) {
 
+	var workflowDraftReq workflowModel.WorkflowDraftReq
+	if err := ctx.ReadJSON(&workflowDraftReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		return
+	}
+	workflowSever.CreateWorkflowDraft(ctx, workflowDraftReq)
 }
 
 // @Tags Workflow

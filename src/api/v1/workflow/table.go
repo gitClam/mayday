@@ -1,6 +1,11 @@
 package workflow
 
-import "github.com/kataras/iris/v12"
+import (
+	"github.com/kataras/iris/v12"
+	workflowModel "mayday/src/model/workflow"
+	workflowSever "mayday/src/service/workflow"
+	"mayday/src/utils"
+)
 
 // @Tags Table
 // @Summary 获取表单详细信息
@@ -51,10 +56,17 @@ func GetTableDraftById(ctx iris.Context) {
 // @Router /table/create/table [post]
 func CreateTable(ctx iris.Context) {
 
+	var tableReq workflowModel.TableReq
+	if err := ctx.ReadJSON(&tableReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		return
+	}
+
+	workflowSever.CreateTable(ctx, tableReq)
 }
 
 // @Tags Table
-// @Summary 创建表单
+// @Summary 创建表单草稿
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json

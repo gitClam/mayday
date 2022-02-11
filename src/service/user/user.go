@@ -120,7 +120,6 @@ func Cancellation(ctx iris.Context) {
 		utils.Responser.FailWithMsg(ctx, "用户注销失败", err)
 		return
 	}
-
 	utils.Responser.Ok(ctx)
 }
 
@@ -132,7 +131,6 @@ func GetUserMessage(ctx iris.Context) {
 		utils.Responser.FailWithMsg(ctx, "用户名不存在", err)
 		return
 	}
-
 	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserDetailsResWithOutToken(&user))
 }
 

@@ -80,6 +80,8 @@ func SetPhoto(ctx iris.Context) {
 // @Tags User
 // @Summary 用户注销
 // @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Success 200 {object} utils.Response
 // @Router /user/cancellation [Delete]
@@ -90,6 +92,8 @@ func Cancellation(ctx iris.Context) {
 // @Tags User
 // @Summary 获取用户信息
 // @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是没有信息的"
 // @Router /user/message [Get]
@@ -100,6 +104,8 @@ func GetUserMessage(ctx iris.Context) {
 // @Tags User
 // @Summary 修改用户信息
 // @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param userReq body user.UserReq true "用户信息"
 // @Success 200 {object} utils.Response

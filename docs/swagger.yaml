@@ -104,6 +104,7 @@ definitions:
         example: M.Salah
         type: string
     required:
+    - mail
     - password
     type: object
   utils.Response:
@@ -115,6 +116,36 @@ definitions:
       msg:
         example: 操作成功
         type: string
+    type: object
+  workflow.WorkflowReq:
+    properties:
+      applicationId:
+        example: 12
+        type: integer
+      isStart:
+        default: 0
+        enum:
+        - 0
+        - 1
+        example: 0
+        type: integer
+      name:
+        example: 请假流程
+        type: string
+      remarks:
+        example: 请假流程1
+        type: string
+      structure:
+        example: 流程的JSON文件
+        type: string
+      tables:
+        example: '["1001", "1002"]'
+        type: string
+    required:
+    - applicationId
+    - name
+    - structure
+    - tables
     type: object
 host: 47.107.108.127:80
 info:
@@ -182,7 +213,7 @@ paths:
             $ref: '#/definitions/utils.Response'
       security:
       - ApiKeyAuth: []
-      summary: 创建表单
+      summary: 创建表单草稿
       tags:
       - Table
   /table/delete/table-draft/{id:int}:
@@ -388,12 +419,16 @@ paths:
       - Table
   /user/cancellation:
     delete:
+      consumes:
+      - application/x-www-form-urlencoded
       parameters:
       - description: 用户登录返回的TOKEN
         in: header
         name: Authorization
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -406,6 +441,8 @@ paths:
       - User
   /user/editor/message:
     post:
+      consumes:
+      - application/x-www-form-urlencoded
       parameters:
       - description: 用户登录返回的TOKEN
         in: header
@@ -418,6 +455,8 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/user.UserReq'
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -464,12 +503,16 @@ paths:
       - User
   /user/message:
     get:
+      consumes:
+      - application/x-www-form-urlencoded
       parameters:
       - description: 用户登录返回的TOKEN
         in: header
         name: Authorization
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -568,7 +611,7 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.WorkflowReq'
       produces:
       - application/json
       responses:
@@ -596,7 +639,7 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.WorkflowReq'
       produces:
       - application/json
       responses:

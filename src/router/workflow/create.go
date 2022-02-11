@@ -12,31 +12,6 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-// swagger:operation POST /workflow/create/workflow workflow create_workflow
-// ---
-// summary: 创建流程（发布）
-// description: 创建流程（发布）
-// parameters:
-// - name: Name
-//   description: 流程名字
-//   type: json
-//   required: true
-// - name: Structure
-//   description: 流程结构
-//   type: json
-//   required: true
-// - name: Tables
-//   description: 表单样式
-//   type: json
-//   required: true
-// - name: Remarks
-//   description: 备注
-//   type: string
-//   required: false
-// - name: IsStart
-//   description: 是否开启(默认为开启)
-//   type: bool
-//   required: false
 func WorkflowCreateWorkflow(ctx iris.Context) {
 	log.Print("创建流程（发布）")
 	user, ok := middleware.ParseToken(ctx)
@@ -103,15 +78,6 @@ func WorkflowCreateTable(ctx iris.Context) {
 	utils.Responser.Ok(ctx)
 }
 
-// swagger:operation POST /workflow/create/workflow-draft workflow create_workflow-draft
-// ---
-// summary: 创建流程（草稿）
-// description: 创建流程（草稿）
-// parameters:
-// - name: Structure
-//   description: 流程结构
-//   type: json(string)
-//   required: true
 func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 	log.Print("创建流程（草稿）")
 	user, ok := middleware.ParseToken(ctx)

@@ -93,7 +93,7 @@ var doc = `{
                 "tags": [
                     "Table"
                 ],
-                "summary": "创建表单",
+                "summary": "创建表单草稿",
                 "parameters": [
                     {
                         "type": "string",
@@ -463,6 +463,12 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "User"
                 ],
@@ -492,6 +498,12 @@ var doc = `{
                     {
                         "ApiKeyAuth": []
                     }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "tags": [
                     "User"
@@ -590,6 +602,12 @@ var doc = `{
                     {
                         "ApiKeyAuth": []
                     }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "tags": [
                     "User"
@@ -768,7 +786,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.WorkflowReq"
                         }
                     }
                 ],
@@ -813,7 +831,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.WorkflowReq"
                         }
                     }
                 ],
@@ -1284,6 +1302,7 @@ var doc = `{
         "user.UserReq": {
             "type": "object",
             "required": [
+                "mail",
                 "password"
             ],
             "properties": {
@@ -1360,6 +1379,46 @@ var doc = `{
                 "msg": {
                     "type": "string",
                     "example": "操作成功"
+                }
+            }
+        },
+        "workflow.WorkflowReq": {
+            "type": "object",
+            "required": [
+                "applicationId",
+                "name",
+                "structure",
+                "tables"
+            ],
+            "properties": {
+                "applicationId": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "isStart": {
+                    "type": "integer",
+                    "default": 0,
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "example": 0
+                },
+                "name": {
+                    "type": "string",
+                    "example": "请假流程"
+                },
+                "remarks": {
+                    "type": "string",
+                    "example": "请假流程1"
+                },
+                "structure": {
+                    "type": "string",
+                    "example": "流程的JSON文件"
+                },
+                "tables": {
+                    "type": "string",
+                    "example": "[\"1001\", \"1002\"]"
                 }
             }
         }
