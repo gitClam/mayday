@@ -58,7 +58,7 @@ func CreateWorkflow(ctx iris.Context) {
 
 	var workflowReq workflowModel.WorkflowReq
 	if err := ctx.ReadJSON(&workflowReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
 	workflowSever.CreateWorkflow(ctx, workflowReq)
@@ -70,14 +70,14 @@ func CreateWorkflow(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body workflowModel.WorkflowReq true "流程信息"
+// @Param userReq body workflowModel.WorkflowDraftReq true "流程信息"
 // @Success 200 {object} utils.Response
 // @Router /workflow/create/workflow-draft [post]
 func CreateWorkflowDraft(ctx iris.Context) {
 
 	var workflowDraftReq workflowModel.WorkflowDraftReq
 	if err := ctx.ReadJSON(&workflowDraftReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
 	workflowSever.CreateWorkflowDraft(ctx, workflowDraftReq)

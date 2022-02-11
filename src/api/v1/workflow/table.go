@@ -51,14 +51,14 @@ func GetTableDraftById(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "表单信息"
+// @Param userReq body workflow.TableReq true "表单信息"
 // @Success 200 {object} utils.Response
 // @Router /table/create/table [post]
 func CreateTable(ctx iris.Context) {
 
 	var tableReq workflowModel.TableReq
 	if err := ctx.ReadJSON(&tableReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
 
@@ -76,6 +76,12 @@ func CreateTable(ctx iris.Context) {
 // @Router /table/create/table-draft [post]
 func CreateTableDraft(ctx iris.Context) {
 
+	var tableDraftReq workflowModel.TableDraftReq
+	if err := ctx.ReadJSON(&tableDraftReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		return
+	}
+	workflowSever.CreateTableDraft(ctx, tableDraftReq)
 }
 
 // @Tags Table

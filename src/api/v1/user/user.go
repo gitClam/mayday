@@ -113,7 +113,7 @@ func GetUserMessage(ctx iris.Context) {
 func SetUserMessage(ctx iris.Context) {
 	var userReq userModel.UserReq
 	if err := ctx.ReadForm(&userReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
 	userSever.SetUserMessage(ctx, userReq)

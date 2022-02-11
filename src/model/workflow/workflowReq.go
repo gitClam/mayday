@@ -5,7 +5,7 @@ import (
 )
 
 type WorkflowReq struct {
-	ApplicationId int    `validate:"required" example:"12" extensions:"现在为了方便可以暂时不填"`
+	ApplicationId int    `validate:"required" example:"12"`
 	Name          string `validate:"required" example:"请假流程"`
 	IsStart       int    `example:"0" enums:"0,1" default:"0"`
 	Structure     string `validate:"required" example:"流程的JSON文件"`
