@@ -107,7 +107,7 @@ func DeleteWorkflowDraft(ctx iris.Context, id []int) {
 		}
 	}
 
-	affected, err := e.Id(id).Delete(sdWorkflowDrafts)
+	affected, err := e.Id(id).Delete(new(WorkflowModel.SdWorkflowDraft))
 	if affected <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
 		return
