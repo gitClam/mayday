@@ -72,3 +72,45 @@ func CreateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 	}
 	utils.Responser.Ok(ctx)
 }
+
+//删除流程
+func DeleteWorkflow(ctx iris.Context, id []int) {
+	//TODO 验证权限
+	sdWorkflow := new(WorkflowModel.SdWorkflow)
+	e := global.GVA_DB
+	affected, err := e.Id(id).Delete(sdWorkflow)
+	if affected <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
+
+//删除流程草稿
+func DeleteWorkflowDraft(ctx iris.Context, id []int) {
+
+	user := ctx.Values().Get("user").(UserModel.SdUser)
+	var sdWorkflows []WorkflowModel.SdWorkflowDraft
+	e := global.GVA_DB
+
+	has, err := e.Id(id).Get(&sdWorkflows)
+	if !has || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程草稿不存在", err)
+		return
+	}
+
+	// 只能删除自己的草稿
+	for _, sdWorkflow := range sdWorkflows {
+		if sdWorkflow.OwnerId != user.Id {
+			utils.Responser.FailWithMsg(ctx, "非法请求", err)
+			return
+		}
+	}
+
+	affected, err := e.Id(id).Delete(sdWorkflows)
+	if affected <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}

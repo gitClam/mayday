@@ -5,6 +5,8 @@ import (
 	workflowModel "mayday/src/model/workflow"
 	workflowSever "mayday/src/service/workflow"
 	"mayday/src/utils"
+	"strconv"
+	"strings"
 )
 
 // @Tags Workflow
@@ -128,11 +130,21 @@ func UpdateWorkflowDraft(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param id path int true "流程id"
+// @Param id path string true "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
 // @Success 200 {object} utils.Response
 // @Router /workflow/delete/workflow/{id:int} [delete]
 func DeleteWorkflow(ctx iris.Context) {
 
+	var workflowsId []int
+	for _, id := range strings.Split(ctx.Params().Get("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		workflowsId = append(workflowsId, num)
+	}
+	workflowSever.DeleteWorkflow(ctx, workflowsId)
 }
 
 // @Tags Workflow
@@ -141,9 +153,18 @@ func DeleteWorkflow(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param id path int true "流程id"
+// @Param id path int true "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
 // @Success 200 {object} utils.Response
 // @Router /workflow/delete/workflow-draft/{id:int} [delete]
 func DeleteWorkflowDraft(ctx iris.Context) {
-
+	var workflowsId []int
+	for _, id := range strings.Split(ctx.Params().Get("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		workflowsId = append(workflowsId, num)
+	}
+	workflowSever.DeleteWorkflowDraft(ctx, workflowsId)
 }

@@ -42,23 +42,6 @@ func WorkflowCreateWorkflow(ctx iris.Context) {
 	utils.Responser.Ok(ctx)
 }
 
-// swagger:operation POST /workflow/create/table table create_table
-// ---
-// summary: 创建表单（发布）
-// description: 创建表单（发布）
-// parameters:
-// - name: WorkspaceId
-//   description: 要发布的工作空间的id
-//   type: int
-//   required: true
-// - name: Data
-//   description: 表单的具体数据
-//   type: json(string)
-//   required: true
-// - name: Name
-//   description: 表单的名字
-//   type: string
-//   required: true
 func WorkflowCreateTable(ctx iris.Context) {
 	log.Print("创建流程表单")
 	var table workflow.SdTable
@@ -109,19 +92,6 @@ func WorkflowCreateWorkflowDraft(ctx iris.Context) {
 
 }
 
-// swagger:operation POST /workflow/create/table-draft table Workflow_create_table-draft
-// ---
-// summary: 创建表单（草稿）
-// description: 创建表单（草稿）
-// parameters:
-// - name: Data
-//   description: 表单的具体数据
-//   type: json(string)
-//   required: true
-// - name: Name
-//   description: 表单的名字
-//   type: string
-//   required: true
 func WorkflowCreateTableDraft(ctx iris.Context) {
 	log.Print("创建表单（草稿）")
 	user, ok := middleware.ParseToken(ctx)

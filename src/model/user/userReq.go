@@ -20,6 +20,13 @@ type UserReq struct {
 }
 
 func (req *UserReq) GetSdUser() (sd SdUser) {
+	if req.Name == "" {
+		req.Name = req.Mail
+	}
+
+	if req.Sex != "女" {
+		req.Sex = "男"
+	}
 
 	sd.Name = req.Name
 	sd.Password = req.Password

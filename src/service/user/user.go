@@ -12,6 +12,11 @@ import (
 //用户注册
 func Register(ctx iris.Context, userReq userModel.UserReq) {
 
+	if userReq.Password == "" || userReq.Mail == "" {
+		utils.Responser.FailWithMsg(ctx, "邮箱或密码为空")
+		return
+	}
+
 	sdUser := userReq.GetSdUser()
 	sdUser.Photo = global.GVA_CONFIG.System.DefaultHeadPortrait
 	sdUser.CreateDate = utils.LocalTime(time.Now())

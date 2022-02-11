@@ -61,7 +61,6 @@ func CreateTable(ctx iris.Context) {
 		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
 		return
 	}
-
 	workflowSever.CreateTable(ctx, tableReq)
 }
 
