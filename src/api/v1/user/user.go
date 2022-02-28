@@ -5,7 +5,6 @@ import (
 	userModel "mayday/src/model/user"
 	userSever "mayday/src/service/user"
 	"mayday/src/utils"
-	"strconv"
 )
 
 // @Tags User
@@ -54,16 +53,15 @@ func Login(ctx iris.Context) {
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param id path int true "用户id"
 // @Success 200 {string}  string  "直接返回文件的渲染视图"
-// @Router /user/photo/{id:int} [get]
+// @Router /user/photo/{fileName:string}/ [get]
 func GetPhoto(ctx iris.Context) {
-	id, err := strconv.Atoi(ctx.URLParam("id"))
-	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+	fileName := ctx.Params().Get("fileName")
+	if fileName == "" {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
 		return
 	}
-	userSever.GetUserPhoto(ctx, id)
+	userSever.GetUserPhoto(ctx, fileName)
 }
 
 // @Tags User

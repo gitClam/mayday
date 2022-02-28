@@ -62,24 +62,9 @@ func Login(ctx iris.Context, mail string, password string) {
 }
 
 //获取用户头像
-func GetUserPhoto(ctx iris.Context, id int) {
+func GetUserPhoto(ctx iris.Context, fileName string) {
 
-	var sdUser userModel.SdUser
-	sdUser.Id = id
-
-	e := global.GVA_DB
-	has, err := e.Get(&sdUser)
-	if !has || err != nil {
-		utils.Responser.FailWithMsg(ctx, "用户名不存在", err)
-		return
-	}
-
-	if sdUser.Photo == "" {
-		utils.Responser.FailWithMsg(ctx, "用户头像未设置")
-		return
-	}
-
-	err = ctx.ServeFile(sdUser.Photo, false)
+	err := ctx.ServeFile(global.GVA_CONFIG.System.PhotoPath+"/"+fileName, false)
 	if err != nil {
 		utils.Responser.FailWithMsg(ctx, "头像文件读取错误", err)
 		return
@@ -101,16 +86,16 @@ func SetUserPhoto(ctx iris.Context) {
 		return
 	}
 
-	photoPath := global.GVA_CONFIG.System.PhotoPath + user.Mail + " updateTime: " + time.Now().Format("2006-01-02 15:04:05")
-	global.GVA_LOG.Info(photoPath)
+	fileName := user.Mail + "_" + time.Now().String()
 
-	err = utils.IO.Save(photoPath, file)
+	err = utils.IO.Save(global.GVA_CONFIG.System.PhotoPath+"/"+fileName, file)
 	if err != nil {
 		utils.Responser.FailWithMsg(ctx, "图片文件保存失败", err)
 		return
 	}
 
-	if user.Photo != photoPath {
+	if user.Photo != fileName {
+		user.Photo = fileName
 		affected, err := global.GVA_DB.Id(user.Id).Update(user)
 		if affected <= 0 || err != nil {
 			utils.Responser.FailWithMsg(ctx, "图片更新失败", err)

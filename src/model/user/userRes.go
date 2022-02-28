@@ -16,6 +16,7 @@ type UserDetailsRes struct {
 	Department string `example:"tnnd怎么还不点"`
 	Vocation   string `example:"包工头"`
 	Phone      string `example:"12345678912"`
+	Photo      string `example:"123456@abc.com_time"`
 	CreateDate string `example:"2021-01-01 00:00:00"`
 	Token      string `example:"NDOAIIF@!Afaad21dAONF24b78B9b23br9B(HRbnv8020Bv893htb08BbivB082"`
 }
@@ -26,6 +27,7 @@ type UserAbstractRes struct {
 	Age   int    `example:"3"`
 	Sex   string `example:"男" enums:"男,女"`
 	Info  string `example:"今晚点喂"`
+	Photo string `example:"123456@abc.com_time"`
 	Mail  string `example:"123456@abc.com"`
 	Phone string `example:"12345678912"`
 }
@@ -45,6 +47,7 @@ func GetUserDetailsResWithToken(token string, user *SdUser) (userDetailsRes User
 	userDetailsRes.Company = user.Company
 	userDetailsRes.Department = user.Department
 	userDetailsRes.Vocation = user.Vocation
+	userDetailsRes.Photo = user.Photo
 	userDetailsRes.Phone = user.Phone
 	userDetailsRes.CreateDate = user.CreateDate.String("2006-01-02 15:04:05")
 	userDetailsRes.Token = token
@@ -62,6 +65,7 @@ func GetUserAbstractResList(userList []SdUser) (UserAbstractResList []UserAbstra
 		userAbstractRes.Sex = sdUser.Sex
 		userAbstractRes.Info = sdUser.Info
 		userAbstractRes.Mail = sdUser.Mail
+		userAbstractRes.Photo = sdUser.Photo
 		userAbstractRes.Phone = sdUser.Phone
 
 		UserAbstractResList = append(UserAbstractResList, userAbstractRes)
