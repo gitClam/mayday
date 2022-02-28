@@ -98,7 +98,8 @@ func SetUserPhoto(ctx iris.Context) {
 		return
 	}
 
-	photoPath := global.GVA_CONFIG.System.PhotoPath + user.Mail
+	photoPath := global.GVA_CONFIG.System.PhotoPath + user.Mail + " updateTime: " + time.Now().Format("2006-01-02 15:04:05")
+	global.GVA_LOG.Info(photoPath)
 
 	err = utils.IO.Save(photoPath, file)
 	if err != nil {

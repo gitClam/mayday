@@ -36,13 +36,13 @@ func Register(ctx iris.Context) {
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是会有信息的"
 // @Router /user/login [post]
 func Login(ctx iris.Context) {
-	mail := ctx.FormValue("Mail")
+	mail := ctx.FormValue("mail")
 	if mail == "" {
 		utils.Responser.FailWithMsg(ctx, "用户邮箱为空")
 		return
 	}
-	password := ctx.FormValue("Password")
-	if ctx.FormValue("Password") == "" {
+	password := ctx.FormValue("password")
+	if password == "" {
 		utils.Responser.FailWithMsg(ctx, "用户密码为空")
 		return
 	}
