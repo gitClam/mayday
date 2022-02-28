@@ -32,6 +32,10 @@ type UserAbstractRes struct {
 	Phone string `example:"12345678912"`
 }
 
+type UserPhotoFileName struct {
+	FileName string `example:"791285634@qq.com_1646030652"`
+}
+
 // GetUserDetailsResWithToken 携带token
 func GetUserDetailsResWithToken(token string, user *SdUser) (userDetailsRes UserDetailsRes) {
 	userDetailsRes.Id = user.Id

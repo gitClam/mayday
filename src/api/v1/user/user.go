@@ -69,7 +69,7 @@ func GetPhoto(ctx iris.Context) {
 // @Security ApiKeyAuth
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param UserPhoto formData string true "头像文件"
-// @Success 200 {object} utils.Response
+// @Success 200 {object} utils.Response{data=user.UserPhotoFileName}
 // @Router /user/set_photo [post]
 func SetPhoto(ctx iris.Context) {
 	userSever.SetUserPhoto(ctx)

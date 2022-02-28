@@ -103,7 +103,7 @@ func SetUserPhoto(ctx iris.Context) {
 		}
 	}
 
-	utils.Responser.OkWithDetails(ctx, "成功", iris.Map{"fileName": fileName})
+	utils.Responser.OkWithDetails(ctx, "成功", userModel.UserPhotoFileName{FileName: fileName})
 }
 
 //用户注销
