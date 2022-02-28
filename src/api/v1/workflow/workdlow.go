@@ -110,11 +110,17 @@ func CreateWorkflowDraft(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "流程信息"
+// @Param userReq body workflowModel.WorkflowReq true "流程信息"
 // @Success 200 {object} utils.Response
 // @Router /workflow/update/workflow [post]
 func UpdateWorkflow(ctx iris.Context) {
+	var workflowReq workflowModel.WorkflowReq
+	if err := ctx.ReadJSON(&workflowReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		return
+	}
 
+	workflowSever.UpdateWorkflow(ctx, workflowReq)
 }
 
 // @Tags Workflow
@@ -127,7 +133,12 @@ func UpdateWorkflow(ctx iris.Context) {
 // @Success 200 {object} utils.Response
 // @Router /workflow/update/workflow-state [post]
 func UpdateWorkflowState(ctx iris.Context) {
-
+	var workflowReq workflowModel.WorkflowReq
+	if err := ctx.ReadForm(&workflowReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		return
+	}
+	workflowSever.UpdateWorkflowState(ctx, workflowReq)
 }
 
 // @Tags Workflow

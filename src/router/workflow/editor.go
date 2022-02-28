@@ -11,51 +11,6 @@ import (
 	"log"
 )
 
-// swagger:operation POST /workflow/editor/workflow workflow editor_workflow
-// ---
-// summary: 修改流程（已发布）
-// description: 修改流程（已发布）
-// parameters:
-// - name: id
-//   description: 流程ID
-//   type: int
-//   required: true
-// - name: Name
-//   description: 流程名字
-//   type: json
-//   required: true
-// - name: Structure
-//   description: 流程结构
-//   type: json
-//   required: true
-// - name: Tables
-//   description: 表单样式
-//   type: json
-//   required: true
-// - name: Remarks
-//   description: 备注
-//   type: string
-//   required: false
-func WorkflowEditorWorkflow(ctx iris.Context) {
-
-	var workflow workflow.SdWorkflow
-	if err := ctx.ReadJSON(&workflow); err != nil || workflow.Id == 0 {
-		utils.Responser.FailWithMsg(ctx, "")
-		log.Print("数据接收失败")
-		return
-	}
-
-	e := global.GVA_DB
-	affected, err := e.Id(workflow.Id).Update(workflow)
-	if affected <= 0 || err != nil {
-		log.Print(err)
-		log.Printf("流程更新失败")
-		utils.Responser.FailWithMsg(ctx, "")
-		return
-	}
-	utils.Responser.Ok(ctx)
-}
-
 // swagger:operation POST /workflow/editor/workflow-state workflow editor_workflow_state
 // ---
 // summary: 修改流程状态（已发布）

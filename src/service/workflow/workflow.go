@@ -154,3 +154,41 @@ func GetWorkflowDraftById(ctx iris.Context, id []int) {
 	}
 	utils.Responser.OkWithData(ctx, SdWorkflows)
 }
+
+//更新流程信息
+func UpdateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
+	//TODO 验证权限
+	e := global.GVA_DB
+	sdWorkflow := workflowReq.GetSdWorkflow()
+	affected, err := e.Id(sdWorkflow.Id).Update(sdWorkflow)
+	if affected <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程更新失败")
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
+
+//修改流程状态
+func UpdateWorkflowState(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
+	//TODO 验证权限
+	e := global.GVA_DB
+	sdworkflow := workflowReq.GetSdWorkflow()
+	has, err := e.Id(sdworkflow.Id).Get(&sdworkflow)
+	if !has || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程不存在")
+		return
+	}
+
+	if sdworkflow.IsStart == 0 {
+		sdworkflow.IsStart = 1
+	} else {
+		sdworkflow.IsStart = 0
+	}
+
+	affected, err := e.Id(sdworkflow.Id).Cols("is_start").Update(sdworkflow)
+	if affected <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程更新失败")
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
