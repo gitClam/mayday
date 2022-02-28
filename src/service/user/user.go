@@ -1,11 +1,13 @@
 package user_Server
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
 	"mayday/src/middleware"
 	userModel "mayday/src/model/user"
 	"mayday/src/utils"
+	"strconv"
 	"time"
 )
 
@@ -55,6 +57,7 @@ func Login(ctx iris.Context, mail string, password string) {
 		return
 	}
 
+	ctx.Values().Set("user", fmt.Sprint(strconv.Itoa(mUser.Id)+" "+mUser.Name))
 	utils.Responser.OkWithDetails(ctx, utils.Success, userModel.GetUserDetailsResWithToken(token, &mUser))
 }
 
@@ -92,7 +95,7 @@ func SetUserPhoto(ctx iris.Context) {
 		return
 	}
 
-	file, _, err := ctx.FormFile("GetPhoto")
+	file, _, err := ctx.FormFile("UserPhoto")
 	if err != nil {
 		utils.Responser.FailWithMsg(ctx, "图片接收失败", err)
 		return

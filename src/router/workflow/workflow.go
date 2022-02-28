@@ -11,9 +11,9 @@ func InitWorkflowRouter(Router router.Party) {
 	{
 		get := workflow.Party("/get")
 		{
-			get.Get("/workflow", workflowApi.GetWorkflowById)              //查询流程
-			get.Get("/workflow-draft", workflowApi.GetWorkflowDraftByUser) //查询本人所有的流程草稿
-			get.Get("/workflow-draft", workflowApi.GetWorkflowDraftById)   //查询流程草稿详细信息
+			get.Get("/workflow", workflowApi.GetWorkflowById)                   //查询流程
+			get.Get("/workflow-draft/user", workflowApi.GetWorkflowDraftByUser) //查询本人所有的流程草稿
+			get.Get("/workflow-draft/id", workflowApi.GetWorkflowDraftById)     //查询流程草稿详细信息
 		}
 		create := workflow.Party("/create")
 		{

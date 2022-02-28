@@ -121,7 +121,7 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	err := e.Id(id).Find(&SdWorkflows)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
+		utils.Responser.FailWithMsg(ctx, "流程查询失败", err)
 		return
 	}
 	utils.Responser.OkWithData(ctx, SdWorkflows)
