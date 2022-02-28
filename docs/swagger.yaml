@@ -34,6 +34,9 @@ definitions:
       phone:
         example: "12345678912"
         type: string
+      photo:
+        example: 123456@abc.com_time
+        type: string
       qqNumber:
         example: "123456789"
         type: string
@@ -54,6 +57,12 @@ definitions:
         type: string
       wechat:
         example: M.Salah
+        type: string
+    type: object
+  user.UserPhotoFileName:
+    properties:
+      fileName:
+        example: 791285634@qq.com_1646030652
         type: string
     type: object
   user.UserReq:
@@ -117,6 +126,68 @@ definitions:
         example: 操作成功
         type: string
     type: object
+  workflow.SdWorkflow:
+    properties:
+      ceilingCount:
+        type: integer
+      createTime:
+        type: string
+      createUser:
+        type: integer
+      id:
+        type: integer
+      isDeleted:
+        type: integer
+      isStart:
+        type: integer
+      name:
+        type: string
+      remarks:
+        type: string
+      structure:
+        items:
+          type: integer
+        type: array
+      tables:
+        items:
+          type: integer
+        type: array
+    type: object
+  workflow.TableReq:
+    properties:
+      data:
+        example: JSON格式的数据
+        type: string
+      name:
+        example: 请假表单
+        type: string
+      workspaceId:
+        example: 1
+        type: integer
+    required:
+    - data
+    - name
+    - workspaceId
+    type: object
+  workflow.WorkflowDraftReq:
+    properties:
+      name:
+        example: 睡觉流程
+        type: string
+      remarks:
+        example: 请假流程2
+        type: string
+      structure:
+        example: 流程的JSON文件
+        type: string
+      tables:
+        example: '["1001", "1002"]'
+        type: string
+    required:
+    - name
+    - structure
+    - tables
+    type: object
   workflow.WorkflowReq:
     properties:
       applicationId:
@@ -175,7 +246,7 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.TableReq'
       produces:
       - application/json
       responses:
@@ -216,34 +287,7 @@ paths:
       summary: 创建表单草稿
       tags:
       - Table
-  /table/delete/table-draft/{id:int}:
-    delete:
-      consumes:
-      - application/x-www-form-urlencoded
-      parameters:
-      - description: 用户登录返回的TOKEN
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 表单id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/utils.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: 删除表单草稿
-      tags:
-      - Table
-  /table/delete/table/{id:int}:
+  /table/delete/table:
     delete:
       consumes:
       - application/x-www-form-urlencoded
@@ -270,8 +314,8 @@ paths:
       summary: 删除表单
       tags:
       - Table
-  /table/get/table-draft:
-    get:
+  /table/delete/table-draft:
+    delete:
       consumes:
       - application/x-www-form-urlencoded
       parameters:
@@ -280,34 +324,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 返回表单的详细信息
-          schema:
-            allOf:
-            - $ref: '#/definitions/utils.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/user.UserDetailsRes'
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取当前用户的表单草稿列表
-      tags:
-      - Table
-  /table/get/table-draft/{id:int}:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      parameters:
-      - description: 用户登录返回的TOKEN
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 表单草稿id
+      - description: 表单id
         in: path
         name: id
         required: true
@@ -316,20 +333,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: 返回表单的详细信息
+          description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/user.UserDetailsRes'
-              type: object
+            $ref: '#/definitions/utils.Response'
       security:
       - ApiKeyAuth: []
-      summary: 获取表单草稿详细信息
+      summary: 删除表单草稿
       tags:
       - Table
-  /table/get/table/{id:int}:
+  /table/get/table:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -359,6 +371,38 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 获取表单详细信息
+      tags:
+      - Table
+  /table/get/table-draft:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户登录返回的TOKEN
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 表单草稿id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回表单的详细信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserDetailsRes'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取表单草稿详细信息
       tags:
       - Table
   /table/update/table:
@@ -528,16 +572,10 @@ paths:
       summary: 获取用户信息
       tags:
       - User
-  /user/photo/{id:int}:
+  /user/photo/{fileName:string}/:
     get:
       consumes:
       - application/x-www-form-urlencoded
-      parameters:
-      - description: 用户id
-        in: path
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -583,14 +621,19 @@ paths:
         type: string
       - description: 头像文件
         in: formData
-        name: GetPhoto
+        name: UserPhoto
         required: true
         type: string
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.Response'
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserPhotoFileName'
+              type: object
       security:
       - ApiKeyAuth: []
       summary: 设置头像
@@ -639,7 +682,7 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/workflow.WorkflowReq'
+          $ref: '#/definitions/workflow.WorkflowDraftReq'
       produces:
       - application/json
       responses:
@@ -652,7 +695,7 @@ paths:
       summary: 创建流程草稿
       tags:
       - Workflow
-  /workflow/delete/workflow-draft/{id:int}:
+  /workflow/delete/workflow:
     delete:
       consumes:
       - application/x-www-form-urlencoded
@@ -662,7 +705,34 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 流程id
+      - description: 流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除流程
+      tags:
+      - Workflow
+  /workflow/delete/workflow-draft:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户登录返回的TOKEN
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'
         in: path
         name: id
         required: true
@@ -679,34 +749,7 @@ paths:
       summary: 删除流程草稿
       tags:
       - Workflow
-  /workflow/delete/workflow/{id:int}:
-    delete:
-      consumes:
-      - application/x-www-form-urlencoded
-      parameters:
-      - description: 用户登录返回的TOKEN
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 流程id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/utils.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: 删除流程
-      tags:
-      - Workflow
-  /workflow/get/workflow-draft:
+  /workflow/get/workflow:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -716,24 +759,31 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: 流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: 返回流程草稿的详细信息
+          description: 返回流程的详细信息
           schema:
             allOf:
             - $ref: '#/definitions/utils.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/user.UserDetailsRes'
+                  items:
+                    $ref: '#/definitions/workflow.SdWorkflow'
+                  type: array
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 获取当前用户的流程草稿列表
+      summary: 获取流程详细信息
       tags:
       - Workflow
-  /workflow/get/workflow-draft/{id:int}:
+  /workflow/get/workflow-draft/id:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -765,7 +815,7 @@ paths:
       summary: 获取流程草稿详细信息
       tags:
       - Workflow
-  /workflow/get/workflow/{id:int}:
+  /workflow/get/workflow-draft/user:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -775,16 +825,11 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 流程id
-        in: path
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: 返回流程的详细信息
+          description: 返回流程草稿的详细信息
           schema:
             allOf:
             - $ref: '#/definitions/utils.Response'
@@ -794,7 +839,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 获取流程详细信息
+      summary: 获取当前用户的流程草稿列表
       tags:
       - Workflow
   /workflow/update/workflow:

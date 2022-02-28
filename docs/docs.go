@@ -63,7 +63,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.TableReq"
                         }
                     }
                 ],
@@ -122,50 +122,7 @@ var doc = `{
                 }
             }
         },
-        "/table/delete/table-draft/{id:int}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Table"
-                ],
-                "summary": "删除表单草稿",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "用户登录返回的TOKEN",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "表单id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/utils.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/table/delete/table/{id:int}": {
+        "/table/delete/table": {
             "delete": {
                 "security": [
                     {
@@ -208,8 +165,8 @@ var doc = `{
                 }
             }
         },
-        "/table/get/table-draft": {
-            "get": {
+        "/table/delete/table-draft": {
+            "delete": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -224,55 +181,7 @@ var doc = `{
                 "tags": [
                     "Table"
                 ],
-                "summary": "获取当前用户的表单草稿列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "用户登录返回的TOKEN",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "返回表单的详细信息",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/user.UserDetailsRes"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/table/get/table-draft/{id:int}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Table"
-                ],
-                "summary": "获取表单草稿详细信息",
+                "summary": "删除表单草稿",
                 "parameters": [
                     {
                         "type": "string",
@@ -283,7 +192,7 @@ var doc = `{
                     },
                     {
                         "type": "integer",
-                        "description": "表单草稿id",
+                        "description": "表单id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -291,27 +200,15 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "返回表单的详细信息",
+                        "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/user.UserDetailsRes"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.Response"
                         }
                     }
                 }
             }
         },
-        "/table/get/table/{id:int}": {
+        "/table/get/table": {
             "get": {
                 "security": [
                     {
@@ -339,6 +236,61 @@ var doc = `{
                     {
                         "type": "integer",
                         "description": "表单id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回表单的详细信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserDetailsRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/table/get/table-draft": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Table"
+                ],
+                "summary": "获取表单草稿详细信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "表单草稿id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -644,7 +596,7 @@ var doc = `{
                 }
             }
         },
-        "/user/photo/{id:int}": {
+        "/user/photo/{fileName:string}/": {
             "get": {
                 "security": [
                     {
@@ -661,15 +613,6 @@ var doc = `{
                     "User"
                 ],
                 "summary": "获取头像",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "用户id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "直接返回文件的渲染视图",
@@ -740,7 +683,7 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "头像文件",
-                        "name": "GetPhoto",
+                        "name": "UserPhoto",
                         "in": "formData",
                         "required": true
                     }
@@ -749,7 +692,19 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserPhotoFileName"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -831,7 +786,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/workflow.WorkflowReq"
+                            "$ref": "#/definitions/workflow.WorkflowDraftReq"
                         }
                     }
                 ],
@@ -845,7 +800,50 @@ var doc = `{
                 }
             }
         },
-        "/workflow/delete/workflow-draft/{id:int}": {
+        "/workflow/delete/workflow": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Workflow"
+                ],
+                "summary": "删除流程",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/workflow/delete/workflow-draft": {
             "delete": {
                 "security": [
                     {
@@ -872,7 +870,7 @@ var doc = `{
                     },
                     {
                         "type": "integer",
-                        "description": "流程id",
+                        "description": "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -888,50 +886,7 @@ var doc = `{
                 }
             }
         },
-        "/workflow/delete/workflow/{id:int}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Workflow"
-                ],
-                "summary": "删除流程",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "用户登录返回的TOKEN",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "流程id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/utils.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/workflow/get/workflow-draft": {
+        "/workflow/get/workflow": {
             "get": {
                 "security": [
                     {
@@ -947,7 +902,7 @@ var doc = `{
                 "tags": [
                     "Workflow"
                 ],
-                "summary": "获取当前用户的流程草稿列表",
+                "summary": "获取流程详细信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -955,11 +910,18 @@ var doc = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "返回流程草稿的详细信息",
+                        "description": "返回流程的详细信息",
                         "schema": {
                             "allOf": [
                                 {
@@ -969,7 +931,10 @@ var doc = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/user.UserDetailsRes"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/workflow.SdWorkflow"
+                                            }
                                         }
                                     }
                                 }
@@ -979,7 +944,7 @@ var doc = `{
                 }
             }
         },
-        "/workflow/get/workflow-draft/{id:int}": {
+        "/workflow/get/workflow-draft/id": {
             "get": {
                 "security": [
                     {
@@ -1034,7 +999,7 @@ var doc = `{
                 }
             }
         },
-        "/workflow/get/workflow/{id:int}": {
+        "/workflow/get/workflow-draft/user": {
             "get": {
                 "security": [
                     {
@@ -1050,7 +1015,7 @@ var doc = `{
                 "tags": [
                     "Workflow"
                 ],
-                "summary": "获取流程详细信息",
+                "summary": "获取当前用户的流程草稿列表",
                 "parameters": [
                     {
                         "type": "string",
@@ -1058,18 +1023,11 @@ var doc = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "流程id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "返回流程的详细信息",
+                        "description": "返回流程草稿的详细信息",
                         "schema": {
                             "allOf": [
                                 {
@@ -1269,6 +1227,10 @@ var doc = `{
                     "type": "string",
                     "example": "12345678912"
                 },
+                "photo": {
+                    "type": "string",
+                    "example": "123456@abc.com_time"
+                },
                 "qqNumber": {
                     "type": "string",
                     "example": "123456789"
@@ -1296,6 +1258,15 @@ var doc = `{
                 "wechat": {
                     "type": "string",
                     "example": "M.Salah"
+                }
+            }
+        },
+        "user.UserPhotoFileName": {
+            "type": "object",
+            "properties": {
+                "fileName": {
+                    "type": "string",
+                    "example": "791285634@qq.com_1646030652"
                 }
             }
         },
@@ -1379,6 +1350,95 @@ var doc = `{
                 "msg": {
                     "type": "string",
                     "example": "操作成功"
+                }
+            }
+        },
+        "workflow.SdWorkflow": {
+            "type": "object",
+            "properties": {
+                "ceilingCount": {
+                    "type": "integer"
+                },
+                "createTime": {
+                    "type": "string"
+                },
+                "createUser": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isDeleted": {
+                    "type": "integer"
+                },
+                "isStart": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "remarks": {
+                    "type": "string"
+                },
+                "structure": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "tables": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "workflow.TableReq": {
+            "type": "object",
+            "required": [
+                "data",
+                "name",
+                "workspaceId"
+            ],
+            "properties": {
+                "data": {
+                    "type": "string",
+                    "example": "JSON格式的数据"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "请假表单"
+                },
+                "workspaceId": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "workflow.WorkflowDraftReq": {
+            "type": "object",
+            "required": [
+                "name",
+                "structure",
+                "tables"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "睡觉流程"
+                },
+                "remarks": {
+                    "type": "string",
+                    "example": "请假流程2"
+                },
+                "structure": {
+                    "type": "string",
+                    "example": "流程的JSON文件"
+                },
+                "tables": {
+                    "type": "string",
+                    "example": "[\"1001\", \"1002\"]"
                 }
             }
         },
