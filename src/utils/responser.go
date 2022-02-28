@@ -36,10 +36,14 @@ func Result(code int, data interface{}, msg string, ctx iris.Context) {
 		return
 	}
 	//日志输出
+	ip, err := GetIP(ctx)
+	if err != nil {
+		ip = "UnKnow"
+	}
 	if ctx.Values().Get("err") == nil {
-		global.GVA_LOG.Info("用户: " + fmt.Sprint(ctx.Values().Get("user")) + " " + ctx.Path() + " " + msg)
+		global.GVA_LOG.Info("ip: " + ip + " " + "用户: " + fmt.Sprint(ctx.Values().Get("user")) + " " + ctx.Path() + " " + msg)
 	} else {
-		global.GVA_LOG.Warn("用户: " + fmt.Sprint(ctx.Values().Get("user")) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
+		global.GVA_LOG.Warn("ip: " + ip + " " + "用户: " + fmt.Sprint(ctx.Values().Get("user")) + " " + ctx.Path() + " " + msg + " " + ctx.Values().Get("err").(error).Error())
 	}
 }
 
