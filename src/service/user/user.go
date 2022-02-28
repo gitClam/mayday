@@ -86,7 +86,7 @@ func SetUserPhoto(ctx iris.Context) {
 		return
 	}
 
-	fileName := user.Mail + "_" + time.Now().String()
+	fileName := user.Mail + "_" + strconv.FormatInt(time.Now().Unix(), 10)
 
 	err = utils.IO.Save(global.GVA_CONFIG.System.PhotoPath+"/"+fileName, file)
 	if err != nil {
