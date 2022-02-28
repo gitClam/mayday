@@ -4,12 +4,13 @@ import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
 	UserModel "mayday/src/model/user"
-	"mayday/src/model/workflow"
+	WorkflowModel "mayday/src/model/workflow"
 	"mayday/src/utils"
 )
 
 //创建表单
-func CreateTable(ctx iris.Context, tableReq workflow.TableReq) {
+func CreateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
+	//TODO 权限检查
 	sdTable := tableReq.GetSdTable()
 
 	e := global.GVA_DB
@@ -22,7 +23,7 @@ func CreateTable(ctx iris.Context, tableReq workflow.TableReq) {
 }
 
 //创建表单草稿
-func CreateTableDraft(ctx iris.Context, tableDraftReq workflow.TableDraftReq) {
+func CreateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.TableDraftReq) {
 
 	user := ctx.Values().Get("user").(UserModel.SdUser)
 
@@ -32,6 +33,46 @@ func CreateTableDraft(ctx iris.Context, tableDraftReq workflow.TableDraftReq) {
 	effect, err := e.Insert(sdTableDraft)
 	if effect <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "表单草稿插入失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
+
+//删除表单
+func DeleteTable(ctx iris.Context, id []int) {
+	//TODO 权限检查
+	e := global.GVA_DB
+	effect, err := e.Id(id).Delete(new(WorkflowModel.SdTable))
+	if effect <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单删除失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
+
+//删除表单草稿
+func DeleteTableDraft(ctx iris.Context, id []int) {
+	user := ctx.Values().Get("user").(UserModel.SdUser)
+	var sdTableDrafts []WorkflowModel.SdTableDraft
+	e := global.GVA_DB
+
+	err := e.Id(id).Find(&sdTableDrafts)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单草稿不存在", err)
+		return
+	}
+
+	// 只能删除自己的草稿
+	for _, sdTableDraft := range sdTableDrafts {
+		if sdTableDraft.UserId != user.Id {
+			utils.Responser.FailWithMsg(ctx, "非法请求", err)
+			return
+		}
+	}
+
+	effect, err := e.Id(id).Delete(new(WorkflowModel.SdTableDraft))
+	if effect <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单草稿删除失败", err)
 		return
 	}
 	utils.Responser.Ok(ctx)

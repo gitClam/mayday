@@ -5,6 +5,8 @@ import (
 	workflowModel "mayday/src/model/workflow"
 	workflowSever "mayday/src/service/workflow"
 	"mayday/src/utils"
+	"strconv"
+	"strings"
 )
 
 // @Tags Table
@@ -15,7 +17,7 @@ import (
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息"
-// @Router /table/get/table/{id:int} [get]
+// @Router /table/get/table [get]
 func GetTableById(ctx iris.Context) {
 
 }
@@ -40,7 +42,7 @@ func GetTableDraftByUser(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单草稿id"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息"
-// @Router /table/get/table-draft/{id:int} [get]
+// @Router /table/get/table-draft [get]
 func GetTableDraftById(ctx iris.Context) {
 
 }
@@ -117,9 +119,19 @@ func UpdateTableDraft(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id"
 // @Success 200 {object} utils.Response
-// @Router /table/delete/table/{id:int} [delete]
+// @Router /table/delete/table [delete]
 func DeleteTable(ctx iris.Context) {
 
+	var tableId []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		tableId = append(tableId, num)
+	}
+	workflowSever.DeleteTable(ctx, tableId)
 }
 
 // @Tags Table
@@ -130,7 +142,17 @@ func DeleteTable(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id"
 // @Success 200 {object} utils.Response
-// @Router /table/delete/table-draft/{id:int} [delete]
+// @Router /table/delete/table-draft [delete]
 func DeleteTableDraft(ctx iris.Context) {
+	var tableId []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		tableId = append(tableId, num)
+	}
+	workflowSever.DeleteTableDraft(ctx, tableId)
 
 }

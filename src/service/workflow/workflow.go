@@ -76,9 +76,8 @@ func CreateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 //删除流程
 func DeleteWorkflow(ctx iris.Context, id []int) {
 	//TODO 验证权限
-	sdWorkflow := new(WorkflowModel.SdWorkflow)
 	e := global.GVA_DB
-	affected, err := e.Id(id).Delete(sdWorkflow)
+	affected, err := e.Id(id).Delete(new(WorkflowModel.SdWorkflow))
 	if affected <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
 		return
@@ -113,4 +112,17 @@ func DeleteWorkflowDraft(ctx iris.Context, id []int) {
 		return
 	}
 	utils.Responser.Ok(ctx)
+}
+
+//获取流程信息
+func GetWorkflowById(ctx iris.Context, id []int) {
+	//TODO 验证权限
+	var SdWorkflows []WorkflowModel.SdWorkflow
+	e := global.GVA_DB
+	err := e.Id(id).Find(&SdWorkflows)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
+		return
+	}
+	utils.Responser.OkWithData(ctx, SdWorkflows)
 }

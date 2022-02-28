@@ -11,9 +11,9 @@ func InitTableRouter(Router router.Party) {
 	{
 		get := table.Party("/get")
 		{
-			get.Get("/table/{id:int}", workflowApi.GetTableById)            //查询表单
-			get.Get("/table-draft", workflowApi.GetTableDraftByUser)        //查询用户拥有的表单草稿
-			get.Get("/table-draft/{id:int}", workflowApi.GetTableDraftById) //查询表单草稿
+			get.Get("/table", workflowApi.GetTableById)              //查询表单
+			get.Get("/table-draft", workflowApi.GetTableDraftByUser) //查询用户拥有的表单草稿
+			get.Get("/table-draft", workflowApi.GetTableDraftById)   //查询表单草稿
 		}
 		create := table.Party("/create")
 		{
@@ -29,8 +29,8 @@ func InitTableRouter(Router router.Party) {
 
 		delete := table.Party("/delete")
 		{
-			delete.Delete("/table/{id:int}", workflowApi.DeleteTable)            //删除表单
-			delete.Delete("/table-draft/{id:int}", workflowApi.DeleteTableDraft) //删除表单草稿
+			delete.Delete("/table", workflowApi.DeleteTable)            //删除表单
+			delete.Delete("/table-draft", workflowApi.DeleteTableDraft) //删除表单草稿
 		}
 	}
 }

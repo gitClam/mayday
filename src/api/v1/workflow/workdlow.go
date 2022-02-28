@@ -15,10 +15,20 @@ import (
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param id path int true "流程id"
-// @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回流程的详细信息"
-// @Router /workflow/get/workflow/{id:int} [get]
+// @Param id path int true "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
+// @Success 200 {object} utils.Response{data=[]workflow.SdWorkflow} "返回流程的详细信息"
+// @Router /workflow/get/workflow [get]
 func GetWorkflowById(ctx iris.Context) {
+	var workflowsId []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		workflowsId = append(workflowsId, num)
+	}
+	workflowSever.GetWorkflowById(ctx, workflowsId)
 
 }
 
@@ -42,7 +52,7 @@ func GetWorkflowDraftByUser(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "流程草稿id"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回流程的详细信息"
-// @Router /workflow/get/workflow-draft/{id:int} [get]
+// @Router /workflow/get/workflow-draft [get]
 func GetWorkflowDraftById(ctx iris.Context) {
 
 }
@@ -132,11 +142,11 @@ func UpdateWorkflowDraft(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path string true "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
 // @Success 200 {object} utils.Response
-// @Router /workflow/delete/workflow/{id:int} [delete]
+// @Router /workflow/delete/workflow [delete]
 func DeleteWorkflow(ctx iris.Context) {
 
 	var workflowsId []int
-	for _, id := range strings.Split(ctx.Params().Get("id"), ",") {
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
 			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
@@ -155,7 +165,7 @@ func DeleteWorkflow(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "流程id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
 // @Success 200 {object} utils.Response
-// @Router /workflow/delete/workflow-draft/{id:int} [delete]
+// @Router /workflow/delete/workflow-draft [delete]
 func DeleteWorkflowDraft(ctx iris.Context) {
 	var workflowsId []int
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {

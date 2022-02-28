@@ -11,9 +11,9 @@ func InitWorkflowRouter(Router router.Party) {
 	{
 		get := workflow.Party("/get")
 		{
-			get.Get("/workflow/{id:int}", workflowApi.GetWorkflowById)            //查询流程
-			get.Get("/workflow-draft", workflowApi.GetWorkflowDraftByUser)        //查询本人所有的流程草稿
-			get.Get("/workflow-draft/{id:int}", workflowApi.GetWorkflowDraftById) //查询流程草稿详细信息
+			get.Get("/workflow", workflowApi.GetWorkflowById)              //查询流程
+			get.Get("/workflow-draft", workflowApi.GetWorkflowDraftByUser) //查询本人所有的流程草稿
+			get.Get("/workflow-draft", workflowApi.GetWorkflowDraftById)   //查询流程草稿详细信息
 		}
 		create := workflow.Party("/create")
 		{
@@ -30,7 +30,7 @@ func InitWorkflowRouter(Router router.Party) {
 
 		delete := workflow.Party("/delete")
 		{
-			delete.Delete("/workflow/{id:int}", workflowApi.DeleteWorkflow)   //删除流程
+			delete.Delete("/workflow", workflowApi.DeleteWorkflow)            //删除流程
 			delete.Delete("/workflow-draft", workflowApi.DeleteWorkflowDraft) //删除流程草稿
 		}
 	}
