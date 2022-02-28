@@ -135,7 +135,7 @@ func GetWorkflowDraftByUser(ctx iris.Context) {
 	e := global.GVA_DB
 	err := e.Where("owner_id = ?", user.Id).Find(&workflowDrafts)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程草稿查询失败")
+		utils.Responser.FailWithMsg(ctx, "流程草稿查询失败", err)
 		return
 	}
 
@@ -162,7 +162,7 @@ func UpdateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	sdWorkflow := workflowReq.GetSdWorkflow()
 	affected, err := e.Id(sdWorkflow.Id).Update(sdWorkflow)
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程更新失败")
+		utils.Responser.FailWithMsg(ctx, "流程更新失败", err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -172,22 +172,35 @@ func UpdateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 func UpdateWorkflowState(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	//TODO 验证权限
 	e := global.GVA_DB
-	sdworkflow := workflowReq.GetSdWorkflow()
-	has, err := e.Id(sdworkflow.Id).Get(&sdworkflow)
+	sdWorkflow := workflowReq.GetSdWorkflow()
+	has, err := e.Id(sdWorkflow.Id).Get(&sdWorkflow)
 	if !has || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程不存在")
+		utils.Responser.FailWithMsg(ctx, "流程不存在", err)
 		return
 	}
 
-	if sdworkflow.IsStart == 0 {
-		sdworkflow.IsStart = 1
+	if sdWorkflow.IsStart == 0 {
+		sdWorkflow.IsStart = 1
 	} else {
-		sdworkflow.IsStart = 0
+		sdWorkflow.IsStart = 0
 	}
 
-	affected, err := e.Id(sdworkflow.Id).Cols("is_start").Update(sdworkflow)
+	affected, err := e.Id(sdWorkflow.Id).Cols("is_start").Update(sdWorkflow)
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程更新失败")
+		utils.Responser.FailWithMsg(ctx, "流程更新失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
+
+//修改流程草稿
+func UpdateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.WorkflowDraftReq) {
+	//TODO 验证权限
+	e := global.GVA_DB
+	sdWorkflowDraft := workflowDraftReq.GetSdWorkflowDraft()
+	affected, err := e.Id(sdWorkflowDraft.Id).Update(sdWorkflowDraft)
+	if affected <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程草稿更新失败", err)
 		return
 	}
 	utils.Responser.Ok(ctx)

@@ -114,6 +114,13 @@ func CreateTableDraft(ctx iris.Context) {
 // @Router /table/update/table [post]
 func UpdateTable(ctx iris.Context) {
 
+	var tableReq workflowModel.TableReq
+	if err := ctx.ReadJSON(&tableReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		return
+	}
+	workflowSever.UpdateTable(ctx, tableReq)
+
 }
 
 // @Tags Table
@@ -127,6 +134,12 @@ func UpdateTable(ctx iris.Context) {
 // @Router /table/update/table-draft [post]
 func UpdateTableDraft(ctx iris.Context) {
 
+	var tableDraftReq workflowModel.TableDraftReq
+	if err := ctx.ReadJSON(&tableDraftReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		return
+	}
+	workflowSever.UpdateTableDraft(ctx, tableDraftReq)
 }
 
 // @Tags Table

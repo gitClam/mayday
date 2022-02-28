@@ -99,7 +99,7 @@ func GetTableDraftByUser(ctx iris.Context) {
 	e := global.GVA_DB
 	err := e.Where("user_id = ?", user.Id).Find(&sdTableDrafts)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿查询失败")
+		utils.Responser.FailWithMsg(ctx, "表单草稿查询失败", err)
 		return
 	}
 
@@ -117,4 +117,29 @@ func GetTableDraftById(ctx iris.Context, id []int) {
 		return
 	}
 	utils.Responser.OkWithData(ctx, sdTableDraft)
+}
+
+//修改表单
+func UpdateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
+	//TODO 验证权限
+	e := global.GVA_DB
+	sdTable := tableReq.GetSdTable()
+	effect, err := e.Id(sdTable.Id).Update(sdTable)
+	if effect <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单修改失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
+
+func UpdateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.TableDraftReq) {
+	//TODO 验证权限
+	e := global.GVA_DB
+	sdTableDraft := tableDraftReq.GetSdTableDraft()
+	effect, err := e.Id(sdTableDraft.Id).Update(sdTableDraft)
+	if effect <= 0 || err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单草稿修改失败", err)
+		return
+	}
+	utils.Responser.Ok(ctx)
 }

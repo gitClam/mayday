@@ -151,7 +151,13 @@ func UpdateWorkflowState(ctx iris.Context) {
 // @Success 200 {object} utils.Response
 // @Router /workflow/update/workflow-draft [post]
 func UpdateWorkflowDraft(ctx iris.Context) {
+	var workflowDraftReq workflowModel.WorkflowDraftReq
+	if err := ctx.ReadJSON(&workflowDraftReq); err != nil {
+		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		return
+	}
 
+	workflowSever.UpdateWorkflowDraft(ctx, workflowDraftReq)
 }
 
 // @Tags Workflow
