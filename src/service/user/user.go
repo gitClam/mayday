@@ -131,7 +131,8 @@ func GetUserMessage(ctx iris.Context) {
 //修改用户信息
 func SetUserMessage(ctx iris.Context, msg userModel.UserReq) {
 	user := ctx.Values().Get("user").(userModel.SdUser)
-	affected, err := global.GVA_DB.Id(user.Id).Update(msg)
+	sdUser := msg.GetSdUser()
+	affected, err := global.GVA_DB.Id(user.Id).Update(sdUser)
 	if affected <= 0 || err != nil {
 		utils.Responser.FailWithMsg(ctx, "数据更新失败", err)
 		return
