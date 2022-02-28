@@ -3,7 +3,7 @@ system:
   port: ":80"
   photoPath: "./data/photo"
   env: ""
-  defaultHeadPortrait: "./data/photo/2.png"
+  defaultHeadPortrait: "2.png"
 
 zap:
   level: 'info'

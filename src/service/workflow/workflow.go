@@ -126,3 +126,31 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 	}
 	utils.Responser.OkWithData(ctx, SdWorkflows)
 }
+
+//获取用户的流程草稿
+func GetWorkflowDraftByUser(ctx iris.Context) {
+	user := ctx.Values().Get("user").(UserModel.SdUser)
+	var workflowDrafts []WorkflowModel.SdWorkflowDraft
+
+	e := global.GVA_DB
+	err := e.Where("owner_id = ?", user.Id).Find(&workflowDrafts)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程草稿查询失败")
+		return
+	}
+
+	utils.Responser.OkWithDetails(ctx, utils.Success, workflowDrafts)
+}
+
+//获取流程草稿详细信息
+func GetWorkflowDraftById(ctx iris.Context, id []int) {
+	//TODO 验证权限
+	var SdWorkflows []WorkflowModel.SdWorkflowDraft
+	e := global.GVA_DB
+	err := e.Id(id).Find(&SdWorkflows)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "流程草稿查询失败", err)
+		return
+	}
+	utils.Responser.OkWithData(ctx, SdWorkflows)
+}

@@ -77,3 +77,44 @@ func DeleteTableDraft(ctx iris.Context, id []int) {
 	}
 	utils.Responser.Ok(ctx)
 }
+
+//获取表单信息
+func GetTableById(ctx iris.Context, id []int) {
+	//TODO 验证权限
+	var sdTables []WorkflowModel.SdTable
+	e := global.GVA_DB
+	err := e.Id(id).Find(&sdTables)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单查询失败", err)
+		return
+	}
+	utils.Responser.OkWithData(ctx, sdTables)
+}
+
+//获取用户的表单草稿信息
+func GetTableDraftByUser(ctx iris.Context) {
+	user := ctx.Values().Get("user").(UserModel.SdUser)
+	var sdTableDrafts WorkflowModel.SdTableDraft
+
+	e := global.GVA_DB
+	err := e.Where("user_id = ?", user.Id).Find(&sdTableDrafts)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单草稿查询失败")
+		return
+	}
+
+	utils.Responser.OkWithDetails(ctx, utils.Success, sdTableDrafts)
+}
+
+//获取表单草稿信息
+func GetTableDraftById(ctx iris.Context, id []int) {
+	//TODO 验证权限
+	var sdTableDraft []WorkflowModel.SdTableDraft
+	e := global.GVA_DB
+	err := e.Id(id).Find(&sdTableDraft)
+	if err != nil {
+		utils.Responser.FailWithMsg(ctx, "表单草稿查询失败", err)
+		return
+	}
+	utils.Responser.OkWithData(ctx, sdTableDraft)
+}

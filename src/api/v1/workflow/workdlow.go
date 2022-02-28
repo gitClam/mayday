@@ -41,7 +41,7 @@ func GetWorkflowById(ctx iris.Context) {
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回流程草稿的详细信息"
 // @Router /workflow/get/workflow-draft/user [get]
 func GetWorkflowDraftByUser(ctx iris.Context) {
-
+	workflowSever.GetWorkflowDraftByUser(ctx)
 }
 
 // @Tags Workflow
@@ -50,11 +50,20 @@ func GetWorkflowDraftByUser(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param id path int true "流程草稿id"
+// @Param id path int true "流程草稿id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回流程的详细信息"
 // @Router /workflow/get/workflow-draft/id [get]
 func GetWorkflowDraftById(ctx iris.Context) {
-
+	var workflowDraftsId []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		workflowDraftsId = append(workflowDraftsId, num)
+	}
+	workflowSever.GetWorkflowDraftById(ctx, workflowDraftsId)
 }
 
 // @Tags Workflow

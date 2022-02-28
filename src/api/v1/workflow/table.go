@@ -15,11 +15,20 @@ import (
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param id path int true "表单id"
+// @Param id path int true "表单id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息"
 // @Router /table/get/table [get]
 func GetTableById(ctx iris.Context) {
-
+	var tableid []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		tableid = append(tableid, num)
+	}
+	workflowSever.GetTableById(ctx, tableid)
 }
 
 // @Tags Table
@@ -29,9 +38,9 @@ func GetTableById(ctx iris.Context) {
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息"
-// @Router /table/get/table-draft [get]
+// @Router /table/get/table-draft/user [get]
 func GetTableDraftByUser(ctx iris.Context) {
-
+	workflowSever.GetTableDraftByUser(ctx)
 }
 
 // @Tags Table
@@ -42,9 +51,18 @@ func GetTableDraftByUser(ctx iris.Context) {
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单草稿id"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息"
-// @Router /table/get/table-draft [get]
+// @Router /table/get/table-draft/id [get]
 func GetTableDraftById(ctx iris.Context) {
-
+	var ids []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			return
+		}
+		ids = append(ids, num)
+	}
+	workflowSever.GetTableDraftById(ctx, ids)
 }
 
 // @Tags Table
