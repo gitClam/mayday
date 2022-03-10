@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"github.com/kataras/iris/v12"
+	"mayday/src/model/common/resultcode"
 	workflowModel "mayday/src/model/workflow"
 	workflowSever "mayday/src/service/workflow"
 	"mayday/src/utils"
@@ -23,7 +24,7 @@ func GetWorkflowById(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		workflowsId = append(workflowsId, num)
@@ -58,7 +59,7 @@ func GetWorkflowDraftById(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		workflowDraftsId = append(workflowDraftsId, num)
@@ -79,7 +80,7 @@ func CreateWorkflow(ctx iris.Context) {
 
 	var workflowReq workflowModel.WorkflowReq
 	if err := ctx.ReadJSON(&workflowReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.CreateWorkflow(ctx, workflowReq)
@@ -98,7 +99,7 @@ func CreateWorkflowDraft(ctx iris.Context) {
 
 	var workflowDraftReq workflowModel.WorkflowDraftReq
 	if err := ctx.ReadJSON(&workflowDraftReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.CreateWorkflowDraft(ctx, workflowDraftReq)
@@ -116,7 +117,7 @@ func CreateWorkflowDraft(ctx iris.Context) {
 func UpdateWorkflow(ctx iris.Context) {
 	var workflowReq workflowModel.WorkflowReq
 	if err := ctx.ReadJSON(&workflowReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 
@@ -135,7 +136,7 @@ func UpdateWorkflow(ctx iris.Context) {
 func UpdateWorkflowState(ctx iris.Context) {
 	var workflowReq workflowModel.WorkflowReq
 	if err := ctx.ReadForm(&workflowReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.UpdateWorkflowState(ctx, workflowReq)
@@ -153,7 +154,7 @@ func UpdateWorkflowState(ctx iris.Context) {
 func UpdateWorkflowDraft(ctx iris.Context) {
 	var workflowDraftReq workflowModel.WorkflowDraftReq
 	if err := ctx.ReadJSON(&workflowDraftReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 
@@ -175,7 +176,7 @@ func DeleteWorkflow(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		workflowsId = append(workflowsId, num)
@@ -197,7 +198,7 @@ func DeleteWorkflowDraft(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		workflowsId = append(workflowsId, num)

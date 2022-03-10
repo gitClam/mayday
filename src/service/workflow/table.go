@@ -3,6 +3,7 @@ package workflow
 import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
+	"mayday/src/model/common/resultcode"
 	UserModel "mayday/src/model/user"
 	WorkflowModel "mayday/src/model/workflow"
 	"mayday/src/utils"
@@ -16,7 +17,7 @@ func CreateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
 	e := global.GVA_DB
 	effect, err := e.Insert(sdTable)
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单插入失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataCreateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -32,7 +33,7 @@ func CreateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.TableDraftRe
 	e := global.GVA_DB
 	effect, err := e.Insert(sdTableDraft)
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿插入失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataCreateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -44,7 +45,7 @@ func DeleteTable(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	effect, err := e.Id(id).Delete(new(WorkflowModel.SdTable))
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单删除失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -58,21 +59,21 @@ func DeleteTableDraft(ctx iris.Context, id []int) {
 
 	err := e.Id(id).Find(&sdTableDrafts)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿不存在", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
 
 	// 只能删除自己的草稿
 	for _, sdTableDraft := range sdTableDrafts {
 		if sdTableDraft.UserId != user.Id {
-			utils.Responser.FailWithMsg(ctx, "非法请求", err)
+			utils.Responser.Fail(ctx, resultcode.PermissionsLess, err)
 			return
 		}
 	}
 
 	effect, err := e.Id(id).Delete(new(WorkflowModel.SdTableDraft))
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿删除失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -85,10 +86,10 @@ func GetTableById(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	err := e.Id(id).Find(&sdTables)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单查询失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	utils.Responser.OkWithData(ctx, sdTables)
+	utils.Responser.OkWithDetails(ctx, sdTables)
 }
 
 //获取用户的表单草稿信息
@@ -99,11 +100,11 @@ func GetTableDraftByUser(ctx iris.Context) {
 	e := global.GVA_DB
 	err := e.Where("user_id = ?", user.Id).Find(&sdTableDrafts)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿查询失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
 
-	utils.Responser.OkWithDetails(ctx, utils.Success, sdTableDrafts)
+	utils.Responser.OkWithDetails(ctx, sdTableDrafts)
 }
 
 //获取表单草稿信息
@@ -113,10 +114,10 @@ func GetTableDraftById(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	err := e.Id(id).Find(&sdTableDraft)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿查询失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	utils.Responser.OkWithData(ctx, sdTableDraft)
+	utils.Responser.OkWithDetails(ctx, sdTableDraft)
 }
 
 //修改表单
@@ -126,7 +127,7 @@ func UpdateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
 	sdTable := tableReq.GetSdTable()
 	effect, err := e.Id(sdTable.Id).Update(sdTable)
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单修改失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataUpdateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -138,7 +139,7 @@ func UpdateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.TableDraftRe
 	sdTableDraft := tableDraftReq.GetSdTableDraft()
 	effect, err := e.Id(sdTableDraft.Id).Update(sdTableDraft)
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "表单草稿修改失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataUpdateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)

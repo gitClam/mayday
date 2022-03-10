@@ -3,6 +3,8 @@ package workflow
 import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
+	"mayday/src/model/common/resultcode"
+	"mayday/src/model/common/timedecoder"
 	UserModel "mayday/src/model/user"
 	WorkflowModel "mayday/src/model/workflow"
 	"mayday/src/utils"
@@ -15,14 +17,14 @@ func CreateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	user := ctx.Values().Get("user").(UserModel.SdUser)
 
 	sdWorkflow := workflowReq.GetSdWorkflow()
-	sdWorkflow.CreateTime = utils.LocalTime(time.Now())
+	sdWorkflow.CreateTime = timedecoder.LocalTime(time.Now())
 	sdWorkflow.CreateUser = user.Id
 
 	//方便测试
 	e := global.GVA_DB
 	effect, err := e.Insert(sdWorkflow)
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程创建失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataCreateFail, err)
 		return
 	}
 
@@ -67,7 +69,7 @@ func CreateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 	e := global.GVA_DB
 	effect, err := e.Insert(sdWorkflowDraft)
 	if effect <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程草稿创建失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataCreateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -79,7 +81,7 @@ func DeleteWorkflow(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	affected, err := e.Id(id).Delete(new(WorkflowModel.SdWorkflow))
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -94,21 +96,21 @@ func DeleteWorkflowDraft(ctx iris.Context, id []int) {
 
 	err := e.Id(id).Find(&sdWorkflowDrafts)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程草稿不存在", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
 
 	// 只能删除自己的草稿
 	for _, sdWorkflow := range sdWorkflowDrafts {
 		if sdWorkflow.OwnerId != user.Id {
-			utils.Responser.FailWithMsg(ctx, "非法请求", err)
+			utils.Responser.Fail(ctx, resultcode.PermissionsLess, err)
 			return
 		}
 	}
 
 	affected, err := e.Id(id).Delete(new(WorkflowModel.SdWorkflowDraft))
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程删除失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -121,10 +123,10 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	err := e.Id(id).Find(&SdWorkflows)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程查询失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	utils.Responser.OkWithData(ctx, SdWorkflows)
+	utils.Responser.OkWithDetails(ctx, SdWorkflows)
 }
 
 //获取用户的流程草稿
@@ -135,11 +137,11 @@ func GetWorkflowDraftByUser(ctx iris.Context) {
 	e := global.GVA_DB
 	err := e.Where("owner_id = ?", user.Id).Find(&workflowDrafts)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程草稿查询失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
 
-	utils.Responser.OkWithDetails(ctx, utils.Success, workflowDrafts)
+	utils.Responser.OkWithDetails(ctx, workflowDrafts)
 }
 
 //获取流程草稿详细信息
@@ -149,10 +151,10 @@ func GetWorkflowDraftById(ctx iris.Context, id []int) {
 	e := global.GVA_DB
 	err := e.Id(id).Find(&SdWorkflows)
 	if err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程草稿查询失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	utils.Responser.OkWithData(ctx, SdWorkflows)
+	utils.Responser.OkWithDetails(ctx, SdWorkflows)
 }
 
 //更新流程信息
@@ -162,7 +164,7 @@ func UpdateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	sdWorkflow := workflowReq.GetSdWorkflow()
 	affected, err := e.Id(sdWorkflow.Id).Update(sdWorkflow)
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程更新失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataUpdateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -175,7 +177,7 @@ func UpdateWorkflowState(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq
 	sdWorkflow := workflowReq.GetSdWorkflow()
 	has, err := e.Id(sdWorkflow.Id).Get(&sdWorkflow)
 	if !has || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程不存在", err)
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
 
@@ -187,7 +189,7 @@ func UpdateWorkflowState(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq
 
 	affected, err := e.Id(sdWorkflow.Id).Cols("is_start").Update(sdWorkflow)
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程更新失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataUpdateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
@@ -200,7 +202,7 @@ func UpdateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 	sdWorkflowDraft := workflowDraftReq.GetSdWorkflowDraft()
 	affected, err := e.Id(sdWorkflowDraft.Id).Update(sdWorkflowDraft)
 	if affected <= 0 || err != nil {
-		utils.Responser.FailWithMsg(ctx, "流程草稿更新失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataUpdateFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)

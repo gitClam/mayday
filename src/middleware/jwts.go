@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"mayday/src/global"
+	"mayday/src/model/common/resultcode"
 	"mayday/src/model/user"
 	"mayday/src/utils"
 	"strings"
@@ -18,7 +18,7 @@ import (
 )
 
 type (
-	errorHandler func(context.Context, string)
+	errorHandler func(context.Context, int, error)
 
 	TokenExtractor func(context.Context) (string, error)
 
@@ -34,8 +34,7 @@ var (
 
 func Serve(ctx context.Context) bool {
 	ConfigJWT()
-	if err := jwts.CheckJWT(ctx); err != nil {
-		log.Printf("Check jwt error, %s", err)
+	if !jwts.CheckJWT(ctx) {
 		return false
 	}
 	return ParseTokenTest(ctx)
@@ -84,7 +83,7 @@ func FromAuthHeader(ctx context.Context) (string, error) {
 
 func (m *Jwts) logf(format string, args ...interface{}) {
 	if m.Config.Debug {
-		log.Printf(format, args...)
+		global.GVA_LOG.Info(fmt.Sprintf(format, args...))
 	}
 }
 
@@ -92,66 +91,61 @@ func (m *Jwts) Get(ctx context.Context) *jwt.Token {
 	return ctx.Values().Get(m.Config.ContextKey).(*jwt.Token)
 }
 
-func (m *Jwts) CheckJWT(ctx context.Context) error {
+func (m *Jwts) CheckJWT(ctx context.Context) bool {
 	if !m.Config.EnableAuthOnOptions {
 		if ctx.Method() == iris.MethodOptions {
-			return nil
+			return true
 		}
 	}
 
 	token, err := m.Config.Extractor(ctx)
 	if err != nil {
-		m.logf("Error extracting JWT: %v", err)
-		m.Config.ErrorHandler(ctx, utils.TokenExactFailur)
-		return fmt.Errorf("Error extracting token: %v", err)
+		m.Config.ErrorHandler(ctx, resultcode.TokenExactFail, err)
+		return false
 	}
 
 	if token == "" {
 		if m.Config.CredentialsOptional {
-			m.logf("  No credentials found (CredentialsOptional=true)")
-			return nil
+			m.logf(" Error: No credentials found (CredentialsOptional=true)")
+			return true
 		}
 
-		m.logf("  Error: No credentials found (CredentialsOptional=false)")
-		m.Config.ErrorHandler(ctx, utils.TokenParseFailurAndEmpty)
-		return fmt.Errorf(utils.TokenParseFailurAndEmpty)
+		m.Config.ErrorHandler(ctx, resultcode.TokenParseFailAndEmpty, fmt.Errorf(" Error: No credentials found (CredentialsOptional=false)"))
+		return false
 	}
 
 	parsedToken, err := jwt.Parse(token, m.Config.ValidationKeyGetter)
 	if err != nil {
-		m.logf("Error parsing token1: %v", err)
-		m.Config.ErrorHandler(ctx, utils.TokenExpire)
-		return fmt.Errorf("Error parsing token2: %v", err)
+		m.Config.ErrorHandler(ctx, resultcode.TokenParseFail, err)
+		return false
 	}
 
 	if m.Config.SigningMethod != nil && m.Config.SigningMethod.Alg() != parsedToken.Header["alg"] {
 		message := fmt.Sprintf("Expected %s signing method but token specified %s",
 			m.Config.SigningMethod.Alg(),
 			parsedToken.Header["alg"])
-		m.logf("Error validating token algorithm: %s", message)
-		m.Config.ErrorHandler(ctx, utils.TokenParseFailur) // 算法错误
-		return fmt.Errorf("Error validating token algorithm: %s", message)
+		m.Config.ErrorHandler(ctx, resultcode.TokenParseFail, fmt.Errorf(message)) // 算法错误
+		return false
 	}
 
 	if !parsedToken.Valid {
-		m.logf(utils.TokenParseFailurAndInvalid)
-		m.Config.ErrorHandler(ctx, utils.TokenParseFailurAndInvalid)
-		return fmt.Errorf(utils.TokenParseFailurAndInvalid)
+		m.Config.ErrorHandler(ctx, resultcode.TokenParseFailAndInvalid, fmt.Errorf("无效的TOKEN"))
+		return false
 	}
 
 	if m.Config.Expiration {
 		if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok {
 			if expired := claims.VerifyExpiresAt(time.Now().Unix(), true); !expired {
-				return fmt.Errorf(utils.TokenExpire)
+				m.Config.ErrorHandler(ctx, resultcode.TokenExpire, fmt.Errorf("TOKEN已过期"))
+				return false
 			}
 		}
 	}
 
 	ctx.Values().Set(m.Config.ContextKey, parsedToken)
-	return nil
+	return true
 }
 
-// ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
 // ConfigJWT jwt中间件配置
@@ -180,9 +174,8 @@ func ConfigJWT() {
 		//加密的方式
 		SigningMethod: jwt.SigningMethodHS256,
 		//验证未通过错误处理方式
-		ErrorHandler: func(ctx context.Context, errMsg string) {
-
-			utils.Responser.FailWithMsg(ctx, "TOKEN验证失败")
+		ErrorHandler: func(ctx context.Context, code int, errMsg error) {
+			utils.Responser.Fail(ctx, code, errMsg)
 		},
 		// 指定func用于提取请求中的token
 		Extractor:           FromAuthHeader,

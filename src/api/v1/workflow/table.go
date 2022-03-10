@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"github.com/kataras/iris/v12"
+	"mayday/src/model/common/resultcode"
 	workflowModel "mayday/src/model/workflow"
 	workflowSever "mayday/src/service/workflow"
 	"mayday/src/utils"
@@ -23,7 +24,7 @@ func GetTableById(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		tableid = append(tableid, num)
@@ -57,7 +58,7 @@ func GetTableDraftById(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		ids = append(ids, num)
@@ -78,7 +79,7 @@ func CreateTable(ctx iris.Context) {
 
 	var tableReq workflowModel.TableReq
 	if err := ctx.ReadJSON(&tableReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.CreateTable(ctx, tableReq)
@@ -97,7 +98,7 @@ func CreateTableDraft(ctx iris.Context) {
 
 	var tableDraftReq workflowModel.TableDraftReq
 	if err := ctx.ReadJSON(&tableDraftReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.CreateTableDraft(ctx, tableDraftReq)
@@ -116,7 +117,7 @@ func UpdateTable(ctx iris.Context) {
 
 	var tableReq workflowModel.TableReq
 	if err := ctx.ReadJSON(&tableReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.UpdateTable(ctx, tableReq)
@@ -136,7 +137,7 @@ func UpdateTableDraft(ctx iris.Context) {
 
 	var tableDraftReq workflowModel.TableDraftReq
 	if err := ctx.ReadJSON(&tableDraftReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	workflowSever.UpdateTableDraft(ctx, tableDraftReq)
@@ -157,7 +158,7 @@ func DeleteTable(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		tableId = append(tableId, num)
@@ -179,7 +180,7 @@ func DeleteTableDraft(ctx iris.Context) {
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
-			utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
 		tableId = append(tableId, num)

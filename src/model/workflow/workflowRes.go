@@ -2,19 +2,19 @@ package workflow
 
 import (
 	"encoding/json"
-	"mayday/src/utils"
+	"mayday/src/model/common/timedecoder"
 )
 
 type WorkflowRes struct {
-	Id           int             `validate:"required" example:"睡觉流程"`
-	Name         string          `validate:"required" example:"睡觉流程"`
-	CreateUser   int             `validate:"required" example:"睡觉流程"`
-	CreateTime   utils.LocalTime `validate:"required" example:"睡觉流程"`
-	IsStart      int             `validate:"required" example:"睡觉流程"`
-	CeilingCount int             `validate:"required" example:"睡觉流程"`
-	Structure    json.RawMessage `validate:"required" example:"睡觉流程"`
-	Tables       json.RawMessage `validate:"required" example:"睡觉流程"`
-	Remarks      string          `validate:"required" example:"睡觉流程"`
+	Id           int                   `validate:"required" example:"睡觉流程"`
+	Name         string                `validate:"required" example:"睡觉流程"`
+	CreateUser   int                   `validate:"required" example:"睡觉流程"`
+	CreateTime   timedecoder.LocalTime `validate:"required" example:"睡觉流程"`
+	IsStart      int                   `validate:"required" example:"睡觉流程"`
+	CeilingCount int                   `validate:"required" example:"睡觉流程"`
+	Structure    json.RawMessage       `validate:"required" example:"睡觉流程"`
+	Tables       json.RawMessage       `validate:"required" example:"睡觉流程"`
+	Remarks      string                `validate:"required" example:"睡觉流程"`
 }
 
 func GetWorkflowRes(sd []SdWorkflow) (res []WorkflowRes) {

@@ -2,14 +2,6 @@ package workflow_routes
 
 import (
 	"github.com/kataras/iris/v12"
-	"mayday/src/middleware"
-	"mayday/src/utils"
-
-	//"strconv"
-	//"time"
-	"log"
-
-	"mayday/src/router/workflow/order"
 )
 
 // swagger:operation POST /workflow/order/create-order workflow create_order_Workflow
@@ -22,20 +14,20 @@ import (
 //   type: file
 //   required: true
 func WorkflowOrderCreateOrder(ctx iris.Context) {
-	//检查请求的用户
-	user, ok := middleware.ParseToken(ctx)
-	if !ok {
-		log.Printf("解析TOKEN出错，请重新登录")
-		utils.Responser.FailWithMsg(ctx, "解析TOKEN出错，请重新登录")
-		return
-	}
-	err := order.CreateOrder(ctx, user)
-	if err != nil {
-		log.Print(err)
-		utils.Responser.FailWithMsg(ctx, "")
-		return
-	}
-	utils.Responser.Ok(ctx)
+	////检查请求的用户
+	//user, ok := middleware.ParseToken(ctx)
+	//if !ok {
+	//	log.Printf("解析TOKEN出错，请重新登录")
+	//	utils.Responser.Fail(ctx, "解析TOKEN出错，请重新登录")
+	//	return
+	//}
+	//err := order.CreateOrder(ctx, user)
+	//if err != nil {
+	//	log.Print(err)
+	//	utils.Responser.Fail(ctx, "")
+	//	return
+	//}
+	//utils.Responser.Ok(ctx)
 }
 
 // swagger:operation POST /workflow/order/fill-table workflow fill_table_Workflow_order_fill_table

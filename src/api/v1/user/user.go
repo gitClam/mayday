@@ -2,6 +2,7 @@ package user_api
 
 import (
 	"github.com/kataras/iris/v12"
+	"mayday/src/model/common/resultcode"
 	userModel "mayday/src/model/user"
 	userSever "mayday/src/service/user"
 	"mayday/src/utils"
@@ -19,7 +20,7 @@ func Register(ctx iris.Context) {
 
 	var userReq userModel.UserReq
 	if err := ctx.ReadForm(&userReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	userSever.Register(ctx, userReq)
@@ -37,12 +38,12 @@ func Register(ctx iris.Context) {
 func Login(ctx iris.Context) {
 	mail := ctx.FormValue("mail")
 	if mail == "" {
-		utils.Responser.FailWithMsg(ctx, "用户邮箱为空")
+		utils.Responser.Fail(ctx, resultcode.UsernameFail)
 		return
 	}
 	password := ctx.FormValue("password")
 	if password == "" {
-		utils.Responser.FailWithMsg(ctx, "用户密码为空")
+		utils.Responser.Fail(ctx, resultcode.PasswordFail)
 		return
 	}
 	userSever.Login(ctx, mail, password)
@@ -58,7 +59,7 @@ func Login(ctx iris.Context) {
 func GetPhoto(ctx iris.Context) {
 	fileName := ctx.Params().Get("fileName")
 	if fileName == "" {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败")
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail)
 		return
 	}
 	userSever.GetUserPhoto(ctx, fileName)
@@ -111,7 +112,7 @@ func GetUserMessage(ctx iris.Context) {
 func SetUserMessage(ctx iris.Context) {
 	var userReq userModel.UserReq
 	if err := ctx.ReadForm(&userReq); err != nil {
-		utils.Responser.FailWithMsg(ctx, "数据接收失败", err)
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
 	userSever.SetUserMessage(ctx, userReq)

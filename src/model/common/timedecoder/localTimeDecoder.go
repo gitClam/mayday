@@ -1,4 +1,4 @@
-package utils
+package timedecoder
 
 import (
 	"database/sql/driver"

@@ -1,7 +1,9 @@
 package initialize
 
-import "mayday/src/utils"
+import (
+	"mayday/src/model/common/timedecoder"
+)
 
 func RegisterLocalTimeDecoder() {
-	utils.TimeDecoder.RegisterLocalTimeDecoder()
+	timedecoder.TimeDecoder.RegisterLocalTimeDecoder()
 }
