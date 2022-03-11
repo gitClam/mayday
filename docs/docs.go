@@ -227,6 +227,7 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "description": "1017::数据接收失败\n1023::数据不存在或查询失败\nAnd so forth.",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -255,7 +256,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "返回表单的详细信息 错误码：\" + resultcode.DataReceiveFail + \"数据接收失败",
+                        "description": "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)",
                         "schema": {
                             "allOf": [
                                 {
