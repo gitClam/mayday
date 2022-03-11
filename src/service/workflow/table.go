@@ -10,7 +10,7 @@ import (
 )
 
 //创建表单
-func CreateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
+func CreateTable(ctx iris.Context, tableReq WorkflowModel.CreateTableReq) {
 	//TODO 权限检查
 	sdTable := tableReq.GetSdTable()
 
@@ -24,7 +24,7 @@ func CreateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
 }
 
 //创建表单草稿
-func CreateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.TableDraftReq) {
+func CreateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.CreateTableDraftReq) {
 
 	user := ctx.Values().Get("user").(UserModel.SdUser)
 
@@ -121,7 +121,7 @@ func GetTableDraftById(ctx iris.Context, id []int) {
 }
 
 //修改表单
-func UpdateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
+func UpdateTable(ctx iris.Context, tableReq WorkflowModel.UpdateTableReq) {
 	//TODO 验证权限
 	e := global.GVA_DB
 	sdTable := tableReq.GetSdTable()
@@ -133,7 +133,7 @@ func UpdateTable(ctx iris.Context, tableReq WorkflowModel.TableReq) {
 	utils.Responser.Ok(ctx)
 }
 
-func UpdateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.TableDraftReq) {
+func UpdateTableDraft(ctx iris.Context, tableDraftReq WorkflowModel.UpdateTableDraftReq) {
 	//TODO 验证权限
 	e := global.GVA_DB
 	sdTableDraft := tableDraftReq.GetSdTableDraft()

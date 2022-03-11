@@ -17,19 +17,19 @@ import (
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息"
+// @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /table/get/table [get]
 func GetTableById(ctx iris.Context) {
-	var tableid []int
+	var tableId []int
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
-		tableid = append(tableid, num)
+		tableId = append(tableId, num)
 	}
-	workflowSever.GetTableById(ctx, tableid)
+	workflowSever.GetTableById(ctx, tableId)
 }
 
 // @Tags Table
@@ -72,12 +72,12 @@ func GetTableDraftById(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body workflow.TableReq true "表单信息"
-// @Success 200 {object} utils.Response
+// @Param userReq body workflow.CreateTableReq true "表单信息"
+// @Success 200 {object} utils.Response{data=user.UserDetailsRes}
 // @Router /table/create/table [post]
 func CreateTable(ctx iris.Context) {
 
-	var tableReq workflowModel.TableReq
+	var tableReq workflowModel.CreateTableReq
 	if err := ctx.ReadJSON(&tableReq); err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
@@ -91,12 +91,12 @@ func CreateTable(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "表单信息"
+// @Param userReq body workflow.CreateTableDraftReq true "表单草稿信息"
 // @Success 200 {object} utils.Response
 // @Router /table/create/table-draft [post]
 func CreateTableDraft(ctx iris.Context) {
 
-	var tableDraftReq workflowModel.TableDraftReq
+	var tableDraftReq workflowModel.CreateTableDraftReq
 	if err := ctx.ReadJSON(&tableDraftReq); err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
@@ -110,12 +110,12 @@ func CreateTableDraft(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "表单信息"
+// @Param userReq body workflow.UpdateTableReq true "表单信息"
 // @Success 200 {object} utils.Response
 // @Router /table/update/table [post]
 func UpdateTable(ctx iris.Context) {
 
-	var tableReq workflowModel.TableReq
+	var tableReq workflowModel.UpdateTableReq
 	if err := ctx.ReadJSON(&tableReq); err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
@@ -130,12 +130,12 @@ func UpdateTable(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body user.UserReq true "表单信息"
+// @Param userReq body workflow.UpdateTableDraftReq true "表单草稿信息"
 // @Success 200 {object} utils.Response
 // @Router /table/update/table-draft [post]
 func UpdateTableDraft(ctx iris.Context) {
 
-	var tableDraftReq workflowModel.TableDraftReq
+	var tableDraftReq workflowModel.UpdateTableDraftReq
 	if err := ctx.ReadJSON(&tableDraftReq); err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
