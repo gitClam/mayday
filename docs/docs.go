@@ -63,7 +63,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/workflow.TableReq"
+                            "$ref": "#/definitions/workflow.CreateTableReq"
                         }
                     }
                 ],
@@ -71,7 +71,19 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserDetailsRes"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -103,12 +115,12 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "description": "表单信息",
+                        "description": "表单草稿信息",
                         "name": "userReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.CreateTableDraftReq"
                         }
                     }
                 ],
@@ -235,7 +247,7 @@ var doc = `{
                     },
                     {
                         "type": "integer",
-                        "description": "表单id",
+                        "description": "表单id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -243,7 +255,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "返回表单的详细信息",
+                        "description": "返回表单的详细信息 错误码：\" + resultcode.DataReceiveFail + \"数据接收失败",
                         "schema": {
                             "allOf": [
                                 {
@@ -263,7 +275,7 @@ var doc = `{
                 }
             }
         },
-        "/table/get/table-draft": {
+        "/table/get/table-draft/id": {
             "get": {
                 "security": [
                     {
@@ -293,6 +305,54 @@ var doc = `{
                         "description": "表单草稿id",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回表单的详细信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user.UserDetailsRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/table/get/table-draft/user": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Table"
+                ],
+                "summary": "获取当前用户的表单草稿列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户登录返回的TOKEN",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -349,7 +409,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.UpdateTableReq"
                         }
                     }
                 ],
@@ -389,12 +449,12 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "description": "表单信息",
+                        "description": "表单草稿信息",
                         "name": "userReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.UpdateTableDraftReq"
                         }
                     }
                 ],
@@ -971,7 +1031,7 @@ var doc = `{
                     },
                     {
                         "type": "integer",
-                        "description": "流程草稿id",
+                        "description": "流程草稿id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1078,7 +1138,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.UserReq"
+                            "$ref": "#/definitions/workflow.WorkflowReq"
                         }
                     }
                 ],
@@ -1353,6 +1413,44 @@ var doc = `{
                 }
             }
         },
+        "workflow.CreateTableDraftReq": {
+            "type": "object",
+            "required": [
+                "data",
+                "name"
+            ],
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "请假表单"
+                }
+            }
+        },
+        "workflow.CreateTableReq": {
+            "type": "object",
+            "required": [
+                "data",
+                "name",
+                "workspaceId"
+            ],
+            "properties": {
+                "data": {
+                    "type": "string",
+                    "example": "JSON格式的数据"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "请假表单"
+                },
+                "workspaceId": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
         "workflow.SdWorkflow": {
             "type": "object",
             "properties": {
@@ -1394,17 +1492,39 @@ var doc = `{
                 }
             }
         },
-        "workflow.TableReq": {
+        "workflow.UpdateTableDraftReq": {
             "type": "object",
             "required": [
-                "data",
-                "name",
-                "workspaceId"
+                "id"
             ],
             "properties": {
                 "data": {
                     "type": "string",
                     "example": "JSON格式的数据"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "请假表单"
+                }
+            }
+        },
+        "workflow.UpdateTableReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "data": {
+                    "type": "string",
+                    "example": "JSON格式的数据"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
                     "type": "string",

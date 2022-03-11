@@ -126,6 +126,33 @@ definitions:
         example: 操作成功
         type: string
     type: object
+  workflow.CreateTableDraftReq:
+    properties:
+      data:
+        type: string
+      name:
+        example: 请假表单
+        type: string
+    required:
+    - data
+    - name
+    type: object
+  workflow.CreateTableReq:
+    properties:
+      data:
+        example: JSON格式的数据
+        type: string
+      name:
+        example: 请假表单
+        type: string
+      workspaceId:
+        example: 1
+        type: integer
+    required:
+    - data
+    - name
+    - workspaceId
+    type: object
   workflow.SdWorkflow:
     properties:
       ceilingCount:
@@ -153,11 +180,28 @@ definitions:
           type: integer
         type: array
     type: object
-  workflow.TableReq:
+  workflow.UpdateTableDraftReq:
     properties:
       data:
         example: JSON格式的数据
         type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: 请假表单
+        type: string
+    required:
+    - id
+    type: object
+  workflow.UpdateTableReq:
+    properties:
+      data:
+        example: JSON格式的数据
+        type: string
+      id:
+        example: 1
+        type: integer
       name:
         example: 请假表单
         type: string
@@ -165,9 +209,7 @@ definitions:
         example: 1
         type: integer
     required:
-    - data
-    - name
-    - workspaceId
+    - id
     type: object
   workflow.WorkflowDraftReq:
     properties:
@@ -246,14 +288,19 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/workflow.TableReq'
+          $ref: '#/definitions/workflow.CreateTableReq'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.Response'
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserDetailsRes'
+              type: object
       security:
       - ApiKeyAuth: []
       summary: 创建表单
@@ -269,12 +316,12 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 表单信息
+      - description: 表单草稿信息
         in: body
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.CreateTableDraftReq'
       produces:
       - application/json
       responses:
@@ -351,7 +398,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 表单id
+      - description: 表单id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'
         in: path
         name: id
         required: true
@@ -360,7 +407,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 返回表单的详细信息
+          description: 返回表单的详细信息 错误码：" + resultcode.DataReceiveFail + "数据接收失败
           schema:
             allOf:
             - $ref: '#/definitions/utils.Response'
@@ -373,7 +420,7 @@ paths:
       summary: 获取表单详细信息
       tags:
       - Table
-  /table/get/table-draft:
+  /table/get/table-draft/id:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -405,6 +452,33 @@ paths:
       summary: 获取表单草稿详细信息
       tags:
       - Table
+  /table/get/table-draft/user:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户登录返回的TOKEN
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 返回表单的详细信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.UserDetailsRes'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取当前用户的表单草稿列表
+      tags:
+      - Table
   /table/update/table:
     post:
       consumes:
@@ -420,7 +494,7 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.UpdateTableReq'
       produces:
       - application/json
       responses:
@@ -443,12 +517,12 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 表单信息
+      - description: 表单草稿信息
         in: body
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.UpdateTableDraftReq'
       produces:
       - application/json
       responses:
@@ -793,7 +867,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 流程草稿id
+      - description: 流程草稿id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'
         in: path
         name: id
         required: true
@@ -857,7 +931,7 @@ paths:
         name: userReq
         required: true
         schema:
-          $ref: '#/definitions/user.UserReq'
+          $ref: '#/definitions/workflow.WorkflowReq'
       produces:
       - application/json
       responses:
