@@ -411,7 +411,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          description: 返回表单的详细信息 \n错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
           schema:
             allOf:
             - $ref: '#/definitions/utils.Response'
