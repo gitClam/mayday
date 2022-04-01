@@ -45,7 +45,7 @@ func Result(code int, data interface{}, ctx iris.Context) {
 
 // Ok 成功返回
 func (r *response) Ok(ctx iris.Context) {
-	Result(resultcode.Success, "", ctx)
+	Result(resultcode.Success, nil, ctx)
 }
 
 // OkWithDetails 带数据成功返回
@@ -58,7 +58,7 @@ func (r *response) Fail(ctx iris.Context, code int, err ...error) {
 	if len(err) != 0 {
 		ctx.Values().Set("err", err[0])
 	}
-	Result(code, "", ctx)
+	Result(code, nil, ctx)
 }
 
 // FailWithDetails 带详细信息失败返回

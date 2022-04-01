@@ -2,7 +2,6 @@ package core
 
 import (
 	"github.com/kataras/iris/v12"
-	"log"
 	"mayday/src/global"
 	"mayday/src/initialize"
 )
@@ -20,7 +19,7 @@ func RunServer() {
 	err := app.Run(iris.Addr(global.GVA_CONFIG.System.Port))
 
 	if err != nil {
-		log.Print("服务器启动失败 " + err.Error())
+		global.GVA_LOG.Error("服务器启动失败 " + err.Error())
 		return
 	}
 
