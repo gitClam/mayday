@@ -3,6 +3,7 @@ package order
 import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
+	"mayday/src/model/order"
 	"mayday/src/model/user"
 	"mayday/src/model/workflow"
 
@@ -13,7 +14,6 @@ import (
 	//"os"
 	"encoding/json"
 
-	"mayday/src/model"
 	userModel "mayday/src/model/user"
 	//"mayday/src/utils/responser"
 	//"mayday/src/utils/responser/vo"
@@ -37,7 +37,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 		//targetEdges    []map[string]interface{}
 		currentNode    map[string]interface{} //流程的开始节点（不知道为什么是个列表）
 		workOrderValue struct {               //请求的全部数据
-			model.SdOrder
+			order.SdOrder
 			Tpls        map[string][]interface{} `json:"tpls"` //表单结构和数据
 			SourceState string                   `json:"source_state"`
 			Tasks       json.RawMessage          `json:"tasks"` ////////
@@ -124,7 +124,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 		//储存全部表单数据（一个个加到末尾）handle.WorkOrderData：form_data解析后
 		//handle.WorkOrderData = append(handle.WorkOrderData, tpl)
 	}
-
+	//var nodeValue,condExprStatus,sourceEdges,targetEdges
 	//-------------------------------------------------------如果当前节点是网关节点------------------------------------
 	/*switch nodeValue["clazz"] {
 	// 排他网关
@@ -143,7 +143,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 			}
 			for _, condExpr := range edgeCondExpr {
 				// 条件判断
-				condExprStatus, err = handle.ConditionalJudgment(condExpr)
+				condExprStatus, err = ConditionalJudgment(condExpr)
 				if err != nil {
 					return
 				}
@@ -218,10 +218,10 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 	}
 
 	// 再次检查节点的处理人（如果不是网关节点应该是没用的）
-	err = GetVariableValue(variableValue, tools.GetUserId(c))
-	if err != nil {
-		return
-	}
+	//err = GetVariableValue(variableValue, tools.GetUserId(c))
+	//if err != nil {
+	//	return
+	//}
 	//把处理过后的节点数据赋值到请求数据（修改请求数据）（如果不是网关节点应该也是没用的）
 	workOrderValue.State, err = json.Marshal(variableValue)
 	if err != nil {
@@ -230,7 +230,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 	*/
 	//-------------------------------如果不是网关节点应该会直接跳到这里------------------------------------
 	//新建一个变量存储请求数据   对应数据库表  p_work_order_info
-	var OrderInfo = model.SdOrder{
+	var OrderInfo = order.SdOrder{
 		Title:         workOrderValue.Title,
 		WorkflowId:    workOrderValue.WorkflowId,
 		State:         workOrderValue.State,
@@ -266,7 +266,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 			return
 		}
 		//数据库存储对象 对应数据库表 p_work_order_tpl_data
-		formData := model.SdOrderTable{
+		formData := order.SdOrderTable{
 			//OrderId:     OrderInfo.Id,
 			FormStructure: formStructureJson,
 			FormData:      formDataJson,
@@ -301,7 +301,7 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 		return
 	}
 	//插入操作
-	if affect, err1 := tx.Insert(model.SdOrderCirculationHistory{
+	if affect, err1 := tx.Insert(order.SdOrderCirculationHistory{
 		Title:       workOrderValue.Title,
 		OrderId:     OrderInfo.Id,
 		State:       workOrderValue.SourceState,
@@ -333,6 +333,10 @@ func CreateOrder(ctx iris.Context, user *user.SdUser) (err error) {
 	log.Print(tpl)
 	log.Print(currentNode)
 	return
+}
+
+func ConditionalJudgment(stateList []interface{}) (bool, error) {
+	return true, nil
 }
 
 func GetVariableValue(stateList []interface{}, creator int) (err error) {

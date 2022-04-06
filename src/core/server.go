@@ -11,7 +11,8 @@ func RunServer() {
 	initialize.Mysql()
 	//初始化时间格式解析器
 	initialize.RegisterLocalTimeDecoder()
-
+	//初始化权限管理
+	initialize.Casbin()
 	app := iris.New()
 	//路由分配
 	initialize.Routers(app)

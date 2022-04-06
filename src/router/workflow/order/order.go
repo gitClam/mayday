@@ -1,4 +1,4 @@
-package workflow_routes
+package order
 
 import (
 	"github.com/kataras/iris/v12"

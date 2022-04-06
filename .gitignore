@@ -5,3 +5,5 @@ log/**/*.out
 .idea/
 
 .data/photo/
+
+.log

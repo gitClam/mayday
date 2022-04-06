@@ -1,4 +1,4 @@
-package model
+package order
 
 import (
 	"mayday/src/model/common/timedecoder"

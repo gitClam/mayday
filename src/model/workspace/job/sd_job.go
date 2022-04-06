@@ -1,4 +1,4 @@
-package model
+package job
 
 type SdJob struct {
 	Id           int    `xorm:"not null pk autoincr INT(11)"`
