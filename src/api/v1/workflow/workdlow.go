@@ -70,7 +70,7 @@ func GetWorkflowDraftById(ctx iris.Context) {
 // @Tags Workflow
 // @Summary 创建流程
 // @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
+// @accept application/json
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param userReq body workflowModel.WorkflowReq true "流程信息"
@@ -89,7 +89,7 @@ func CreateWorkflow(ctx iris.Context) {
 // @Tags Workflow
 // @Summary 创建流程草稿
 // @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
+// @accept application/json
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param userReq body workflowModel.WorkflowDraftReq true "流程信息"
@@ -108,7 +108,7 @@ func CreateWorkflowDraft(ctx iris.Context) {
 // @Tags Workflow
 // @Summary 修改流程信息
 // @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
+// @accept application/json
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param userReq body workflowModel.WorkflowReq true "流程信息"
@@ -127,15 +127,15 @@ func UpdateWorkflow(ctx iris.Context) {
 // @Tags Workflow
 // @Summary 修改流程状态
 // @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
+// @accept application/json
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id body int true "流程id"
 // @Success 200 {object} utils.Response
 // @Router /workflow/update/workflow-state [post]
 func UpdateWorkflowState(ctx iris.Context) {
-	var workflowReq workflowModel.WorkflowReq
-	if err := ctx.ReadForm(&workflowReq); err != nil {
+	var workflowReq workflowModel.SdWorkflow
+	if err := ctx.ReadJSON(&workflowReq); err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
@@ -145,7 +145,7 @@ func UpdateWorkflowState(ctx iris.Context) {
 // @Tags Workflow
 // @Summary 修改流程草稿
 // @Security ApiKeyAuth
-// @accept application/x-www-form-urlencoded
+// @accept application/json
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param userReq body user.UserReq true "流程信息"

@@ -171,10 +171,9 @@ func UpdateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 }
 
 //修改流程状态
-func UpdateWorkflowState(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
+func UpdateWorkflowState(ctx iris.Context, sdWorkflow WorkflowModel.SdWorkflow) {
 	//TODO 验证权限
 	e := global.GVA_DB
-	sdWorkflow := workflowReq.GetSdWorkflow()
 	has, err := e.Id(sdWorkflow.Id).Get(&sdWorkflow)
 	if !has || err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
