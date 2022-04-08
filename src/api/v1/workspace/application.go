@@ -75,7 +75,7 @@ func GetWorkflowByWorkspaceId(ctx iris.Context) {
 		var SdWorkflowApplications []ApplicationModel.SdWorkflowApplication
 
 		for _, SdApplication := range SdApplications {
-			err := e.Where("ApplicationId = ?", strconv.Itoa(SdApplication.Id)).Find(&SdWorkflowApplications)
+			err := e.Where("’application_id‘ = ?", SdApplication.Id).Find(&SdWorkflowApplications)
 			if err != nil {
 				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 				return
