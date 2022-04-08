@@ -1515,7 +1515,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/department.SdDepartment"
+                                            "$ref": "#/definitions/application.SdApplication"
                                         }
                                     }
                                 }
@@ -1563,7 +1563,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/department.SdDepartment"
+                                            "$ref": "#/definitions/application.SdApplication"
                                         }
                                     }
                                 }
@@ -2572,6 +2572,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "application.SdApplication": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "isDeleted": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "workspaceId": {
+                    "type": "integer"
+                }
+            }
+        },
         "department.SdDepartment": {
             "type": "object",
             "properties": {

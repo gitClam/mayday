@@ -13,7 +13,7 @@ import (
 //   description: 用户头像
 //   type: file
 //   required: true
-func WorkflowOrderCreateOrder(ctx iris.Context) {
+func CreateOrder(ctx iris.Context) {
 	////检查请求的用户
 	//user, ok := middleware.ParseToken(ctx)
 	//if !ok {
@@ -34,7 +34,7 @@ func WorkflowOrderCreateOrder(ctx iris.Context) {
 // ---
 // summary: 填写表单（会修改流程状态）
 // description: 填写表单（会修改流程状态）
-func WorkflowOrderFillTable(ctx iris.Context) {
+func Handle(ctx iris.Context) {
 
 }
 
@@ -42,7 +42,7 @@ func WorkflowOrderFillTable(ctx iris.Context) {
 // ---
 // summary: 获取待办提醒
 // description: 获取待办提醒
-func WorkflowOrderNotification(ctx iris.Context) {
+func GetOrderNotification(ctx iris.Context) {
 
 }
 
@@ -55,6 +55,6 @@ func WorkflowOrderNotification(ctx iris.Context) {
 //   description: 流程ID
 //   type: int
 //   required: true
-func WorkflowOrderOrderState(ctx iris.Context) {
+func GetOrderState(ctx iris.Context) {
 
 }

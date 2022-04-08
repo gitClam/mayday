@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/v12"
 	_ "mayday/docs"
 	"mayday/src/middleware"
+	OrderRouter "mayday/src/router/order"
 	UserRouter "mayday/src/router/user"
 	WorkflowRouter "mayday/src/router/workflow"
 	WorkspaceRouter "mayday/src/router/workspace"
@@ -24,17 +25,6 @@ func Routers(app *iris.Application) {
 	WorkflowRouter.InitWorkflowRouter(main)   //流程路由
 	WorkflowRouter.InitTableRouter(main)      //表单路由
 	WorkspaceRouter.InitWorkspaceRouter(main) //工作空间路由
+	OrderRouter.InitOrderRouter(main)         //流程实例(事件)路由
 
-	//
-	//	application := workspace.Party("/application")
-	//	{
-	//		application.Post("/select", workspace_routes.ApplicationSelect)                    //查询应用信息
-	//		application.Post("/select/workspace", workspace_routes.ApplicationSelectWorkspace) //查询应用信息
-	//		application.Post("/create", workspace_routes.ApplicationCreate)                    //创建应用
-	//		application.Post("/editor", workspace_routes.ApplicationEditor)                    //修改应用信息
-	//		application.Delete("/delete", workspace_routes.ApplicationDelete)                  //删除应用
-	//		application.Delete("/delete-workflow", workspace_routes.ApplicationDeleteWorkflow) //删除流程
-	//		application.Post("/insert-workflow", workspace_routes.ApplicationInsert)           //添加流程
-	//	}
-	//}
 }
