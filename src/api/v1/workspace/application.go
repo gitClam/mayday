@@ -81,6 +81,7 @@ func GetWorkflowByWorkspaceId(ctx iris.Context) {
 				return
 			}
 			allSdWorkflowApplications = append(allSdWorkflowApplications, SdWorkflowApplications...)
+			SdWorkflowApplications = SdWorkflowApplications[0:0]
 		}
 	}
 	utils.Responser.OkWithDetails(ctx, allSdWorkflowApplications)
