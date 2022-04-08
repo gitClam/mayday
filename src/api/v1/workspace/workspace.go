@@ -197,7 +197,7 @@ func WorkspaceDelete(ctx iris.Context) {
 	e := global.GVA_DB.NewSession()
 	defer e.Close()
 	e.Begin()
-	for workspaceId := range workspaceIds {
+	for _, workspaceId := range workspaceIds {
 		_, err := e.Exec("delete from sd_user_job where job_id in( select id from sd_job where department_id in (select id from sd_department where workspace_id = ?))", workspaceId)
 		if err != nil {
 			e.Rollback()

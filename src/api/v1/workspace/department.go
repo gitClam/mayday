@@ -172,7 +172,7 @@ func DepartmentDelete(ctx iris.Context) {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	for departmentId := range departmentIds {
+	for _, departmentId := range departmentIds {
 
 		_, err := e.Exec("delete from sd_user_job where job_id in( select id from sd_job where department_id = ?)", departmentId)
 		if err != nil {

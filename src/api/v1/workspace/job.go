@@ -174,7 +174,7 @@ func JobDelete(ctx iris.Context) {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	for jobId := range JobIds {
+	for _, jobId := range JobIds {
 		_, err := e.Exec("delete from sd_user_job where job_id = ?", jobId)
 		if err != nil {
 			e.Rollback()
@@ -215,7 +215,7 @@ func SelectUserByJobId(ctx iris.Context) {
 		JobIds = append(JobIds, num)
 	}
 	var AllUsers []userModel.SdUser
-	for jobId := range JobIds {
+	for _, jobId := range JobIds {
 		var users []userModel.SdUser
 		e := global.GVA_DB
 		err := e.SQL("select * from sd_user where id in(select user_id from sd_user_job where job_id = ?)", jobId).Find(&users)
