@@ -65,8 +65,9 @@ func GetWorkflowByWorkspaceId(ctx iris.Context) {
 	for _, workspaceId := range workspaceIds {
 		var SdApplications []ApplicationModel.SdApplication
 		e := global.GVA_DB
-		has, err := e.Where("workspace_id = ?", workspaceId).Get(&SdApplications)
-		if !has || err != nil {
+		err := e.Where("workspace_id = ?", workspaceId).Find(&SdApplications)
+		if err != nil {
+
 			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 			return
 
@@ -74,8 +75,8 @@ func GetWorkflowByWorkspaceId(ctx iris.Context) {
 		var SdWorkflowApplications []ApplicationModel.SdWorkflowApplication
 
 		for _, SdApplication := range SdApplications {
-			has, err := e.Where("ApplicationId = ?", SdApplication.Id).Get(&allSdWorkflowApplications)
-			if !has || err != nil {
+			err := e.Where("ApplicationId = ?", SdApplication.Id).Find(&allSdWorkflowApplications)
+			if err != nil {
 				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 				return
 			}
