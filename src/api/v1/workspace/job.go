@@ -17,22 +17,22 @@ import (
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true "职位id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=job.SdJob} "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Success 200 {object} utils.Response{data=job.SdJob} "（1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/job/select [Get]
 func JobSelect(ctx iris.Context) {
-	var jobId []int
+	var jobIds []int
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
-		jobId = append(jobId, num)
+		jobIds = append(jobIds, num)
 	}
 
 	var SdJob []JobModel.SdJob
 	e := global.GVA_DB
-	err := e.Id(jobId).Find(&SdJob)
+	err := e.Id(jobIds).Find(&SdJob)
 
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
@@ -47,7 +47,7 @@ func JobSelect(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true " 部门id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=job.SdJob} "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Success 200 {object} utils.Response{data=job.SdJob} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/job/select/department [Get]
 func JobSelectDepartment(ctx iris.Context) {
 	var departmentId []int
@@ -77,7 +77,7 @@ func JobSelectDepartment(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true " 用户id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=job.SdJob} "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Success 200 {object} utils.Response{data=job.SdJob} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/job/select/user [Get]
 func JobSelectUser(ctx iris.Context) {
 	var UserId []int
@@ -202,7 +202,7 @@ func JobDelete(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true " 职位id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{}
+// @Success 200 {object} utils.Response{user.UserAbstractRes}
 // @Router /workspace/job/select-user [Get]
 func SelectUserByJobId(ctx iris.Context) {
 	var JobIds []int
@@ -263,7 +263,7 @@ func JobInsert(ctx iris.Context) {
 }
 
 // @Tags Job
-// @Summary 添加员工
+// @Summary 删除员工
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
@@ -280,7 +280,7 @@ func JobDeleteUser(ctx iris.Context) {
 	e := global.GVA_DB
 	affect, err := e.Delete(&userJob)
 	if affect <= 0 || err != nil {
-		utils.Responser.Fail(ctx, resultcode.DataCreateFail, err)
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
 	utils.Responser.Ok(ctx)
