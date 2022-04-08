@@ -16,7 +16,7 @@ import (
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true " 应用Id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=application.SdApplication} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Success 200 {object} utils.Response{data=application.SdWorkflowApplication} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/application/select [Get]
 func ApplicationSelect(ctx iris.Context) {
 	var applicationIds []int

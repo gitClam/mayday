@@ -1515,7 +1515,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/application.SdApplication"
+                                            "$ref": "#/definitions/application.SdWorkflowApplication"
                                         }
                                     }
                                 }
@@ -2588,6 +2588,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "workspaceId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "application.SdWorkflowApplication": {
+            "type": "object",
+            "properties": {
+                "applicationId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "workflowId": {
                     "type": "integer"
                 }
             }

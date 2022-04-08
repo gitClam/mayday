@@ -15,6 +15,15 @@ definitions:
       workspaceId:
         type: integer
     type: object
+  application.SdWorkflowApplication:
+    properties:
+      applicationId:
+        type: integer
+      id:
+        type: integer
+      workflowId:
+        type: integer
+    type: object
   department.SdDepartment:
     properties:
       id:
@@ -1237,7 +1246,7 @@ paths:
             - $ref: '#/definitions/utils.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/application.SdApplication'
+                  $ref: '#/definitions/application.SdWorkflowApplication'
               type: object
       security:
       - ApiKeyAuth: []

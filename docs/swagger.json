@@ -1508,7 +1508,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/application.SdApplication"
+                                            "$ref": "#/definitions/application.SdWorkflowApplication"
                                         }
                                     }
                                 }
@@ -2581,6 +2581,20 @@
                     "type": "string"
                 },
                 "workspaceId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "application.SdWorkflowApplication": {
+            "type": "object",
+            "properties": {
+                "applicationId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "workflowId": {
                     "type": "integer"
                 }
             }
