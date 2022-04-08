@@ -17,7 +17,7 @@ import (
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "表单id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=workflow.sdTables} "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Success 200 {object} utils.Response{data=workflow.SdTable} "返回表单的详细信息 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /table/get/table [get]
 func GetTableById(ctx iris.Context) {
 	var tableId []int

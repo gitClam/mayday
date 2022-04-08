@@ -2,6 +2,32 @@ basePath: /
 consumes:
 - application/json
 definitions:
+  department.SdDepartment:
+    properties:
+      id:
+        type: integer
+      isDeleted:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      remark:
+        type: string
+      workspaceId:
+        type: integer
+    type: object
+  job.SdJob:
+    properties:
+      departmentId:
+        type: integer
+      id:
+        type: integer
+      isDelete:
+        type: integer
+      name:
+        type: string
+    type: object
   user.UserDetailsRes:
     properties:
       age:
@@ -153,6 +179,21 @@ definitions:
     - name
     - workspaceId
     type: object
+  workflow.SdTable:
+    properties:
+      data:
+        items:
+          type: integer
+        type: array
+      id:
+        type: integer
+      isDeleted:
+        type: integer
+      name:
+        type: string
+      workspaceId:
+        type: integer
+    type: object
   workflow.SdWorkflow:
     properties:
       ceilingCount:
@@ -259,6 +300,19 @@ definitions:
     - name
     - structure
     - tables
+    type: object
+  workspace.SdWorkspace:
+    properties:
+      id:
+        type: integer
+      isDeleted:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      remark:
+        type: string
     type: object
 host: 47.107.108.127:80
 info:
@@ -392,10 +446,6 @@ paths:
     get:
       consumes:
       - application/x-www-form-urlencoded
-      description: |-
-        1017::数据接收失败
-        1023::数据不存在或查询失败
-        And so forth.
       parameters:
       - description: 用户登录返回的TOKEN
         in: header
@@ -417,7 +467,7 @@ paths:
             - $ref: '#/definitions/utils.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/user.UserDetailsRes'
+                  $ref: '#/definitions/workflow.SdTable'
               type: object
       security:
       - ApiKeyAuth: []
@@ -1004,6 +1054,805 @@ paths:
       summary: 修改流程状态
       tags:
       - Workflow
+  /workspace/application/create:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间id'
+        in: body
+        name: WorkspaceId
+        required: true
+        schema:
+          type: string
+      - description: ' 名字'
+        in: body
+        name: Name
+        required: true
+        schema:
+          type: string
+      - description: ' 备注'
+        in: body
+        name: Remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建应用
+      tags:
+      - Application
+  /workspace/application/delete:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间Id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1024::创建失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除应用
+      tags:
+      - Application
+  /workspace/application/delete-workflow:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 流程ID'
+        in: body
+        name: WorkflowId
+        required: true
+        schema:
+          type: string
+      - description: ' 应用id'
+        in: body
+        name: ApplicationId
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1024::删除失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除流程
+      tags:
+      - Application
+  /workspace/application/editor:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间id'
+        in: body
+        name: WorkspaceId
+        required: true
+        schema:
+          type: string
+      - description: ' 名字'
+        in: body
+        name: Name
+        required: true
+        schema:
+          type: string
+      - description: ' 备注'
+        in: body
+        name: Remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改应用信息
+      tags:
+      - Application
+  /workspace/application/insert-workflow:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 流程ID'
+        in: body
+        name: WorkflowId
+        required: true
+        schema:
+          type: string
+      - description: ' 应用id'
+        in: body
+        name: ApplicationId
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1022::创建失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加流程
+      tags:
+      - Application
+  /workspace/application/select:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 应用Id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/department.SdDepartment'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 应用Id获取流程信息
+      tags:
+      - Application
+  /workspace/application/select/workspace:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间Id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/department.SdDepartment'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取应用信息
+      tags:
+      - Application
+  /workspace/create/workspace:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间名字'
+        in: body
+        name: Name
+        required: true
+        schema:
+          type: string
+      - description: ' 联系电话'
+        in: body
+        name: Phone
+        required: true
+        schema:
+          type: string
+      - description: ' 备注'
+        in: body
+        name: Remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建工作空间
+      tags:
+      - Workspace
+  /workspace/delete/workspace:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 部门id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除工作空间
+      tags:
+      - Workspace
+  /workspace/department/create:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间id'
+        in: body
+        name: WorkspaceId
+        required: true
+        schema:
+          type: string
+      - description: ' 部门名字'
+        in: body
+        name: Name
+        required: true
+        schema:
+          type: string
+      - description: ' 联系电话'
+        in: body
+        name: Phone
+        required: true
+        schema:
+          type: string
+      - description: ' 备注'
+        in: body
+        name: Remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建部门
+      tags:
+      - Department
+  /workspace/department/delete:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 部门id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/department.SdDepartment'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除部门
+      tags:
+      - Department
+  /workspace/department/editor:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 部门id'
+        in: body
+        name: Id
+        required: true
+        schema:
+          type: string
+      - description: ' 工作空间id'
+        in: body
+        name: WorkspaceId
+        required: true
+        schema:
+          type: string
+      - description: ' 部门名字'
+        in: body
+        name: Name
+        required: true
+        schema:
+          type: string
+      - description: ' 联系电话'
+        in: body
+        name: Phone
+        required: true
+        schema:
+          type: string
+      - description: ' 备注'
+        in: body
+        name: Remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改部门信息
+      tags:
+      - Department
+  /workspace/department/select:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 部门id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/department.SdDepartment'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取部门信息(通过部门id)
+      tags:
+      - Department
+  /workspace/department/select/user:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户登录返回的TOKEN
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/department.SdDepartment'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 根据用户ID获取部门信息
+      tags:
+      - Department
+  /workspace/department/select/workspace:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/department.SdDepartment'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取部门信息(通过工作空间id)
+      tags:
+      - Department
+  /workspace/editor/workspace:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 工作空间id
+        in: body
+        name: Id
+        required: true
+        schema:
+          type: string
+      - description: 工作空间名字
+        in: body
+        name: Name
+        required: true
+        schema:
+          type: string
+      - description: 联系电话
+        in: body
+        name: Phone
+        required: true
+        schema:
+          type: string
+      - description: 备注
+        in: body
+        name: Remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改工作空间信息
+      tags:
+      - Workspace
+  /workspace/job/create:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 部门id
+        in: body
+        name: DepartmentId
+        required: true
+        schema:
+          type: integer
+      - description: 职位名字
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建职位
+      tags:
+      - Job
+  /workspace/job/delete:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 职位id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除职位
+      tags:
+      - Job
+  /workspace/job/delete-user:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户id
+        in: body
+        name: UserId
+        required: true
+        schema:
+          type: integer
+      - description: 职位id
+        in: body
+        name: JobId
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除员工
+      tags:
+      - Job
+  /workspace/job/editor:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 职位id
+        in: body
+        name: Id
+        required: true
+        schema:
+          type: integer
+      - description: 部门id
+        in: body
+        name: DepartmentId
+        required: true
+        schema:
+          type: integer
+      - description: ' 职位名字'
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改职位信息
+      tags:
+      - Job
+  /workspace/job/insert-user:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户邮箱
+        in: body
+        name: Mail
+        required: true
+        schema:
+          type: string
+      - description: 职位id
+        in: body
+        name: JobId
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加员工
+      tags:
+      - Job
+  /workspace/job/select:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 职位id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/job.SdJob'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取职位信息(职位id)
+      tags:
+      - Job
+  /workspace/job/select-user:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 职位id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取职位人员信息
+      tags:
+      - Job
+  /workspace/job/select/department:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 部门id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/job.SdJob'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取职位信息(部门id)
+      tags:
+      - Job
+  /workspace/job/select/user:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 用户id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 错误码 （1017::数据接收失败,1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/job.SdJob'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取职位信息(用户id)
+      tags:
+      - Job
+  /workspace/select/user:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: 用户登录返回的TOKEN
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: （1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/workspace.SdWorkspace'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取工作空间信息
+      tags:
+      - Workspace
+  /workspace/select/workspace:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - description: ' 工作空间id(可以多个，以 '','' 分隔开) 例：''1,2,3,4'''
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: （1023::数据不存在或查询失败)
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/workspace.SdWorkspace'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取工作空间信息
+      tags:
+      - Workspace
 produces:
 - application/json
 swagger: "2.0"

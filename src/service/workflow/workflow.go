@@ -1,4 +1,4 @@
-package workflow
+package workflowService
 
 import (
 	"github.com/kataras/iris/v12"
