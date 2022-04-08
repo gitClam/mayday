@@ -562,7 +562,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "用户邮箱",
-                        "name": "Mail",
+                        "name": "mail",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -571,7 +571,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "用户密码",
-                        "name": "Password",
+                        "name": "password",
                         "in": "body",
                         "required": true,
                         "schema": {

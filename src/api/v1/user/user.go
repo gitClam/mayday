@@ -31,8 +31,8 @@ func Register(ctx iris.Context) {
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param Mail body string true "用户邮箱"
-// @Param Password body string true "用户密码"
+// @Param mail body string true "用户邮箱"
+// @Param password body string true "用户密码"
 // @Success 200 {object} utils.Response{data=user.UserDetailsRes} ”这里的token是会有信息的"
 // @Router /user/login [post]
 func Login(ctx iris.Context) {

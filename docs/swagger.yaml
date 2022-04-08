@@ -668,13 +668,13 @@ paths:
       parameters:
       - description: 用户邮箱
         in: body
-        name: Mail
+        name: mail
         required: true
         schema:
           type: string
       - description: 用户密码
         in: body
-        name: Password
+        name: password
         required: true
         schema:
           type: string
