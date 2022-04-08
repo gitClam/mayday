@@ -9,7 +9,7 @@ import (
 )
 
 func Casbin() (*casbin.Enforcer, error) {
-	Adapter, err := xormadapter.NewAdapter("mysql", global.GVA_CONFIG.Mysql.GetConnURL())
+	Adapter, err := xormadapter.NewAdapter("mysql", global.GVA_CONFIG.Mysql.GetConnURL(), true)
 	if err != nil {
 		global.GVA_LOG.Error("casbin rbac_model or policy init error, message: %v \r\n", zap.Error(err))
 		return nil, err
