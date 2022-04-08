@@ -29,7 +29,7 @@ func ApplicationSelect(ctx iris.Context) {
 		applicationIds = append(applicationIds, num)
 	}
 	var allSdWorkflowApplication []ApplicationModel.SdWorkflowApplication
-	for applicationId := range applicationIds {
+	for _, applicationId := range applicationIds {
 		var SdWorkflowApplication []ApplicationModel.SdWorkflowApplication
 		e := global.GVA_DB
 		has, err := e.Where("ApplicationId = ?", applicationId).Get(&SdWorkflowApplication)
@@ -40,6 +40,49 @@ func ApplicationSelect(ctx iris.Context) {
 		allSdWorkflowApplication = append(allSdWorkflowApplication, SdWorkflowApplication...)
 	}
 	utils.Responser.OkWithDetails(ctx, allSdWorkflowApplication)
+}
+
+// @Tags Application
+// @Summary 根据应用Id获取全部流程
+// @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param id path int true " 工作空间Id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
+// @Success 200 {object} utils.Response{data=application.SdWorkflowApplication} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Router /workspace/application/select/workFlowByWorkspaceId [Get]
+func GetWorkflowByWorkspaceId(ctx iris.Context) {
+
+	var workspaceIds []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
+			return
+		}
+		workspaceIds = append(workspaceIds, num)
+	}
+	var allSdWorkflowApplications []ApplicationModel.SdWorkflowApplication
+	for _, workspaceId := range workspaceIds {
+		var SdApplications []ApplicationModel.SdApplication
+		e := global.GVA_DB
+		has, err := e.Where("workspace_id = ?", workspaceId).Get(&SdApplications)
+		if !has || err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+			return
+
+		}
+		var SdWorkflowApplications []ApplicationModel.SdWorkflowApplication
+
+		for _, SdApplication := range SdApplications {
+			has, err := e.Where("ApplicationId = ?", SdApplication.Id).Get(&allSdWorkflowApplications)
+			if !has || err != nil {
+				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+				return
+			}
+			allSdWorkflowApplications = append(allSdWorkflowApplications, SdWorkflowApplications...)
+		}
+	}
+	utils.Responser.OkWithDetails(ctx, allSdWorkflowApplications)
 }
 
 // @Tags Application
@@ -62,7 +105,7 @@ func ApplicationSelectWorkspace(ctx iris.Context) {
 		workspaceIds = append(workspaceIds, num)
 	}
 	var allSdApplication []ApplicationModel.SdApplication
-	for workspaceId := range workspaceIds {
+	for _, workspaceId := range workspaceIds {
 		var SdApplications []ApplicationModel.SdApplication
 		e := global.GVA_DB
 		has, err := e.Where("workspace_id = ?", workspaceId).Get(&SdApplications)
@@ -153,7 +196,7 @@ func ApplicationDelete(ctx iris.Context) {
 		return
 	}
 
-	for applicationId := range applicationIds {
+	for _, applicationId := range applicationIds {
 		var SdWorkflowApplication ApplicationModel.SdWorkflowApplication
 		var SdApplication ApplicationModel.SdApplication
 		effect, err := e.Where("ApplicationId = ?", applicationId).Delete(&SdWorkflowApplication)

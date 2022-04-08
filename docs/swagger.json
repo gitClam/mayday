@@ -1518,6 +1518,54 @@
                 }
             }
         },
+        "/workspace/application/select/workFlowByworkspaceId": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Application"
+                ],
+                "summary": "根据应用Id获取全部流程",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": " 工作空间Id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/application.SdWorkflowApplication"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/workspace/application/select/workspace": {
             "get": {
                 "security": [
