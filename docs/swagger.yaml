@@ -1253,7 +1253,7 @@ paths:
       summary: 应用Id获取流程信息
       tags:
       - Application
-  /workspace/application/select/workFlowByworkspaceId:
+  /workspace/application/select/workFlowByWorkspaceId:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -1277,7 +1277,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 根据应用Id获取全部流程
+      summary: 根据工作空间Id获取全部流程
       tags:
       - Application
   /workspace/application/select/workspace:

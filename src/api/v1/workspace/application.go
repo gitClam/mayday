@@ -43,7 +43,7 @@ func ApplicationSelect(ctx iris.Context) {
 }
 
 // @Tags Application
-// @Summary 根据应用Id获取全部流程
+// @Summary 根据工作空间Id获取全部流程
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json

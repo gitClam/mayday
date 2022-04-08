@@ -1525,7 +1525,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/workspace/application/select/workFlowByworkspaceId": {
+        "/workspace/application/select/workFlowByWorkspaceId": {
             "get": {
                 "security": [
                     {
@@ -1541,7 +1541,7 @@ const docTemplate = `{
                 "tags": [
                     "Application"
                 ],
-                "summary": "根据应用Id获取全部流程",
+                "summary": "根据工作空间Id获取全部流程",
                 "parameters": [
                     {
                         "type": "integer",
