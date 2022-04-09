@@ -771,7 +771,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -816,7 +816,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1108,7 +1108,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1153,7 +1153,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1198,7 +1198,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1393,10 +1393,18 @@ const docTemplate = `{
                 "summary": "修改应用信息",
                 "parameters": [
                     {
+                        "description": " 应用id",
+                        "name": "Id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "description": " 工作空间id",
                         "name": "WorkspaceId",
                         "in": "body",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1405,7 +1413,6 @@ const docTemplate = `{
                         "description": " 名字",
                         "name": "Name",
                         "in": "body",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1414,7 +1421,6 @@ const docTemplate = `{
                         "description": " 备注",
                         "name": "Remark",
                         "in": "body",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }

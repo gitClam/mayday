@@ -151,9 +151,10 @@ func ApplicationCreate(ctx iris.Context) {
 // @Security ApiKeyAuth
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param WorkspaceId body string true " 工作空间id"
-// @Param Name body string true " 名字"
-// @Param Remark body string true " 备注"
+// @Param Id body string true " 应用id"
+// @Param WorkspaceId body string false " 工作空间id"
+// @Param Name body string false " 名字"
+// @Param Remark body string false " 备注"
 // @Success 200 {object} utils.Response{} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/application/editor [POST]
 func ApplicationEditor(ctx iris.Context) {
