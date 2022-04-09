@@ -202,13 +202,13 @@ func ApplicationDelete(ctx iris.Context) {
 	for _, applicationId := range applicationIds {
 		var SdWorkflowApplication ApplicationModel.SdWorkflowApplication
 		var SdApplication ApplicationModel.SdApplication
-		effect, err := e.Where("ApplicationId = ?", applicationId).Delete(&SdWorkflowApplication)
+		effect, err := e.Where("application_id = ?", applicationId).Delete(&SdWorkflowApplication)
 		if effect == 0 || err != nil {
 			e.Rollback()
 			utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 			return
 		}
-		effect, err = e.Where("Id = ?", applicationId).Delete(&SdApplication)
+		effect, err = e.Where("id = ?", applicationId).Delete(&SdApplication)
 		if effect == 0 || err != nil {
 			e.Rollback()
 			utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
