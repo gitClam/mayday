@@ -9,8 +9,9 @@ func InitWorkspaceRouter(Router router.Party) {
 	workspace := Router.Party("/workspace")
 	select1 := workspace.Party("/select")
 	{
-		select1.Get("/user", workSpaceApi.WorkspaceSelectWorkspaceUserid) //根据用户ID获取工作空间信息
-		select1.Get("/workspace", workSpaceApi.WorkspaceSelectWorkspace)  //直接根据ID查询
+		select1.Get("/user", workSpaceApi.WorkspaceSelectWorkspaceUserid)               //根据用户ID获取工作空间信息
+		select1.Get("/workspace", workSpaceApi.WorkspaceSelectWorkspace)                //直接根据ID查询
+		select1.Get("/userByWorkSpaceId", workSpaceApi.WorkspaceSelectUseByWorkspaceId) //根据用户ID获取工作空间信息
 	}
 
 	create := workspace.Party("/create")

@@ -224,3 +224,22 @@ func WorkspaceDelete(ctx iris.Context) {
 	e.Commit()
 	utils.Responser.Ok(ctx)
 }
+
+func WorkspaceSelectUseByWorkspaceId(ctx iris.Context) {
+	var workspaceIds []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
+			return
+		}
+		workspaceIds = append(workspaceIds, num)
+	}
+	var allUser []userModel.SdUser
+	for _, workspaceId := range workspaceIds {
+		var users []userModel.SdUser
+		global.GVA_DB.SQL("select * from sd_user where id IN (SELECT user_id FROM sd_user_job WHERE job_id IN (SELECT id FROM sd_job  WHERE department_id IN (SELECT id FROM sd_department WHERE workspace_id = ？)))", workspaceId).Find(&users)
+		allUser = append(allUser, users...)
+	}
+	utils.Responser.OkWithDetails(ctx, allUser)
+}
