@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"github.com/kataras/iris/v12"
-	"log"
 	"mayday/src/global"
 	"mayday/src/model/common/resultcode"
 	userModel "mayday/src/model/user"
@@ -56,7 +55,7 @@ func WorkspaceSelectWorkspace(ctx iris.Context) {
 		}
 		workspaceIds = append(workspaceIds, num)
 	}
-	var sdWorkspace WorkspaceModel.SdWorkspace
+	var sdWorkspace []WorkspaceModel.SdWorkspace
 	e := global.GVA_DB
 	err := e.Id(workspaceIds).Find(&sdWorkspace)
 	if err != nil {
@@ -88,7 +87,6 @@ func WorkspaceCreate(ctx iris.Context) {
 	e := global.GVA_DB.NewSession()
 	defer e.Close()
 	e.Begin()
-	log.Print(Workspace)
 	affect, err := e.Insert(&Workspace)
 	if affect <= 0 || err != nil {
 		e.Rollback()
