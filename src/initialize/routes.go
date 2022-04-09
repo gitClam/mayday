@@ -17,10 +17,11 @@ func Routers(app *iris.Application) {
 	app.Get("/swagger/{any:path}", swagger.WrapHandler(swaggerFiles.Handler))
 
 	main := app.Party("/")
-	// Option 请求直接返回
+	// Option 请求直接返回 和跨域
+	main.Use(middleware.Cors)
 	main.Options("/*", func(ctx iris.Context) {})
 	//解决跨域和路由拦截
-	main.Use(middleware.Cors, middleware.ServeHTTP)
+	main.Use(middleware.ServeHTTP)
 	UserRouter.InitUserRouter(main)           //用户路由
 	WorkflowRouter.InitWorkflowRouter(main)   //流程路由
 	WorkflowRouter.InitTableRouter(main)      //表单路由
