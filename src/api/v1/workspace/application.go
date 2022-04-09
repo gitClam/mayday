@@ -110,8 +110,8 @@ func ApplicationSelectWorkspace(ctx iris.Context) {
 	for _, workspaceId := range workspaceIds {
 		var SdApplications []ApplicationModel.SdApplication
 		e := global.GVA_DB
-		has, err := e.Where("workspace_id = ?", workspaceId).Get(&SdApplications)
-		if !has || err != nil {
+		err := e.Where("workspace_id = ?", workspaceId).Find(&SdApplications)
+		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 			return
 		}
