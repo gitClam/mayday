@@ -50,19 +50,19 @@ func JobSelect(ctx iris.Context) {
 // @Success 200 {object} utils.Response{data=job.SdJob} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/job/select/department [Get]
 func JobSelectDepartment(ctx iris.Context) {
-	var departmentId []int
+	var departmentIds []int
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
-		departmentId = append(departmentId, num)
+		departmentIds = append(departmentIds, num)
 	}
 
 	var SdJob []JobModel.SdJob
 	e := global.GVA_DB
-	err := e.Where("department_id = ?", departmentId).Find(&SdJob)
+	err := e.In("department_id", departmentIds).Find(&SdJob)
 
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
@@ -80,23 +80,27 @@ func JobSelectDepartment(ctx iris.Context) {
 // @Success 200 {object} utils.Response{data=job.SdJob} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
 // @Router /workspace/job/select/user [Get]
 func JobSelectUser(ctx iris.Context) {
-	var UserId []int
+	var UserIds []int
 	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
 		num, err := strconv.Atoi(id)
 		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 			return
 		}
-		UserId = append(UserId, num)
+		UserIds = append(UserIds, num)
 	}
-	var SdJob []JobModel.SdJob
-	e := global.GVA_DB
-	err := e.SQL("select * from sd_job where id in(select job_id from sd_user_job where user_id = ?)", UserId).Find(&SdJob)
-	if err != nil {
-		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
-		return
+	var AllSdJob []JobModel.SdJob
+	for _, UserId := range UserIds {
+		var SdJob []JobModel.SdJob
+		e := global.GVA_DB
+		err := e.SQL("select * from sd_job where id in(select job_id from sd_user_job where user_id = ?)", UserId).Find(&SdJob)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+			return
+		}
+		AllSdJob = append(AllSdJob, SdJob...)
 	}
-	utils.Responser.OkWithDetails(ctx, SdJob)
+	utils.Responser.OkWithDetails(ctx, AllSdJob)
 }
 
 // @Tags Job
