@@ -32,7 +32,7 @@ func ApplicationSelect(ctx iris.Context) {
 	for _, applicationId := range applicationIds {
 		var SdWorkflowApplication []ApplicationModel.SdWorkflowApplication
 		e := global.GVA_DB
-		err := e.Where("ApplicationId = ?", applicationId).Find(&SdWorkflowApplication)
+		err := e.Where("application_id = ?", applicationId).Find(&SdWorkflowApplication)
 		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 			return
