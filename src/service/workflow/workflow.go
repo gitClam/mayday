@@ -79,7 +79,7 @@ func CreateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 func DeleteWorkflow(ctx iris.Context, id []int) {
 	//TODO 验证权限
 	e := global.GVA_DB
-	affected, err := e.Id(id).Delete(new(WorkflowModel.SdWorkflow))
+	affected, err := e.In("id", id).Delete(new(WorkflowModel.SdWorkflow))
 	if affected <= 0 || err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
@@ -94,7 +94,7 @@ func DeleteWorkflowDraft(ctx iris.Context, id []int) {
 	var sdWorkflowDrafts []WorkflowModel.SdWorkflowDraft
 	e := global.GVA_DB
 
-	err := e.Id(id).Find(&sdWorkflowDrafts)
+	err := e.In("id", id).Find(&sdWorkflowDrafts)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
@@ -108,7 +108,7 @@ func DeleteWorkflowDraft(ctx iris.Context, id []int) {
 		}
 	}
 
-	affected, err := e.Id(id).Delete(new(WorkflowModel.SdWorkflowDraft))
+	affected, err := e.In("id", id).Delete(new(WorkflowModel.SdWorkflowDraft))
 	if affected <= 0 || err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
@@ -149,7 +149,7 @@ func GetWorkflowDraftById(ctx iris.Context, id []int) {
 	//TODO 验证权限
 	var SdWorkflows []WorkflowModel.SdWorkflowDraft
 	e := global.GVA_DB
-	err := e.Id(id).Find(&SdWorkflows)
+	err := e.In("id", id).Find(&SdWorkflows)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
