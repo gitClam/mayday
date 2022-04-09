@@ -39,7 +39,7 @@ func GetWorkflowById(ctx iris.Context) {
 // @accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回流程草稿的详细信息"
+// @Success 200 {object} utils.Response{data=workflow.SdWorkflowDraft} "返回流程草稿的详细信息"
 // @Router /workflow/get/workflow-draft/user [get]
 func GetWorkflowDraftByUser(ctx iris.Context) {
 	workflowSever.GetWorkflowDraftByUser(ctx)
@@ -52,7 +52,7 @@ func GetWorkflowDraftByUser(ctx iris.Context) {
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
 // @Param id path int true "流程草稿id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
-// @Success 200 {object} utils.Response{data=user.UserDetailsRes} "返回流程的详细信息"
+// @Success 200 {object} utils.Response{data=workflow.SdWorkflowDraft} "返回流程的详细信息"
 // @Router /workflow/get/workflow-draft/id [get]
 func GetWorkflowDraftById(ctx iris.Context) {
 	var workflowDraftsId []int
@@ -73,7 +73,7 @@ func GetWorkflowDraftById(ctx iris.Context) {
 // @accept application/json
 // @Produce application/json
 // @Param Authorization header string true "用户登录返回的TOKEN"
-// @Param userReq body workflowModel.WorkflowReq true "流程信息"
+// @Param 流程创建 body workflowModel.WorkflowReq true "流程信息"
 // @Success 200 {object} utils.Response
 // @Router /workflow/create/workflow [post]
 func CreateWorkflow(ctx iris.Context) {
