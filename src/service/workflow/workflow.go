@@ -121,7 +121,7 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 	//TODO 验证权限
 	var SdWorkflows []WorkflowModel.SdWorkflow
 	e := global.GVA_DB
-	err := e.Id(id).Find(&SdWorkflows)
+	err := e.In("id", id).Find(&SdWorkflows)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
