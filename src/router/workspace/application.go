@@ -17,5 +17,6 @@ func InitApplicationRouter(workspace router.Party) {
 		application.Post("/delete-workflow", workSpaceApi.ApplicationDeleteWorkflow)            //删除流程
 		application.Post("/insert-workflow", workSpaceApi.ApplicationInsert)                    //添加流程
 		application.Get("/select/workFlowByWorkspaceId", workSpaceApi.GetWorkflowByWorkspaceId) //根据工作空间直接查询流程信息
+		application.Get("/select/application", workSpaceApi.SelectApplicationById)              //根据应用Id 获取应用信息
 	}
 }

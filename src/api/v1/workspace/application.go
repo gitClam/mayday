@@ -266,3 +266,31 @@ func ApplicationDeleteWorkflow(ctx iris.Context) {
 	}
 	utils.Responser.Ok(ctx)
 }
+
+// @Tags Application
+// @Summary 应用Id获取应用信息
+// @Security ApiKeyAuth
+// @accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param id path int true " 应用Id(可以多个，以 ',' 分隔开) 例：'1,2,3,4'"
+// @Success 200 {object} utils.Response{data=application.SdWorkflowApplication} "错误码 （1017::数据接收失败,1023::数据不存在或查询失败)"
+// @Router /workspace/application/select/application [Get]
+func SelectApplicationById(ctx iris.Context) {
+	var applicationIds []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
+			return
+		}
+		applicationIds = append(applicationIds, num)
+	}
+	var sdApplications []ApplicationModel.SdApplication
+	e := global.GVA_DB
+	err := e.In("application_id", applicationIds).Find(&sdApplications)
+	if err != nil {
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+		return
+	}
+	utils.Responser.OkWithDetails(ctx, sdApplications)
+}
