@@ -203,7 +203,7 @@ func ApplicationDelete(ctx iris.Context) {
 		var SdWorkflowApplication ApplicationModel.SdWorkflowApplication
 		var SdApplication ApplicationModel.SdApplication
 		effect, err := e.Where("application_id = ?", applicationId).Delete(&SdWorkflowApplication)
-		if effect == 0 || err != nil {
+		if err != nil {
 			e.Rollback()
 			utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 			return
