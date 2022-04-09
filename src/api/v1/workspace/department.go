@@ -84,7 +84,7 @@ func DepartmentSelectWorkspace(ctx iris.Context) {
 	var departments []DepartmentModel.SdDepartment
 
 	e := global.GVA_DB
-	err := e.Where("workspace_id = ? and is_deleted = 0", workspaceIds).Find(&departments)
+	err := e.In("workspace_id", workspaceIds).Find(&departments)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
