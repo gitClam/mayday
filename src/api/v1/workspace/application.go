@@ -287,7 +287,7 @@ func SelectApplicationById(ctx iris.Context) {
 	}
 	var sdApplications []ApplicationModel.SdApplication
 	e := global.GVA_DB
-	err := e.In("application_id", applicationIds).Find(&sdApplications)
+	err := e.In("id", applicationIds).Find(&sdApplications)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
