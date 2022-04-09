@@ -57,7 +57,7 @@ func WorkspaceSelectWorkspace(ctx iris.Context) {
 	}
 	var sdWorkspace []WorkspaceModel.SdWorkspace
 	e := global.GVA_DB
-	err := e.Id(workspaceIds).Find(&sdWorkspace)
+	err := e.In("id", workspaceIds).Find(&sdWorkspace)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
