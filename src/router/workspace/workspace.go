@@ -27,6 +27,7 @@ func InitWorkspaceRouter(Router router.Party) {
 	delete := workspace.Party("/delete")
 	{
 		delete.Delete("/workspace", workSpaceApi.WorkspaceDelete) //删除工作空间
+		delete.Post("/user", workSpaceApi.WorkspaceUserDelete)    //删除员工
 	}
 	InitJobRouter(workspace)
 	InitDepartmentRouter(workspace)

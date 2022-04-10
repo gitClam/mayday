@@ -247,3 +247,20 @@ func WorkspaceSelectUseByWorkspaceId(ctx iris.Context) {
 	}
 	utils.Responser.OkWithDetails(ctx, allUser)
 }
+
+//删除员工
+func WorkspaceUserDelete(ctx iris.Context) {
+	userId := ctx.FormValue("userId")
+	workspaceId := ctx.FormValue("workspaceId")
+	if userId == "" || workspaceId == "" {
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail)
+		return
+	}
+
+	_, err := global.GVA_DB.Exec("DELETE FROM sd_user_job WHERE user_id = ? AND job_id IN (SELECT id FROM sd_job WHERE department_id IN (SELECT id FROM sd_department WHERE workspace_id = ?))", userId, workspaceId)
+	if err != nil {
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail)
+		return
+	}
+	utils.Responser.Ok(ctx)
+}
