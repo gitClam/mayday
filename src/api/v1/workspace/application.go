@@ -1,6 +1,7 @@
 package workspace
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
@@ -304,7 +305,7 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 		Name        string
 		Remark      string
 		IsDeleted   int
-		processList []workflow.WorkflowSimpleRes
+		processList []byte
 	}
 
 	var WorkspaceIds []int
@@ -347,20 +348,24 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 				SdWorkflows = append(SdWorkflows, SdWorkflow.ToWorkflowSimpleRes())
 			}
 		}
+		marshal, err := json.Marshal(SdWorkflows)
+		if err != nil {
+			return
+		}
 		result = append(result, struct {
 			Id          int
 			WorkspaceId int
 			Name        string
 			Remark      string
 			IsDeleted   int
-			processList []workflow.WorkflowSimpleRes
+			processList []byte
 		}{
 			Id:          application.Id,
 			WorkspaceId: application.WorkspaceId,
 			Name:        application.Name,
 			Remark:      application.Remark,
 			IsDeleted:   application.IsDeleted,
-			processList: SdWorkflows})
+			processList: marshal})
 	}
 
 	fmt.Println(result)
