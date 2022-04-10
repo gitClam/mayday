@@ -173,7 +173,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 					return
 				}
 
-				authStatus, err = JudgeUserAuthority(w.Context, v.Id, structResult["workOrder"].(WorkOrderData).CurrentState)
+				authStatus, err = JudgeUserAuthority(w.Context, v.Id, structResult["workOrder"].(order.SdOrder).CurrentState)
 				if err != nil {
 					return
 				}
