@@ -4,6 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
 	"mayday/src/model/common/resultcode"
+	"mayday/src/model/workflow"
 	ApplicationModel "mayday/src/model/workspace/application"
 	"mayday/src/utils"
 	"strconv"
@@ -293,4 +294,73 @@ func SelectApplicationById(ctx iris.Context) {
 		return
 	}
 	utils.Responser.OkWithDetails(ctx, sdApplications)
+}
+
+func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
+	var result []struct {
+		Id          int
+		WorkspaceId int
+		Name        string
+		Remark      string
+		IsDeleted   int
+		processList []workflow.WorkflowSimpleRes
+	}
+
+	var WorkspaceIds []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
+			return
+		}
+		WorkspaceIds = append(WorkspaceIds, num)
+	}
+
+	var allApplication []ApplicationModel.SdApplication
+	for _, WorkspaceId := range WorkspaceIds {
+		err := global.GVA_DB.Where("workspace_id = ?", WorkspaceId).Find(&allApplication)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+			return
+		}
+	}
+
+	for _, application := range allApplication {
+		var SdWorkflowApplications []ApplicationModel.SdWorkflowApplication
+		var SdWorkflows []workflow.WorkflowSimpleRes
+		e := global.GVA_DB
+		err := e.Where("application_id = ?", application.Id).Find(&SdWorkflowApplications)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+			return
+		}
+		for _, SdWorkflowApplication := range SdWorkflowApplications {
+			var SdWorkflow workflow.SdWorkflow
+			e := global.GVA_DB
+			err := e.Where("id = ? and is_start = 1", SdWorkflowApplication.WorkflowId).Find(&SdWorkflow)
+			if err != nil {
+				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+				return
+			}
+			SdWorkflows = append(SdWorkflows, SdWorkflow.ToWorkflowSimpleRes())
+		}
+
+		result = append(result, struct {
+			Id          int
+			WorkspaceId int
+			Name        string
+			Remark      string
+			IsDeleted   int
+			processList []workflow.WorkflowSimpleRes
+		}{
+			Id:          application.Id,
+			WorkspaceId: application.WorkspaceId,
+			Name:        application.Name,
+			Remark:      application.Remark,
+			IsDeleted:   application.IsDeleted,
+			processList: SdWorkflows})
+	}
+
+	utils.Responser.OkWithDetails(ctx, result)
+
 }
