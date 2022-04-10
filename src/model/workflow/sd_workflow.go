@@ -19,14 +19,14 @@ type SdWorkflow struct {
 	Remarks      string                `xorm:"VARCHAR(100)"`
 }
 type WorkflowSimpleRes struct {
-	Id           int                   `xorm:"not null pk autoincr INT(11)"`
-	Name         string                `xorm:"VARCHAR(50)"`
-	CreateUser   int                   `xorm:"not null index INT(11)"`
-	CreateTime   timedecoder.LocalTime `xorm:"not null DATETIME"`
-	IsStart      int                   `xorm:"not null TINYINT(1)"`
-	CeilingCount int                   `xorm:"INT(11)"`
-	IsDeleted    int                   `xorm:"not null default 0 TINYINT(1)"`
-	Remarks      string                `xorm:"VARCHAR(100)"`
+	Id           int                   `xorm:"not null pk autoincr INT(11)" json:"Id"`
+	Name         string                `xorm:"VARCHAR(50)" json:"Name"`
+	CreateUser   int                   `xorm:"not null index INT(11)" json:"CreateUser"`
+	CreateTime   timedecoder.LocalTime `xorm:"not null DATETIME" json:"CreateTime"`
+	IsStart      int                   `xorm:"not null TINYINT(1)" json:"IsStart"`
+	CeilingCount int                   `xorm:"INT(11)" json:"CeilingCount"`
+	IsDeleted    int                   `xorm:"not null default 0 TINYINT(1)" json:"IsDeleted"`
+	Remarks      string                `xorm:"VARCHAR(100)" json:"Remarks"`
 }
 
 func (sd *SdWorkflow) ToWorkflowSimpleRes() (res WorkflowSimpleRes) {
