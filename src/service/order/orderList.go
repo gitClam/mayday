@@ -32,8 +32,8 @@ func NewWorkOrder(classify int, c iris.Context) *WorkOrder {
 
 func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 	var (
-		workOrderInfoList []workOrderInfo
-		processorInfo     user.SdUser
+		//workOrderInfoList []workOrderInfo
+		processorInfo user.SdUser
 	)
 
 	personSelectValue := "(JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('process_method', 'person')))"
@@ -118,12 +118,13 @@ func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 	//	C:  w.Context,
 	//	DB: db,
 	//}, &workOrderInfoList, map[string]map[string]interface{}{}, "p_process_info")
-	err = db.Find(&workOrderInfoList)
+	var sdOrder []order.SdOrder
+	err = db.Find(&sdOrder)
 	if err != nil {
 		global.GVA_LOG.Info("查询工单列表失败")
 		return nil, err
 	}
-	result = workOrderInfoList
+	result = sdOrder
 	return
 }
 
