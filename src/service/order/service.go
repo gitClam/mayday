@@ -24,7 +24,7 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		processStructureDetails map[string]interface{}
 		processNode             []map[string]interface{}
 		tplDetails              []*workflow.SdTable
-		workOrderInfo           WorkOrderData
+		workOrderInfo           order.SdOrder
 		workOrderTpls           []*order.SdOrderTable
 		workOrderHistory        []*order.SdOrderCirculationHistory
 		stateList               []map[string]interface{}

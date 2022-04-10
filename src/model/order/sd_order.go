@@ -18,5 +18,6 @@ type SdOrder struct {
 	IsDenied      int                   `xorm:"not null INT(11)"`
 	IsEnd         int                   `xorm:"not null INT(11)"`
 	State         json.RawMessage       `xorm:"JSON"`
+	CurrentState  string                `xorm:"VARCHAR(20)"`
 	IsDeleted     int                   `xorm:"not null default 0 TINYINT(1)"`
 }
