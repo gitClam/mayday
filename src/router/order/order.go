@@ -13,7 +13,7 @@ func InitOrderRouter(Router router.Party) {
 		//order.Get("/notification", orderApi.GetOrderNotification) //获取代办
 		order.Post("/process-structure", orderApi.ProcessStructure)
 		order.Post("/create", orderApi.CreateOrder)      //创建流程实例
-		order.Get("/list", orderApi.WorkOrderList)       //获取代办
+		order.Post("/list", orderApi.WorkOrderList)      //获取代办
 		order.Post("/handle", orderApi.ProcessWorkOrder) //事件处理
 		order.Get("/unity", orderApi.UnityWorkOrder)
 		order.Post("/inversion", orderApi.InversionWorkOrder) // 转交工单

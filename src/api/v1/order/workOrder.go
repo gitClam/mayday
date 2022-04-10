@@ -74,7 +74,7 @@ func WorkOrderList(ctx iris.Context) {
 		err         error
 		classifyInt int
 	)
-	classify := ctx.FormValue("classify")
+	classify := ctx.FormValue("Classify")
 	if classify == "" {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail)
 		return
