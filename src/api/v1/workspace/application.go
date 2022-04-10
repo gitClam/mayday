@@ -347,7 +347,6 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 				SdWorkflows = append(SdWorkflows, SdWorkflow.ToWorkflowSimpleRes())
 			}
 		}
-		fmt.Println(SdWorkflows)
 		result = append(result, struct {
 			Id          int
 			WorkspaceId int
@@ -364,6 +363,7 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 			processList: SdWorkflows})
 	}
 
+	fmt.Println(result)
 	utils.Responser.OkWithDetails(ctx, result)
 
 }
