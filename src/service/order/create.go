@@ -2,7 +2,6 @@ package order
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"mayday/src/global"
@@ -55,7 +54,6 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 		global.GVA_LOG.Warn("数据接收失败", zap.Error(err))
 		return
 	}
-	fmt.Println(workOrderValue)
 	//设置参与人
 	relatedPerson, err := json.Marshal([]int{user.Id})
 	if err != nil {
@@ -91,7 +89,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	if !has || err != nil {
 		tx.Rollback()
 		global.GVA_LOG.Warn("获取流程信息失败", zap.Error(err))
-		return
+		return err
 	}
 	//取出流程结构
 	err = json.Unmarshal(workflowValue.Structure, &processState.Structure)
@@ -238,12 +236,11 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 		UserId:        user.Id,
 	}
 	//数据库插入新订单的记录
-	affect1, err2 := tx.Insert(&OrderInfo)
-	if affect1 <= 0 || err2 != nil {
-		err = err2
+	effect, err := tx.Insert(&OrderInfo)
+	if effect <= 0 || err != nil {
 		tx.Rollback()
 		global.GVA_LOG.Warn("插入订单数据失败", zap.Error(err))
-		return
+		return err
 	}
 
 	//创建工单模版关联数据

@@ -114,14 +114,16 @@ func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 	//db = db.Join("left join p_process_info on p_work_order_info.process = p_process_info.id").
 	//	Select("p_work_order_info.*, p_process_info.name as process_name")
 
-	result, err = pagination.Paging(&pagination.Param{
-		C:  w.Context,
-		DB: db,
-	}, &workOrderInfoList, map[string]map[string]interface{}{}, "p_process_info")
+	//result, err = pagination.Paging(&pagination.Param{
+	//	C:  w.Context,
+	//	DB: db,
+	//}, &workOrderInfoList, map[string]map[string]interface{}{}, "p_process_info")
+	err = db.Find(&workOrderInfoList)
 	if err != nil {
-		err = fmt.Errorf("查询工单列表失败，%v", err.Error())
-		return
+		global.GVA_LOG.Info("查询工单列表失败")
+		return nil, err
 	}
+	result = workOrderInfoList
 	return
 }
 
