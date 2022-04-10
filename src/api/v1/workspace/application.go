@@ -338,7 +338,6 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 		for _, SdWorkflowApplication := range SdWorkflowApplications {
 			var SdWorkflow workflow.SdWorkflow
 			e := global.GVA_DB
-			fmt.Println(SdWorkflowApplication)
 			has, err := e.Where("id = ?", SdWorkflowApplication.WorkflowId).And("is_start = 1").Get(&SdWorkflow)
 			if err != nil {
 				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
@@ -348,7 +347,7 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 				SdWorkflows = append(SdWorkflows, SdWorkflow.ToWorkflowSimpleRes())
 			}
 		}
-
+		fmt.Println(SdWorkflows)
 		result = append(result, struct {
 			Id          int
 			WorkspaceId int
