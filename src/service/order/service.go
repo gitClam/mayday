@@ -92,9 +92,9 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		result["tpls"] = tplDetails
 	} else {
 		// 查询工单信息
-		err = global.GVA_DB.Where("id = ?", workOrderId).Find(&workOrderInfo)
-		if err != nil {
-			return
+		has, err := global.GVA_DB.Where("id = ?", workOrderId).Get(&workOrderInfo)
+		if !has || err != nil {
+			return nil, fmt.Errorf("查询order数据失败", err)
 		}
 		// 获取当前节点
 		err = json.Unmarshal(workOrderInfo.State, &stateList)

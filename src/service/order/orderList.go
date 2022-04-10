@@ -130,6 +130,7 @@ func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 	//	DB: db,
 	//}, &workOrderInfoList, map[string]map[string]interface{}{}, "p_process_info")
 	var sdOrder []order.SdOrder
+
 	err = db.Find(&sdOrder)
 	if err != nil {
 		global.GVA_LOG.Info("查询工单列表失败")
@@ -149,9 +150,6 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 	)
 
 	result, err = w.PureWorkOrderList()
-	fmt.Println(1)
-	fmt.Println(result)
-	fmt.Println(1)
 	if err != nil {
 		return nil, err
 	}
