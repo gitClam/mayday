@@ -49,7 +49,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 		//}
 	)
 	//获取请求的全部数据
-	err = ctx.ReadJSON(&workOrderValue)
+	err = ctx.ReadForm(&workOrderValue)
 	if err != nil {
 		global.GVA_LOG.Warn("数据接收失败", zap.Error(err))
 		return
