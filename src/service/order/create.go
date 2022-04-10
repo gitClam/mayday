@@ -2,6 +2,7 @@ package order
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"mayday/src/global"
@@ -49,11 +50,13 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 		//}
 	)
 	//获取请求的全部数据
-	err = ctx.ReadForm(&workOrderValue)
+	err = ctx.ReadJSON(&workOrderValue)
 	if err != nil {
+		fmt.Println(workOrderValue)
 		global.GVA_LOG.Warn("数据接收失败", zap.Error(err))
 		return
 	}
+	fmt.Println(workOrderValue)
 	//设置参与人
 	relatedPerson, err := json.Marshal([]int{user.Id})
 	if err != nil {
