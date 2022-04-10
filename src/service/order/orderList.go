@@ -149,6 +149,9 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 	)
 
 	result, err = w.PureWorkOrderList()
+	fmt.Println(1)
+	fmt.Println(result)
+	fmt.Println(1)
 	if err != nil {
 		return nil, err
 	}
