@@ -364,6 +364,7 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 	}
 
 	fmt.Println(result)
-	utils.Responser.OkWithDetails(ctx, result)
+	ctx.JSON(result)
+	//utils.Responser.OkWithDetails(ctx, result)
 
 }
