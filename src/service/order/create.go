@@ -52,7 +52,6 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	//获取请求的全部数据
 	err = ctx.ReadJSON(&workOrderValue)
 	if err != nil {
-		fmt.Println(workOrderValue)
 		global.GVA_LOG.Warn("数据接收失败", zap.Error(err))
 		return
 	}
@@ -88,8 +87,8 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	}
 
 	// 从数据库查询流程信息
-	err = tx.Id(workOrderValue.WorkflowId).Find(&workflowValue)
-	if err != nil {
+	has, err := tx.ID(workOrderValue.WorkflowId).Get(&workflowValue)
+	if !has || err != nil {
 		tx.Rollback()
 		global.GVA_LOG.Warn("获取流程信息失败", zap.Error(err))
 		return
