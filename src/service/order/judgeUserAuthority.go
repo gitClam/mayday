@@ -29,14 +29,15 @@ func JudgeUserAuthority(c iris.Context, workOrderId int, currentState string) (s
 		currentUserInfo   user.SdUser
 	)
 	// 获取工单信息
-	err = global.GVA_DB.Id(workOrderId).Find(&workOrderInfo)
-	if err != nil {
+	has, err1 := global.GVA_DB.Id(workOrderId).Get(&workOrderInfo)
+	if !has || err1 != nil {
+		err = err1
 		return
 	}
 
 	// 获取流程信息
-	err = global.GVA_DB.Id(workOrderInfo.WorkflowId).Find(&processInfo)
-	if err != nil {
+	has, err = global.GVA_DB.Id(workOrderInfo.WorkflowId).Get(&processInfo)
+	if !has || err != nil {
 		return
 	}
 
@@ -65,8 +66,8 @@ func JudgeUserAuthority(c iris.Context, workOrderId int, currentState string) (s
 	}
 
 	// 获取当前用户信息
-	err = global.GVA_DB.Id(c.Values().Get("user").(user.SdUser).Id).Find(&currentUserInfo)
-	if err != nil {
+	has, err = global.GVA_DB.Id(c.Values().Get("user").(user.SdUser).Id).Get(&currentUserInfo)
+	if !has || err != nil {
 		return
 	}
 
@@ -156,8 +157,8 @@ func JudgeUserAuthority(c iris.Context, workOrderId int, currentState string) (s
 					status = true
 				}
 			case 2:
-				err = global.GVA_DB.Id(workOrderInfo.UserId).Find(&userInfo)
-				if err != nil {
+				has, err = global.GVA_DB.Id(workOrderInfo.UserId).Get(&userInfo)
+				if !has || err != nil {
 					return
 				}
 				//err = orm.Eloquent.Model(&userDept).Id(userInfo.DeptId).Find(&userDept).Error
