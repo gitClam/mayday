@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kataras/iris/v12"
-	"mayday/src/api/v1/order/pagination"
 	"mayday/src/global"
+	"mayday/src/model/common/timedecoder"
 	"mayday/src/model/order"
 	"mayday/src/model/user"
 )
@@ -16,11 +16,22 @@ type WorkOrder struct {
 }
 
 type workOrderInfo struct {
-	order.SdOrder
-	Principals   string `json:"principals"`
-	StateName    string `json:"state_name"`
-	DataClassify int    `json:"data_classify"`
-	ProcessName  string `json:"process_name"`
+	Id            int
+	UserId        int
+	WorkflowId    int
+	CreateTime    timedecoder.LocalTime
+	Title         string
+	UrgeLastTime  timedecoder.LocalTime
+	UrgeCount     int
+	RelatedPerson json.RawMessage
+	IsDenied      int
+	IsEnd         int
+	State         json.RawMessage
+	IsDeleted     int
+	Principals    string `json:"principals"`
+	StateName     string `json:"state_name"`
+	DataClassify  int    `json:"data_classify"`
+	ProcessName   string `json:"process_name"`
 }
 
 func NewWorkOrder(classify int, c iris.Context) *WorkOrder {
@@ -142,7 +153,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 		return nil, err
 	}
 
-	for i, v := range *result.(*pagination.Paginator).Data.(*[]workOrderInfo) {
+	for i, v := range *result.(*[]order.SdOrder) {
 		var (
 			stateName    string
 			structResult map[string]interface{}
@@ -199,19 +210,52 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 				return
 			}
 		}
-		workOrderDetails := *result.(*pagination.Paginator).Data.(*[]workOrderInfo)
-		workOrderDetails[i].Principals = principals
-		workOrderDetails[i].StateName = stateName
+
+		workOrderDetails := *result.(*[]order.SdOrder)
+		workOrderDetail := struct {
+			Id            int
+			UserId        int
+			WorkflowId    int
+			CreateTime    timedecoder.LocalTime
+			Title         string
+			UrgeLastTime  timedecoder.LocalTime
+			UrgeCount     int
+			RelatedPerson json.RawMessage
+			IsDenied      int
+			IsEnd         int
+			State         json.RawMessage
+			IsDeleted     int
+			Principals    string `json:"principals"`
+			StateName     string `json:"state_name"`
+			DataClassify  int    `json:"data_classify"`
+			ProcessName   string `json:"process_name"`
+		}{
+			Id:            workOrderDetails[i].Id,
+			UserId:        workOrderDetails[i].UserId,
+			WorkflowId:    workOrderDetails[i].WorkflowId,
+			CreateTime:    workOrderDetails[i].CreateTime,
+			Title:         workOrderDetails[i].Title,
+			UrgeLastTime:  workOrderDetails[i].UrgeLastTime,
+			UrgeCount:     workOrderDetails[i].UrgeCount,
+			RelatedPerson: workOrderDetails[i].RelatedPerson,
+			IsDenied:      workOrderDetails[i].IsDenied,
+			IsEnd:         workOrderDetails[i].IsEnd,
+			State:         workOrderDetails[i].State,
+			IsDeleted:     workOrderDetails[i].IsDeleted,
+			Principals:    principals,
+			StateName:     stateName,
+		}
+
 		//workOrderDetails[i].DataClassify = v.Classify
 		if authStatus {
-			workOrderInfoList = append(workOrderInfoList, workOrderDetails[i])
+			workOrderInfoList = append(workOrderInfoList, workOrderDetail)
 		}
 	}
 
-	result.(*pagination.Paginator).Data = &workOrderInfoList
-	result.(*pagination.Paginator).TotalCount -= minusTotal
+	//result.(*pagination.Paginator).Data = &workOrderInfoList
+	//result.(*pagination.Paginator).TotalCount -= minusTotal
 
-	return result, nil
+	return workOrderInfoList, nil
 }
 
 //func Paging(p *Param, result interface{}, args ...interface{}) (*Paginator, error) {
