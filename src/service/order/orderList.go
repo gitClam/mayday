@@ -153,7 +153,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 		return nil, err
 	}
 
-	for i, v := range *result.(*[]order.SdOrder) {
+	for i, v := range result.([]order.SdOrder) {
 		var (
 			stateName    string
 			structResult map[string]interface{}
@@ -211,7 +211,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 			}
 		}
 
-		workOrderDetails := *result.(*[]order.SdOrder)
+		workOrderDetails := result.([]order.SdOrder)
 		workOrderDetail := struct {
 			Id            int
 			UserId        int
