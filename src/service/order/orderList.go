@@ -139,7 +139,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 
 	result, err = w.PureWorkOrderList()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	for i, v := range *result.(*pagination.Paginator).Data.(*[]workOrderInfo) {
