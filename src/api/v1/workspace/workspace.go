@@ -235,7 +235,20 @@ func WorkspaceSelectUseByWorkspaceId(ctx iris.Context) {
 		}
 		workspaceIds = append(workspaceIds, num)
 	}
-	var allUser []userModel.UserAbstractRes
+	var result []struct {
+		Id             int
+		Name           string
+		Age            int
+		Sex            string
+		Info           string
+		Photo          string
+		Mail           string
+		Phone          string
+		DepartmentId   int
+		DepartmentName string
+		JobId          int
+		JobName        string
+	}
 	for _, workspaceId := range workspaceIds {
 		var users []userModel.SdUser
 		err := global.GVA_DB.SQL("select * from sd_user where id IN (SELECT user_id FROM sd_user_job WHERE job_id IN (SELECT id FROM sd_job  WHERE department_id IN (SELECT id FROM sd_department WHERE workspace_id = ?)))", workspaceId).Find(&users)
@@ -243,9 +256,48 @@ func WorkspaceSelectUseByWorkspaceId(ctx iris.Context) {
 			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 			return
 		}
-		allUser = append(allUser, userModel.GetUserAbstractResList(users)...)
+		for _, user := range users {
+			var department DepartmentModel.SdDepartment
+			var job JobModel.SdJob
+			has, err := global.GVA_DB.SQL("SELECT * FROM sd_department WHERE workspace_id = ? AND id IN ( SELECT department_id FROM sd_job WHERE id IN( SELECT job_id FROM sd_user_job WHERE user_id = ?))", workspaceId, user.Id).Get(&department)
+			if !has || err != nil {
+				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+				return
+			}
+			has, err = global.GVA_DB.SQL("SELECT * FROM sd_job WHERE department_id = ? AND id IN (SELECT job_id FROM sd_user_job WHERE user_id = ?)", department.Id, user.Id).Get(&job)
+			if !has || err != nil {
+				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+				return
+			}
+			result = append(result, struct {
+				Id             int
+				Name           string
+				Age            int
+				Sex            string
+				Info           string
+				Photo          string
+				Mail           string
+				Phone          string
+				DepartmentId   int
+				DepartmentName string
+				JobId          int
+				JobName        string
+			}{
+				Id:             user.Id,
+				Name:           user.Name,
+				Age:            user.Age,
+				Sex:            user.Sex,
+				Info:           user.Info,
+				Photo:          user.Photo,
+				Mail:           user.Mail,
+				Phone:          user.Phone,
+				DepartmentId:   department.Id,
+				DepartmentName: department.Name,
+				JobId:          job.Id,
+				JobName:        job.Name})
+		}
 	}
-	utils.Responser.OkWithDetails(ctx, allUser)
+	utils.Responser.OkWithDetails(ctx, result)
 }
 
 //删除员工
