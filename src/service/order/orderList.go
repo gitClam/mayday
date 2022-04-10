@@ -36,7 +36,7 @@ func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 		processorInfo user.SdUser
 	)
 
-	personSelectValue := "(JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('process_method', 'person')))"
+	personSelectValue := "(JSON_CONTAINS(sd_order.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(sd_order.state, JSON_OBJECT('process_method', 'person')))"
 	//roleSelectValue := "(JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('process_method', 'role')))"
 	//departmentSelectValue := "(JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('process_method', 'department')))"
 
