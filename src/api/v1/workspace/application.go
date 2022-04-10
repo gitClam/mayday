@@ -1,6 +1,7 @@
 package workspace
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"mayday/src/global"
 	"mayday/src/model/common/resultcode"
@@ -337,6 +338,7 @@ func SelectStartWorkflowDetailByWorkspaceId(ctx iris.Context) {
 		for _, SdWorkflowApplication := range SdWorkflowApplications {
 			var SdWorkflow workflow.SdWorkflow
 			e := global.GVA_DB
+			fmt.Println(SdWorkflowApplication)
 			has, err := e.Where("id = ?", SdWorkflowApplication.WorkflowId).And("is_start = 1").Get(&SdWorkflow)
 			if !has || err != nil {
 				utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
