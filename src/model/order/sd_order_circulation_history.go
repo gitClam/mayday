@@ -15,6 +15,7 @@ type SdOrderCirculationHistory struct {
 	Status       int                   `xorm:"INT(11)"`
 	Processor    string                `xorm:"VARCHAR(50)"`
 	ProcessorId  int                   `xorm:"index INT(11)"`
-	CostDuration timedecoder.LocalTime `xorm:"DATETIME"`
+	CostDuration int64                 `xorm:"INT(10)"`
 	Remarks      string                `xorm:"VARCHAR(200)"`
+	CreateTime   timedecoder.LocalTime `xorm:"DATETIME"`
 }

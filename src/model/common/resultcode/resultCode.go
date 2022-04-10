@@ -30,6 +30,7 @@ const (
 	DataCreateFail           int = 1022 //"数据创建失败"
 	DataSelectFail           int = 1023 //"数据不存在或查询失败"
 	DataDeleteFail           int = 1024 //"数据删除失败"
+	OrderIsEnd               int = 1025 //"工单已经结束"
 
 )
 
@@ -61,4 +62,5 @@ var MessageMap = map[int]string{
 	DataCreateFail:           "数据创建失败",
 	DataSelectFail:           "数据不存在或查询失败",
 	DataDeleteFail:           "数据删除失败",
+	OrderIsEnd:               "工单已经结束",
 }

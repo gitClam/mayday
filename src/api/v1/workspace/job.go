@@ -63,7 +63,6 @@ func JobSelectDepartment(ctx iris.Context) {
 	var SdJob []JobModel.SdJob
 	e := global.GVA_DB
 	err := e.In("department_id", departmentIds).Find(&SdJob)
-
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
