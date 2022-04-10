@@ -100,11 +100,11 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		err = json.Unmarshal(workOrderInfo.State, &stateList)
 		if err != nil {
 			err = fmt.Errorf("序列化节点列表失败，%v", err.Error())
-			return
+			return nil, err
 		}
 		if len(stateList) == 0 {
 			err = errors.New("当前工单没有下一节点数据")
-			return
+			return nil, err
 		}
 
 		// 整理需要并行处理的数据
@@ -140,7 +140,7 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 								}
 							} else {
 								err = errors.New("未查询到对应的处理人字段，请确认。")
-								return
+								return nil, err
 							}
 						}
 					}
