@@ -703,12 +703,10 @@ func (h *Handle) HandleWorkOrder(
 		}
 
 		paramsValue.FormData = append(paramsValue.FormData, t["tplValue"])
-		fmt.Println(6)
 		// 是否可写，只有可写的模版可以更新数据
 		updateStatus := false
 		if h.stateValue["clazz"].(string) == "start" {
 			updateStatus = true
-			fmt.Println(7)
 		} else if writeTplList, writeOK := h.stateValue["writeTpls"]; writeOK {
 		tplListTag:
 			for _, writeTplId := range writeTplList.([]interface{}) {
@@ -733,7 +731,6 @@ func (h *Handle) HandleWorkOrder(
 				}
 			}
 		} else {
-			fmt.Println(8)
 			// 不可写
 			updateStatus = false
 		}
