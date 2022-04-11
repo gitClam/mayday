@@ -1,6 +1,7 @@
 package workflowService
 
 import (
+	"encoding/json"
 	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"mayday/src/global"
@@ -111,7 +112,19 @@ func DeleteWorkflowDraft(ctx iris.Context, id []int) {
 
 //获取流程信息
 func GetWorkflowById(ctx iris.Context, id []int) {
-	//TODO 验证权限
+	var result []struct {
+		Id            int
+		Name          string
+		CreateUser    int
+		CreateTime    timedecoder.LocalTime
+		IsStart       int
+		CeilingCount  int
+		IsDeleted     int
+		Structure     json.RawMessage
+		Tables        json.RawMessage
+		Remarks       string
+		applicationId int
+	}
 	var SdWorkflows []WorkflowModel.SdWorkflow
 	e := global.GVA_DB
 	err := e.In("id", id).Find(&SdWorkflows)
@@ -119,7 +132,39 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 		return
 	}
-	utils.Responser.OkWithDetails(ctx, SdWorkflows)
+	for _, SdWorkflow := range SdWorkflows {
+		var sdWorkflowApplication application.SdWorkflowApplication
+		has, err := global.GVA_DB.Where("where workflow_id = ?", SdWorkflow.Id).Get(&sdWorkflowApplication)
+		if !has || err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+			return
+		}
+		result = append(result, struct {
+			Id            int
+			Name          string
+			CreateUser    int
+			CreateTime    timedecoder.LocalTime
+			IsStart       int
+			CeilingCount  int
+			IsDeleted     int
+			Structure     json.RawMessage
+			Tables        json.RawMessage
+			Remarks       string
+			applicationId int
+		}{Id: SdWorkflow.Id,
+			Name:          SdWorkflow.Name,
+			CreateUser:    SdWorkflow.CreateUser,
+			CreateTime:    SdWorkflow.CreateTime,
+			IsStart:       SdWorkflow.IsStart,
+			CeilingCount:  SdWorkflow.CeilingCount,
+			IsDeleted:     SdWorkflow.IsDeleted,
+			Structure:     SdWorkflow.Structure,
+			Tables:        SdWorkflow.Tables,
+			Remarks:       SdWorkflow.Remarks,
+			applicationId: sdWorkflowApplication.ApplicationId,
+		})
+	}
+	utils.Responser.OkWithDetails(ctx, result)
 }
 
 //获取用户的流程草稿
