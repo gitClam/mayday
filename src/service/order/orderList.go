@@ -47,7 +47,6 @@ func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 		//workOrderInfoList []workOrderInfo
 		processorInfo user.SdUser
 	)
-
 	personSelectValue := "(JSON_CONTAINS(sd_order.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(sd_order.state, JSON_OBJECT('process_method', 'person')))"
 	//roleSelectValue := "(JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('process_method', 'role')))"
 	//departmentSelectValue := "(JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('processor', %v)) and JSON_CONTAINS(p_work_order_info.state, JSON_OBJECT('process_method', 'department')))"
@@ -151,6 +150,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 	)
 
 	result, err = w.PureWorkOrderList()
+
 	if err != nil {
 		return nil, err
 	}
@@ -171,11 +171,13 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 			if w.Classify == 1 {
 				structResult, err = MakeProcessStructure(w.Context, v.WorkflowId, v.Id)
 				if err != nil {
+					fmt.Println(112)
 					return
 				}
 
 				authStatus, err = JudgeUserAuthority(w.Context, v.Id, structResult["workOrder"].(order.SdOrder).CurrentState)
 				if err != nil {
+					fmt.Println(322)
 					return
 				}
 				if !authStatus {
