@@ -198,26 +198,26 @@ func UnityWorkOrder(c iris.Context) {
 	tx := global.GVA_DB.NewSession()
 	err = tx.Begin()
 	if err != nil {
-		utils.Responser.Fail(c, resultcode.DataReceiveFail)
+		utils.Responser.Fail(c, resultcode.DataReceiveFail, err)
 		return
 	}
 
 	// 查询工单信息
-	err = tx.Where("id = ?", workOrderId).Find(&workOrderInfo)
-	if err != nil {
-		utils.Responser.Fail(c, resultcode.DataSelectFail)
+	has, err := tx.Where("id = ?", workOrderId).Get(&workOrderInfo)
+	if !has || err != nil {
+		utils.Responser.Fail(c, resultcode.DataSelectFail, err)
 		return
 	}
 	if workOrderInfo.IsEnd == 1 {
-		utils.Responser.Fail(c, resultcode.OrderIsEnd)
+		utils.Responser.Fail(c, resultcode.OrderIsEnd, err)
 		return
 	}
 
 	// 更新工单状态
-	effect, err := tx.Where("id = ?", workOrderId).Update("is_end", 1)
+	effect, err := tx.Where("id = ?", workOrderId).Update(map[string]interface{}{"is_end": 1})
 	if effect <= 0 || err != nil {
 		tx.Rollback()
-		utils.Responser.Fail(c, resultcode.DataUpdateFail)
+		utils.Responser.Fail(c, resultcode.DataUpdateFail, err)
 		return
 	}
 
@@ -225,7 +225,7 @@ func UnityWorkOrder(c iris.Context) {
 	err = tx.Where("id = ?", c.Values().Get("user").(user.SdUser).Id).Find(&userInfo)
 	if err != nil {
 		tx.Rollback()
-		utils.Responser.Fail(c, resultcode.DataSelectFail)
+		utils.Responser.Fail(c, resultcode.DataSelectFail, err)
 		return
 	}
 
@@ -241,6 +241,7 @@ func UnityWorkOrder(c iris.Context) {
 		Status:      2,
 	})
 	if effect <= 0 || err != nil {
+		utils.Responser.Fail(c, resultcode.DataDeleteFail, err)
 		return
 	}
 
