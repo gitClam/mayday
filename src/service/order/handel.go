@@ -401,7 +401,7 @@ func (h *Handle) HandleWorkOrder(
 	h.workOrderId = workOrderId
 	h.flowProperties = flowProperties
 	h.endHistory = true
-
+	fmt.Println(1)
 	var (
 		//execTasks          []string
 		relatedPersonList  []int
@@ -441,6 +441,7 @@ func (h *Handle) HandleWorkOrder(
 			return
 		}
 	}()
+	fmt.Println(2)
 	// 获取工单信息
 	has, err := global.GVA_DB.Where("id = ?", workOrderId).Get(&h.workOrderDetails)
 	if !has || err != nil {
@@ -473,7 +474,7 @@ func (h *Handle) HandleWorkOrder(
 	if err != nil {
 		return
 	}
-
+	fmt.Println(3)
 	// 获取工单数据
 	//var orderTable order.SdOrderTable
 	//err = global.GVA_DB.Where("order_history_id = ?", workOrderId).Find(&orderTable)
@@ -521,7 +522,7 @@ func (h *Handle) HandleWorkOrder(
 		"label": h.targetStateValue["label"].(string),
 		"id":    h.targetStateValue["id"].(string),
 	}
-
+	fmt.Println(4)
 	sourceEdges, err = h.processState.GetEdge(h.targetStateValue["id"].(string), "source")
 	if err != nil {
 		return
@@ -592,7 +593,7 @@ func (h *Handle) HandleWorkOrder(
 			err = errors.New("并行网关流程不正确")
 			return
 		}
-
+		fmt.Println(5)
 		if len(sourceEdges) > 1 && len(targetEdges) == 1 {
 			// 入口
 			h.updateValue["state"] = make([]map[string]interface{}, 0)
@@ -701,7 +702,7 @@ func (h *Handle) HandleWorkOrder(
 			h.tx.Rollback()
 			return
 		}
-
+		fmt.Println(6)
 		paramsValue.FormData = append(paramsValue.FormData, t["tplValue"])
 		// 是否可写，只有可写的模版可以更新数据
 		updateStatus := false
@@ -782,7 +783,7 @@ func (h *Handle) HandleWorkOrder(
 		h.tx.Rollback()
 		return
 	}
-
+	fmt.Println(8)
 	//获取流程通知类型列表
 	//err = json.Unmarshal(processInfo.Notice, &noticeList)
 	//if err != nil {
