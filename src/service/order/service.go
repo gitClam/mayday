@@ -96,7 +96,7 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 			err = fmt.Errorf("json转map失败，%v", err.Error())
 			return
 		}
-		err = global.GVA_DB.Where("id in (?)", tplIdList).Find(&tplDetails)
+		err = global.GVA_DB.In("id", tplIdList).Find(&tplDetails)
 		if err != nil {
 			err = fmt.Errorf("查询模版失败，%v", err.Error())
 			return
