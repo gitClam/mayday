@@ -27,10 +27,9 @@ func ProcessStructure(ctx iris.Context) {
 	}
 	workOrderId := ctx.FormValue("OrderId")
 	if workOrderId == "" {
-		utils.Responser.Fail(ctx, resultcode.DataReceiveFail)
+		workOrderId = "0"
 		return
 	}
-	workOrderId = "0"
 	workOrderIdInt, _ := strconv.Atoi(workOrderId)
 	processIdInt, _ := strconv.Atoi(processId)
 	result, err := order2.MakeProcessStructure(ctx, processIdInt, workOrderIdInt)
