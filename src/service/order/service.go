@@ -95,7 +95,6 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 			global.GVA_LOG.Error("json转byte失败，%v", zap.Error(err))
 			return
 		}
-		fmt.Println(byteData)
 		err = json.Unmarshal(byteData, &tplIdList)
 		if err != nil {
 			err = fmt.Errorf("json转map失败，%v", err.Error())

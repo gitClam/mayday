@@ -264,7 +264,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 		}
 		//数据库存储对象 对应数据库表 p_work_order_tpl_data
 		formData := order.SdOrderTable{
-			//OrderId:     OrderInfo.Id,
+			OrderId:       OrderInfo.Id,
 			FormStructure: formStructureJson,
 			FormData:      formDataJson,
 		}

@@ -10,4 +10,5 @@ type SdOrderTable struct {
 	OrderHistoryId int             `xorm:"index INT(11)"`
 	FormStructure  json.RawMessage `xorm:"JSON"`
 	FormData       json.RawMessage `xorm:"JSON"`
+	OrderId        int             `xorm:"index INT(10)"`
 }
