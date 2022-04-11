@@ -23,14 +23,19 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		processValue            workflow.SdWorkflow
 		processStructureDetails map[string]interface{}
 		processNode             []map[string]interface{}
-		tplDetails              []*workflow.SdTable
+		tplDetails              []workflow.SdTable
 		workOrderInfo           order.SdOrder
-		workOrderTpls           []*order.SdOrderTable
-		workOrderHistory        []*order.SdOrderCirculationHistory
+		workOrderTpls           []order.SdOrderTable
+		workOrderHistory        []order.SdOrderCirculationHistory
 		stateList               []map[string]interface{}
 	)
 
-	err = global.GVA_DB.Id(processId).Find(&processValue)
+	has, err1 := global.GVA_DB.Id(processId).Get(&processValue)
+	if !has || err != nil {
+		err = err1
+		global.GVA_LOG.Error("数据库查询失败", zap.Error(err))
+		return
+	}
 	fmt.Println("workflow.SdWorkflow")
 	fmt.Println(processValue)
 	if processValue.Structure != nil && len(processValue.Structure) > 0 {
@@ -77,7 +82,7 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 	}
 
 	// 获取历史记录
-	err = global.GVA_DB.Where("order_id = ?", workOrderId).OrderBy("id desc").Find(&workOrderHistory)
+	err = global.GVA_DB.Where("order_id = ?", workOrderId).Desc("id").Find(&workOrderHistory)
 	fmt.Println("orderHistory")
 	fmt.Println(workOrderHistory)
 	if err != nil {
