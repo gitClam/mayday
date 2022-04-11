@@ -47,7 +47,7 @@ func ProcessStructure(ctx iris.Context) {
 		}
 		result["userAuthority"] = userAuthority
 	}
-
+	fmt.Println("123")
 	utils.Responser.OkWithDetails(ctx, result)
 }
 
