@@ -441,7 +441,6 @@ func (h *Handle) HandleWorkOrder(
 			return
 		}
 	}()
-	fmt.Println(1)
 	// 获取工单信息
 	has, err := global.GVA_DB.Where("id = ?", workOrderId).Get(&h.workOrderDetails)
 	if !has || err != nil {
@@ -463,7 +462,6 @@ func (h *Handle) HandleWorkOrder(
 	if err != nil {
 		return
 	}
-	fmt.Println(2)
 	// 获取当前节点
 	h.stateValue, err = h.processState.GetNode(sourceState)
 	if err != nil {
@@ -513,7 +511,6 @@ func (h *Handle) HandleWorkOrder(
 	h.updateValue = map[string]interface{}{
 		"related_person": relatedPersonValue,
 	}
-	fmt.Println(3)
 	// 开启事务
 	h.tx = global.GVA_DB.NewSession()
 	err = h.tx.Begin()
@@ -529,7 +526,6 @@ func (h *Handle) HandleWorkOrder(
 	if err != nil {
 		return
 	}
-	fmt.Println(4)
 	switch h.targetStateValue["clazz"] {
 	case "exclusiveGateway": // 排他网关
 	breakTag:
@@ -695,7 +691,6 @@ func (h *Handle) HandleWorkOrder(
 			return
 		}
 	}
-	fmt.Println(5)
 	// 更新表单数据
 	for _, t := range tpls {
 		var (
@@ -713,6 +708,7 @@ func (h *Handle) HandleWorkOrder(
 		updateStatus := false
 		if h.stateValue["clazz"].(string) == "start" {
 			updateStatus = true
+			fmt.Println(7)
 		} else if writeTplList, writeOK := h.stateValue["writeTpls"]; writeOK {
 		tplListTag:
 			for _, writeTplId := range writeTplList.([]interface{}) {
@@ -737,6 +733,7 @@ func (h *Handle) HandleWorkOrder(
 				}
 			}
 		} else {
+			fmt.Println(8)
 			// 不可写
 			updateStatus = false
 		}
