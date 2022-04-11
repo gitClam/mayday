@@ -2,6 +2,7 @@ package order
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"mayday/src/global"
@@ -89,7 +90,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	if !has || err != nil {
 		tx.Rollback()
 		global.GVA_LOG.Warn("获取流程信息失败", zap.Error(err))
-		return err
+		return fmt.Errorf("获取流程信息失败%v", err)
 	}
 	//取出流程结构
 	err = json.Unmarshal(workflowValue.Structure, &processState.Structure)
