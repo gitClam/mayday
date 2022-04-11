@@ -31,7 +31,8 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 	)
 
 	err = global.GVA_DB.Id(processId).Find(&processValue)
-
+	fmt.Println("workflow.SdWorkflow")
+	fmt.Println(processValue)
 	if processValue.Structure != nil && len(processValue.Structure) > 0 {
 		byteData, err1 := processValue.Structure.MarshalJSON()
 		if err1 != nil {
@@ -77,6 +78,8 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 
 	// 获取历史记录
 	err = global.GVA_DB.Where("order_id = ?", workOrderId).OrderBy("id desc").Find(&workOrderHistory)
+	fmt.Println("orderHistory")
+	fmt.Println(workOrderHistory)
 	if err != nil {
 		return
 	}
