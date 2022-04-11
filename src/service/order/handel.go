@@ -443,21 +443,21 @@ func (h *Handle) HandleWorkOrder(
 	}()
 
 	// 获取工单信息
-	err = global.GVA_DB.Where("id = ?", workOrderId).Find(&h.workOrderDetails)
-	if err != nil {
-		return
+	has, err := global.GVA_DB.Where("id = ?", workOrderId).Get(&h.workOrderDetails)
+	if !has || err != nil {
+		return fmt.Errorf("获取工单信息失败%v", err)
 	}
 
 	// 查询工单创建人信息
-	err = global.GVA_DB.Where("id = ?", h.workOrderDetails.UserId).Find(&applyUserInfo)
-	if err != nil {
-		return
+	has, err = global.GVA_DB.Where("id = ?", h.workOrderDetails.UserId).Get(&applyUserInfo)
+	if !has || err != nil {
+		return fmt.Errorf("查询工单创建人信息%v", err)
 	}
 
 	// 获取流程信息
-	err = global.GVA_DB.Where("id = ?", h.workOrderDetails.WorkflowId).Find(&processInfo)
+	has, err = global.GVA_DB.Where("id = ?", h.workOrderDetails.WorkflowId).Get(&processInfo)
 	if err != nil {
-		return
+		return fmt.Errorf("获取流程信息%v", err)
 	}
 	err = json.Unmarshal(processInfo.Structure, &h.processState.Structure)
 	if err != nil {
@@ -764,9 +764,9 @@ func (h *Handle) HandleWorkOrder(
 	}
 
 	// 获取当前用户信息
-	err = global.GVA_DB.Id(c.Values().Get("user").(userModel.SdUser).Id).Find(&currentUserInfo)
+	has, err = global.GVA_DB.Id(c.Values().Get("user").(userModel.SdUser).Id).Get(&currentUserInfo)
 	if err != nil {
-		return
+		return fmt.Errorf("获取当前用户信息失败%v", err)
 	}
 
 	cirHistoryData = order.SdOrderCirculationHistory{
