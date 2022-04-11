@@ -323,7 +323,7 @@ func InversionWorkOrder(c iris.Context) {
 	// 更新数据
 	_, err = tx.Table(new(order.SdOrder)).
 		Where("id = ?", params.WorkOrderId).
-		Update("state", stateValue)
+		Update(map[string]interface{}{"state": stateValue})
 	if err != nil {
 		utils.Responser.Fail(c, resultcode.DataUpdateFail, err)
 		return
