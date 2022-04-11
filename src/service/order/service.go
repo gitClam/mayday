@@ -29,14 +29,14 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		workOrderHistory        []order.SdOrderCirculationHistory
 		stateList               []map[string]interface{}
 	)
-	fmt.Println(1)
+
 	has, err1 := global.GVA_DB.Id(processId).Get(&processValue)
 	if !has || err != nil {
 		err = err1
 		global.GVA_LOG.Error("数据库查询失败", zap.Error(err))
 		return
 	}
-	fmt.Println(2)
+
 	if processValue.Structure != nil && len(processValue.Structure) > 0 {
 		byteData, err1 := processValue.Structure.MarshalJSON()
 		if err1 != nil {
@@ -49,7 +49,7 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 			global.GVA_LOG.Error("json转map失败，%v", zap.Error(err))
 			return
 		}
-		fmt.Println(3)
+
 		// 排序，使用冒泡
 		p := processStructureDetails["nodes"].([]interface{})
 		if len(p) > 1 {
@@ -72,21 +72,21 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 			processNode = processStructureDetails["nodes"].([]map[string]interface{})
 		}
 	}
-	fmt.Println(4)
+
 	processValue.Structure = nil
 	result = map[string]interface{}{
 		"process": processValue,
 		"nodes":   processNode,
 		"edges":   processStructureDetails["edges"],
 	}
-	fmt.Println(5)
+
 	// 获取历史记录
 	err = global.GVA_DB.Where("order_id = ?", workOrderId).Desc("id").Find(&workOrderHistory)
 	if err != nil {
 		return
 	}
 	result["circulationHistory"] = workOrderHistory
-	fmt.Println(6)
+
 	if workOrderId == 0 {
 		// 查询流程模版
 		var tplIdList []string
@@ -108,7 +108,6 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		}
 		result["tpls"] = tplDetails
 	} else {
-		fmt.Println(7)
 		// 查询工单信息
 		has, err := global.GVA_DB.Where("id = ?", workOrderId).Get(&workOrderInfo)
 		if !has || err != nil {
@@ -164,19 +163,20 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 					}
 				}
 			}
-			fmt.Println(8)
 			if workOrderInfo.CurrentState == "" {
 				workOrderInfo.CurrentState = stateList[0]["id"].(string)
 			}
 		}
 
 		result["workOrder"] = workOrderInfo
-
+		fmt.Println(9)
 		// 查询工单表单数据
 		err = global.GVA_DB.Where("order_history_id = ?", workOrderId).Find(&workOrderTpls)
 		if err != nil {
+			fmt.Println(10)
 			return nil, err
 		}
+		fmt.Println(11)
 		result["tpls"] = workOrderTpls
 	}
 	return result, nil
