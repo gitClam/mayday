@@ -134,8 +134,8 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 	}
 	for _, SdWorkflow := range SdWorkflows {
 		var sdWorkflowApplication application.SdWorkflowApplication
-		has, err := global.GVA_DB.Where("where workflow_id = ?", SdWorkflow.Id).Get(&sdWorkflowApplication)
-		if !has || err != nil {
+		_, err := global.GVA_DB.Where("where workflow_id = ?", SdWorkflow.Id).Get(&sdWorkflowApplication)
+		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
 			return
 		}
