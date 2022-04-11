@@ -5,6 +5,7 @@ import (
 )
 
 type WorkflowReq struct {
+	Id            int
 	ApplicationId int             `validate:"required" example:"12"`
 	Name          string          `validate:"required" example:"请假流程"`
 	IsStart       int             `example:"0" enums:"0,1" default:"0"`
@@ -30,7 +31,7 @@ func (req *WorkflowDraftReq) GetSdWorkflowDraft() (sd SdWorkflowDraft) {
 	return
 }
 func (req *WorkflowReq) GetSdWorkflow() (sd SdWorkflow) {
-
+	sd.Id = req.Id
 	sd.Name = req.Name
 	sd.IsStart = req.IsStart
 	sd.Structure = req.Structure
