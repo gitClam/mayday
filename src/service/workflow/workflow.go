@@ -123,7 +123,7 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 		Structure     json.RawMessage
 		Tables        json.RawMessage
 		Remarks       string
-		applicationId int
+		ApplicationId int
 	}
 	var SdWorkflows []WorkflowModel.SdWorkflow
 	e := global.GVA_DB
@@ -150,7 +150,7 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 			Structure     json.RawMessage
 			Tables        json.RawMessage
 			Remarks       string
-			applicationId int
+			ApplicationId int
 		}{Id: SdWorkflow.Id,
 			Name:          SdWorkflow.Name,
 			CreateUser:    SdWorkflow.CreateUser,
@@ -161,7 +161,7 @@ func GetWorkflowById(ctx iris.Context, id []int) {
 			Structure:     SdWorkflow.Structure,
 			Tables:        SdWorkflow.Tables,
 			Remarks:       SdWorkflow.Remarks,
-			applicationId: sdWorkflowApplication.ApplicationId,
+			ApplicationId: sdWorkflowApplication.ApplicationId,
 		})
 	}
 	utils.Responser.OkWithDetails(ctx, result)
