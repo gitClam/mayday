@@ -737,12 +737,18 @@ func (h *Handle) HandleWorkOrder(
 		}
 		if updateStatus {
 			var effect int64
+			var sdOrderTable order.SdOrderTable
+			has, err = h.tx.ID(t["tplDataId"]).Get(&sdOrderTable)
+			if !has || err != nil {
+				return err
+			}
 			var formData json.RawMessage
 			err = json.Unmarshal(tplValue, &formData)
 			if err != nil {
 				return err
 			}
-			effect, err = h.tx.Table(new(order.SdOrderTable)).Where("id = ?", t["tplDataId"]).Update(map[string]interface{}{"form_data": tplValue})
+			sdOrderTable.FormData = formData
+			effect, err = h.tx.Where("id = ?", t["tplDataId"]).Update(sdOrderTable)
 			if effect <= 0 || err != nil {
 				h.tx.Rollback()
 				return
