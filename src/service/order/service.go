@@ -36,8 +36,6 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		global.GVA_LOG.Error("数据库查询失败", zap.Error(err))
 		return
 	}
-	fmt.Println("workflow.SdWorkflow")
-	fmt.Println(processValue)
 	if processValue.Structure != nil && len(processValue.Structure) > 0 {
 		byteData, err1 := processValue.Structure.MarshalJSON()
 		if err1 != nil {
@@ -83,8 +81,6 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 
 	// 获取历史记录
 	err = global.GVA_DB.Where("order_id = ?", workOrderId).Desc("id").Find(&workOrderHistory)
-	fmt.Println("orderHistory")
-	fmt.Println(workOrderHistory)
 	if err != nil {
 		return
 	}
@@ -92,13 +88,14 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 
 	if workOrderId == 0 {
 		// 查询流程模版
-		var tplIdList []int
+		var tplIdList []string
 		byteData, err1 := processValue.Tables.MarshalJSON()
 		if err1 != nil {
 			err = err1
 			global.GVA_LOG.Error("json转byte失败，%v", zap.Error(err))
 			return
 		}
+		fmt.Println(byteData)
 		err = json.Unmarshal(byteData, &tplIdList)
 		if err != nil {
 			err = fmt.Errorf("json转map失败，%v", err.Error())
