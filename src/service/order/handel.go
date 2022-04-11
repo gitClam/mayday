@@ -737,7 +737,12 @@ func (h *Handle) HandleWorkOrder(
 		}
 		if updateStatus {
 			var effect int64
-			effect, err = h.tx.Table(new(order.SdOrderTable)).Where("id = ?", t["tplDataId"]).Update("form_data", tplValue)
+			var formData json.RawMessage
+			err = json.Unmarshal(tplValue, &formData)
+			if err != nil {
+				return err
+			}
+			effect, err = h.tx.Table(new(order.SdOrderTable)).Where("id = ?", t["tplDataId"]).Update("form_data", formData)
 			if effect <= 0 || err != nil {
 				h.tx.Rollback()
 				return
