@@ -146,6 +146,7 @@ func ProcessWorkOrder(ctx iris.Context) {
 
 	err = ctx.ReadForm(&params)
 	if err != nil {
+		fmt.Println(err)
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
 		return
 	}
