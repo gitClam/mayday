@@ -240,8 +240,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	effect, err := tx.Insert(&OrderInfo)
 	if effect <= 0 || err != nil {
 		tx.Rollback()
-		global.GVA_LOG.Warn("插入订单数据失败", zap.Error(err))
-		return err
+		return fmt.Errorf("插入订单数据失败%v", err)
 	}
 
 	//创建工单模版关联数据
@@ -274,8 +273,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 		if effect <= 0 || err1 != nil {
 			err = err1
 			tx.Rollback()
-			global.GVA_LOG.Warn("创建工单模版关联数据失败", zap.Error(err))
-			return
+			return fmt.Errorf("创建工单模版关联数据失败%v", err)
 		}
 	}
 
@@ -283,8 +281,7 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	if !has || err1 != nil || userInfo.IsDeleted == 1 {
 		tx.Rollback()
 		err = err1
-		global.GVA_LOG.Warn("数据库查询错误或用户名不存在", zap.Error(err))
-		return
+		return fmt.Errorf("数据库查询错误或用户名不存在%v", err)
 	}
 
 	//当前用户昵称信息
@@ -313,19 +310,17 @@ func CreateOrderService(ctx iris.Context, user *user.SdUser) (err error) {
 	}); affect <= 0 || err1 != nil {
 		tx.Rollback()
 		err = err1
-		global.GVA_LOG.Warn("新建历史数据错误", zap.Error(err))
-		return
+		return fmt.Errorf("新建历史数据错误%v", err)
 	}
 
 	// 更新流程提交数量统计
 	if affect, err1 := tx.
 		Table(new(workflow.SdWorkflow)).
-		Id(workOrderValue.WorkflowId).
+		ID(workOrderValue.WorkflowId).
 		Update(map[string]interface{}{"ceiling_count": workflowValue.CeilingCount + 1}); affect <= 0 || err1 != nil {
 		tx.Rollback()
 		err = err1
-		global.GVA_LOG.Warn("更新流程统计数据失败", zap.Error(err))
-		return
+		return fmt.Errorf("更新流程统计数据失败%v", err)
 	}
 	//数据库保存
 	tx.Commit()
