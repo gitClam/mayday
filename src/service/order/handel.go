@@ -742,7 +742,7 @@ func (h *Handle) HandleWorkOrder(
 			if err != nil {
 				return err
 			}
-			effect, err = h.tx.Table(new(order.SdOrderTable)).Where("id = ?", t["tplDataId"]).Update(map[string]interface{}{"form_data": formData})
+			effect, err = h.tx.Table(new(order.SdOrderTable)).Where("id = ?", t["tplDataId"]).Update(map[string]interface{}{"form_data": tplValue})
 			if effect <= 0 || err != nil {
 				h.tx.Rollback()
 				return
