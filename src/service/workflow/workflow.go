@@ -73,6 +73,11 @@ func CreateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 func DeleteWorkflow(ctx iris.Context, id []int) {
 	//TODO 验证权限
 	e := global.GVA_DB
+	_, err := global.GVA_DB.In("workflow_id", id).Delete(new(application.SdWorkflowApplication))
+	if err != nil {
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
+		return
+	}
 	affected, err := e.In("id", id).Delete(new(WorkflowModel.SdWorkflow))
 	if affected <= 0 || err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
