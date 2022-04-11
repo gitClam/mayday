@@ -33,7 +33,12 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 	err = global.GVA_DB.Id(processId).Find(&processValue)
 
 	if processValue.Structure != nil && len(processValue.Structure) > 0 {
-		err = json.Unmarshal([]byte(processValue.Structure), &processStructureDetails)
+		byteData, err := processValue.Structure.MarshalJSON()
+		if err != nil {
+			global.GVA_LOG.Error("json转byte失败，%v", zap.Error(err))
+			return
+		}
+		err = json.Unmarshal(byteData, &processStructureDetails)
 		if err != nil {
 			global.GVA_LOG.Error("json转map失败，%v", zap.Error(err))
 			return
