@@ -32,6 +32,19 @@ func GetTableById(ctx iris.Context) {
 	workflowSever.GetTableById(ctx, tableId)
 }
 
+func GetTableByWorkspaceId(ctx iris.Context) {
+	var workspaceIds []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
+			return
+		}
+		workspaceIds = append(workspaceIds, num)
+	}
+	workflowSever.GetTableByWorkspaceId(ctx, workspaceIds)
+}
+
 // @Tags Table
 // @Summary 获取当前用户的表单草稿列表
 // @Security ApiKeyAuth

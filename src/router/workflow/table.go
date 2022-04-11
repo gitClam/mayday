@@ -11,9 +11,10 @@ func InitTableRouter(Router router.Party) {
 	{
 		get := table.Party("/get")
 		{
-			get.Get("/table", workflowApi.GetTableById)                   //查询表单
-			get.Get("/table-draft/user", workflowApi.GetTableDraftByUser) //查询用户拥有的表单草稿
-			get.Get("/table-draft/id", workflowApi.GetTableDraftById)     //查询表单草稿
+			get.Get("/table", workflowApi.GetTableById)                    //查询表单
+			get.Get("/table-draft/user", workflowApi.GetTableDraftByUser)  //查询用户拥有的表单草稿
+			get.Get("/table-draft/id", workflowApi.GetTableDraftById)      //查询表单草稿
+			get.Get("/table/workspace", workflowApi.GetTableByWorkspaceId) //查询表单
 		}
 		create := table.Party("/create")
 		{

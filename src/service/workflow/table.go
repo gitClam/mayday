@@ -92,6 +92,19 @@ func GetTableById(ctx iris.Context, id []int) {
 	utils.Responser.OkWithDetails(ctx, sdTables)
 }
 
+//获取表单信息
+func GetTableByWorkspaceId(ctx iris.Context, id []int) {
+	//TODO 验证权限
+	var sdTables []WorkflowModel.SdTable
+	e := global.GVA_DB
+	err := e.In("workspace_id", id).Find(&sdTables)
+	if err != nil {
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+		return
+	}
+	utils.Responser.OkWithDetails(ctx, sdTables)
+}
+
 //获取用户的表单草稿信息
 func GetTableDraftByUser(ctx iris.Context) {
 	user := ctx.Values().Get("user").(UserModel.SdUser)
