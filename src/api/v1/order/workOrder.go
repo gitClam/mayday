@@ -121,8 +121,8 @@ func WorkOrderListLength(ctx iris.Context) {
 	}
 
 	utils.Responser.OkWithDetails(ctx, struct {
-		length int
-	}{length: len})
+		Length int
+	}{Length: len})
 }
 
 // 处理工单
