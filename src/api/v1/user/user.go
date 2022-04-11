@@ -2,10 +2,13 @@ package user_api
 
 import (
 	"github.com/kataras/iris/v12"
+	"mayday/src/global"
 	"mayday/src/model/common/resultcode"
 	userModel "mayday/src/model/user"
 	userSever "mayday/src/service/user"
 	"mayday/src/utils"
+	"strconv"
+	"strings"
 )
 
 // @Tags User
@@ -116,4 +119,24 @@ func SetUserMessage(ctx iris.Context) {
 		return
 	}
 	userSever.SetUserMessage(ctx, userReq)
+}
+
+func GetUserMessageById(ctx iris.Context) {
+
+	var userIds []int
+	for _, id := range strings.Split(ctx.URLParam("id"), ",") {
+		num, err := strconv.Atoi(id)
+		if err != nil {
+			utils.Responser.Fail(ctx, resultcode.DataReceiveFail, err)
+			return
+		}
+		userIds = append(userIds, num)
+	}
+	var sdUser []userModel.SdUser
+	err := global.GVA_DB.In("id", userIds).Find(&sdUser)
+	if err != nil {
+		utils.Responser.Fail(ctx, resultcode.DataSelectFail, err)
+		return
+	}
+	utils.Responser.OkWithDetails(ctx, userModel.GetUserAbstractResList(sdUser))
 }
