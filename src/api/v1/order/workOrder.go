@@ -81,13 +81,48 @@ func WorkOrderList(ctx iris.Context) {
 		Classify: classifyInt,
 		Context:  ctx,
 	}
-	result, err = w.WorkOrderList()
+	result, _, err = w.WorkOrderList()
 	if err != nil {
 		global.GVA_LOG.Warn("查询工单数据失败，%v", zap.Error(err))
 		return
 	}
 
 	utils.Responser.OkWithDetails(ctx, result)
+}
+
+func WorkOrderListLength(ctx iris.Context) {
+	/*
+		1. 待办工单
+		2. 我创建的
+		3. 我相关的
+		4. 所有工单
+	*/
+
+	var (
+		//result      interface{}
+		err         error
+		classifyInt int
+	)
+	classify := ctx.FormValue("Classify")
+	if classify == "" {
+		utils.Responser.Fail(ctx, resultcode.DataReceiveFail)
+		return
+	}
+
+	classifyInt, _ = strconv.Atoi(classify)
+	w := order2.WorkOrder{
+		Classify: classifyInt,
+		Context:  ctx,
+	}
+	_, len, err := w.WorkOrderList()
+	if err != nil {
+		global.GVA_LOG.Warn("查询工单数据失败，%v", zap.Error(err))
+		return
+	}
+
+	utils.Responser.OkWithDetails(ctx, struct {
+		length int
+	}{length: len})
 }
 
 // 处理工单

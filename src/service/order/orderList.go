@@ -140,7 +140,7 @@ func (w *WorkOrder) PureWorkOrderList() (result interface{}, err error) {
 	return
 }
 
-func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
+func (w *WorkOrder) WorkOrderList() (result interface{}, length int, err error) {
 
 	var (
 		principals        string
@@ -152,7 +152,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 	result, err = w.PureWorkOrderList()
 
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	for i, v := range result.([]order.SdOrder) {
@@ -246,9 +246,8 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 			State:         workOrderDetails[i].State,
 			CurrentState:  workOrderDetails[i].CurrentState,
 			IsDeleted:     workOrderDetails[i].IsDeleted,
-
-			Principals: principals,
-			StateName:  stateName,
+			Principals:    principals,
+			StateName:     stateName,
 		}
 
 		//workOrderDetails[i].DataClassify = v.Classify
@@ -259,8 +258,8 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 
 	//result.(*pagination.Paginator).Data = &workOrderInfoList
 	//result.(*pagination.Paginator).TotalCount -= minusTotal
-
-	return workOrderInfoList, nil
+	length = len(workOrderInfoList)
+	return workOrderInfoList, length, nil
 }
 
 //func Paging(p *Param, result interface{}, args ...interface{}) (*Paginator, error) {
