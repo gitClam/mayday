@@ -39,7 +39,7 @@ func ProcessStructure(ctx iris.Context) {
 	}
 
 	if workOrderIdInt != 0 {
-		currentState := result["workOrder"].(order2.WorkOrderData).CurrentState
+		currentState := result["workOrder"].(order.SdOrder).CurrentState
 		userAuthority, err := order2.JudgeUserAuthority(ctx, workOrderIdInt, currentState)
 		if err != nil {
 			utils.Responser.Fail(ctx, resultcode.PermissionsLess, err)
