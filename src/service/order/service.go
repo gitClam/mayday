@@ -82,6 +82,7 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 	// 获取历史记录
 	err = global.GVA_DB.Where("order_id = ?", workOrderId).Desc("id").Find(&workOrderHistory)
 	if err != nil {
+		fmt.Println(556)
 		return
 	}
 	result["circulationHistory"] = workOrderHistory

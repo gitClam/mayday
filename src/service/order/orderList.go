@@ -171,13 +171,11 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 			if w.Classify == 1 {
 				structResult, err = MakeProcessStructure(w.Context, v.WorkflowId, v.Id)
 				if err != nil {
-					fmt.Println(112)
 					return
 				}
 
 				authStatus, err = JudgeUserAuthority(w.Context, v.Id, structResult["workOrder"].(order.SdOrder).CurrentState)
 				if err != nil {
-					fmt.Println(322)
 					return
 				}
 				if !authStatus {
