@@ -28,6 +28,7 @@ type workOrderInfo struct {
 	IsEnd         int
 	State         json.RawMessage
 	IsDeleted     int
+	CurrentState  string
 	Principals    string `json:"principals"`
 	StateName     string `json:"state_name"`
 	DataClassify  int    `json:"data_classify"`
@@ -226,6 +227,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 			IsEnd         int
 			State         json.RawMessage
 			IsDeleted     int
+			CurrentState  string
 			Principals    string `json:"principals"`
 			StateName     string `json:"state_name"`
 			DataClassify  int    `json:"data_classify"`
@@ -242,6 +244,7 @@ func (w *WorkOrder) WorkOrderList() (result interface{}, err error) {
 			IsDenied:      workOrderDetails[i].IsDenied,
 			IsEnd:         workOrderDetails[i].IsEnd,
 			State:         workOrderDetails[i].State,
+			CurrentState:  workOrderDetails[i].CurrentState,
 			IsDeleted:     workOrderDetails[i].IsDeleted,
 
 			Principals: principals,

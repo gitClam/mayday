@@ -34,9 +34,6 @@ func ProcessStructure(ctx iris.Context) {
 	workOrderIdInt, _ := strconv.Atoi(workOrderId)
 	processIdInt, _ := strconv.Atoi(processId)
 	result, err := order2.MakeProcessStructure(ctx, processIdInt, workOrderIdInt)
-	fmt.Println(1)
-	fmt.Println(result)
-	fmt.Println(1)
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.Fail, err)
 		return
