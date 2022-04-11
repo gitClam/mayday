@@ -169,14 +169,11 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 		}
 
 		result["workOrder"] = workOrderInfo
-		fmt.Println(9)
 		// 查询工单表单数据
-		err = global.GVA_DB.Where("order_history_id = ?", workOrderId).Find(&workOrderTpls)
+		err = global.GVA_DB.Where("order_id = ?", workOrderId).Find(&workOrderTpls)
 		if err != nil {
-			fmt.Println(10)
 			return nil, err
 		}
-		fmt.Println(11)
 		result["tpls"] = workOrderTpls
 	}
 	return result, nil
