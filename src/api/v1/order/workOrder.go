@@ -25,11 +25,13 @@ func ProcessStructure(ctx iris.Context) {
 		utils.Responser.Fail(ctx, resultcode.DataReceiveFail)
 		return
 	}
+	fmt.Println("123")
 	workOrderId := ctx.FormValue("OrderId")
 	if workOrderId == "" {
 		workOrderId = "0"
 		return
 	}
+	fmt.Println("123")
 	workOrderIdInt, _ := strconv.Atoi(workOrderId)
 	processIdInt, _ := strconv.Atoi(processId)
 	result, err := order2.MakeProcessStructure(ctx, processIdInt, workOrderIdInt)
@@ -37,7 +39,7 @@ func ProcessStructure(ctx iris.Context) {
 		utils.Responser.Fail(ctx, resultcode.Fail, err)
 		return
 	}
-
+	fmt.Println("123")
 	if workOrderIdInt != 0 {
 		currentState := result["workOrder"].(order.SdOrder).CurrentState
 		userAuthority, err := order2.JudgeUserAuthority(ctx, workOrderIdInt, currentState)
