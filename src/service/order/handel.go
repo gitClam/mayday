@@ -198,7 +198,10 @@ func (h *Handle) circulation() (err error) {
 	if h.targetStateValue["clazz"] == "end" {
 		_, err = h.tx.Table(new(order.SdOrder)).
 			Where("id = ?", h.workOrderId).
-			Update("is_end", 1)
+			Update(
+				map[string]interface{}{
+					"is_end": 1,
+				})
 		if err != nil {
 			h.tx.Rollback()
 			return
