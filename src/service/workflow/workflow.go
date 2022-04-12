@@ -2,6 +2,7 @@ package workflowService
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"mayday/src/global"
@@ -34,6 +35,7 @@ func CreateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 		id = `"` + id + `"`
 	}
 	tablesString = `[` + strings.Join(ids, `,`) + `]`
+	fmt.Println(tablesString)
 	sdWorkflow.Tables = []byte(tablesString)
 	//正确写法
 	session := global.GVA_DB.NewSession()
