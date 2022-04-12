@@ -11,6 +11,7 @@ import (
 	WorkflowModel "mayday/src/model/workflow"
 	"mayday/src/model/workspace/application"
 	"mayday/src/utils"
+	"strings"
 	"time"
 )
 
@@ -23,6 +24,17 @@ func CreateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	sdWorkflow.CreateTime = timedecoder.LocalTime(time.Now())
 	sdWorkflow.CreateUser = user.Id
 
+	tables, err := sdWorkflow.Tables.MarshalJSON()
+	tablesString := string(tables)
+	strings.Trim(tablesString, `]`)
+	strings.Trim(tablesString, `[`)
+	var ids []string
+	ids = strings.Split(tablesString, `,`)
+	for _, id := range ids {
+		id = `"` + id + `"`
+	}
+	tablesString = `[` + strings.Join(ids, `,`) + `]`
+	sdWorkflow.Tables = []byte(tablesString)
 	//正确写法
 	session := global.GVA_DB.NewSession()
 	effect, err := session.Insert(&sdWorkflow)
@@ -72,14 +84,26 @@ func CreateWorkflowDraft(ctx iris.Context, workflowDraftReq WorkflowModel.Workfl
 //删除流程
 func DeleteWorkflow(ctx iris.Context, id []int) {
 	//TODO 验证权限
-	e := global.GVA_DB
-	_, err := global.GVA_DB.In("workflow_id", id).Delete(new(application.SdWorkflowApplication))
+	e := global.GVA_DB.NewSession()
+	err := e.Begin()
 	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
-	affected, err := e.In("id", id).Delete(new(WorkflowModel.SdWorkflow))
-	if affected <= 0 || err != nil {
+	_, err = global.GVA_DB.In("workflow_id", id).Delete(new(application.SdWorkflowApplication))
+	if err != nil {
+		e.Rollback()
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
+		return
+	}
+	affected, err1 := e.In("id", id).Delete(new(WorkflowModel.SdWorkflow))
+	if affected <= 0 || err1 != nil {
+		e.Rollback()
+		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err1)
+		return
+	}
+	err = e.Commit()
+	if err != nil {
 		utils.Responser.Fail(ctx, resultcode.DataDeleteFail, err)
 		return
 	}
