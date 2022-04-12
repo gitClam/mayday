@@ -32,7 +32,7 @@ func CreateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	var ids []string
 	ids = strings.Split(tablesString, `,`)
 	for _, id := range ids {
-		id = `"` + id + `"`
+		id = "\"" + id + "\""
 	}
 	tablesString = `[` + strings.Join(ids, `,`) + `]`
 	fmt.Println(tablesString)
