@@ -2,7 +2,6 @@ package workflowService
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"mayday/src/global"
@@ -12,7 +11,6 @@ import (
 	WorkflowModel "mayday/src/model/workflow"
 	"mayday/src/model/workspace/application"
 	"mayday/src/utils"
-	"strings"
 	"time"
 )
 
@@ -25,18 +23,6 @@ func CreateWorkflow(ctx iris.Context, workflowReq WorkflowModel.WorkflowReq) {
 	sdWorkflow.CreateTime = timedecoder.LocalTime(time.Now())
 	sdWorkflow.CreateUser = user.Id
 
-	tables, err := sdWorkflow.Tables.MarshalJSON()
-	tablesString := string(tables)
-	strings.Trim(tablesString, `]`)
-	strings.Trim(tablesString, `[`)
-	var ids []string
-	ids = strings.Split(tablesString, `,`)
-	for _, id := range ids {
-		id = "\"" + id + "\""
-	}
-	tablesString = `[` + strings.Join(ids, `,`) + `]`
-	fmt.Println(tablesString)
-	sdWorkflow.Tables = []byte(tablesString)
 	//正确写法
 	session := global.GVA_DB.NewSession()
 	effect, err := session.Insert(&sdWorkflow)
