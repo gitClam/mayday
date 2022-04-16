@@ -89,14 +89,20 @@ func MakeProcessStructure(c iris.Context, processId int, workOrderId int) (resul
 
 	if workOrderId == 0 {
 		// 查询流程模版
-		var tplIdList []string
-		byteData, err1 := processValue.Tables.MarshalJSON()
-		if err1 != nil {
-			err = err1
-			global.GVA_LOG.Error("json转byte失败，%v", zap.Error(err))
-			return
-		}
-		err = json.Unmarshal(byteData, &tplIdList)
+		//var tplIdList []string
+		//byteData, err1 := processValue.Tables.MarshalJSON()
+		//if err1 != nil {
+		//	err = err1
+		//	global.GVA_LOG.Error("json转byte失败，%v", zap.Error(err))
+		//	return
+		//}
+		//err = json.Unmarshal(byteData, &tplIdList)
+		//if err != nil {
+		//	err = fmt.Errorf("json转map失败，%v", err.Error())
+		//	return
+		//}
+		var tplIdList []int
+		err = json.Unmarshal(processValue.Tables, &tplIdList)
 		if err != nil {
 			err = fmt.Errorf("json转map失败，%v", err.Error())
 			return
