@@ -214,7 +214,7 @@ func (h *Handle) circulation() (err error) {
 // 条件判断
 func (h *Handle) ConditionalJudgment(condExpr map[string]interface{}) (result bool, err error) {
 	var (
-		//condExprOk    bool
+		condExprOk    bool
 		condExprValue interface{}
 	)
 
@@ -232,16 +232,16 @@ func (h *Handle) ConditionalJudgment(condExpr map[string]interface{}) (result bo
 		}
 	}()
 
-	//for _, data := range h.WorkOrderData {
-	//	var formData map[string]interface{}
-	//	err = json.Unmarshal(data, &formData)
-	//	if err != nil {
-	//		return
-	//	}
-	//	if condExprValue, condExprOk = formData[condExpr["key"].(string)]; condExprOk {
-	//		break
-	//	}
-	//}
+	for _, data := range h.WorkOrderData {
+		var formData map[string]interface{}
+		err = json.Unmarshal(data, &formData)
+		if err != nil {
+			return
+		}
+		if condExprValue, condExprOk = formData[condExpr["key"].(string)]; condExprOk {
+			break
+		}
+	}
 
 	if condExprValue == nil {
 		err = errors.New("未查询到对应的表单数据。")
@@ -844,6 +844,7 @@ func (h *Handle) HandleWorkOrder(
 			Processor:   currentUserInfo.Name,
 			ProcessorId: c.Values().Get("user").(userModel.SdUser).Id,
 			Circulation: "结束",
+			CreateTime:  timedecoder.LocalTime(time.Now()),
 			Remarks:     "工单已结束",
 			Status:      2, // 其他状态
 		})
